@@ -1,0 +1,23 @@
+#navbar-background {
+    background: linear-gradient(to right, #ff8800, #ff9300, #ff8800);
+    height: 4rem;
+}
+
+#navbar-logo {
+    height: 70%;
+    transition: all 0.5s ease-out;
+    -webkit-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+}
+
+
+
+#navbar-logo:hover {
+    width: 4rem;
+    height: 3.2rem;
+    -webkit-transform: rotate(-20deg);
+    -moz-transform: rotate(-20deg);
+    -ms-transform: rotate(-20deg);
+    transform: rotate(-20deg);
+}
