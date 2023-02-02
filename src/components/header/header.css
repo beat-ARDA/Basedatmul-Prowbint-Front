@@ -2,6 +2,10 @@
     background: linear-gradient(to right, #ff8800, #ff9300, #ff8800);
 }
 
+.header-mobile {
+    background: linear-gradient(to right, #ff8800, #ff9300, #ff8800);
+}
+
 .header-logo {
     width: 4rem;
 }
@@ -50,15 +54,41 @@
 }
 
 .login-button {
-    background-color: rgba(0, 0, 0, 1);;
+    background-color: rgba(0, 0, 0, 1);
+    ;
     color: white;
     outline: none;
     border: none;
 }
 
 .login-button:hover {
-    background-color: rgba(59, 58, 58, 1);;
+    background-color: rgba(59, 58, 58, 1);
+    ;
     color: white;
     outline: none;
     border: none;
+}
+
+.bars-icon {
+    width: 2rem;
+}
+
+@media (width >=1200px) {
+    .header {
+        display: block;
+    }
+
+    .header-mobile {
+        display: none;
+    }
+}
+
+@media (width <1200px) {
+    .header {
+        display: none;
+    }
+
+    .header-mobile {
+        display: block;
+    }
 }
