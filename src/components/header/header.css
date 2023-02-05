@@ -73,6 +73,58 @@
     width: 2rem;
 }
 
+.perfil-image {
+    background-image: url("../../images/perfil.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 50%;
+    height: 100%;
+    border-radius: 50%;
+    border: 0.01rem solid rgba(0, 0, 0, 0.6);
+}
+
+.perfil-image-mobile {
+    background-image: url("../../images/perfil.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 15%;
+    height: 3rem;
+    border-radius: 50%;
+    border: 0.01rem solid rgba(0, 0, 0, 0.6);
+}
+
+.content-header-mobile {
+    border-top: 0.1rem solid black;
+}
+
+.categorias-link:hover .lista-categorias {
+    display: block;
+}
+
+.lista-categorias:hover {
+    display: block;
+}
+
+.lista-categorias {
+    display: none;
+    position: absolute;
+    background-color: white;
+    list-style: none;
+    font-size: 0.9rem;
+}
+
+.categoria-icon {
+    width: 0.7rem;
+}
+
+.categoria-item:hover
+{
+    background-color: lightgray;
+    cursor: pointer;
+}
+
 @media (width >=1200px) {
     .header {
         display: block;
