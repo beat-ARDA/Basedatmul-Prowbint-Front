@@ -1,0 +1,22 @@
+.login-icon {
+    width: 4rem;
+}
+
+.ingresar-button {
+    background-color: black;
+    color: white;
+    outline: none;
+    border: none;
+    border-radius: 2rem;
+}
+
+.ingresar-button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.login-input {
+    border: none;
+    border-bottom: 0.1rem solid lightgray;
+    outline: none;
+   
+}
