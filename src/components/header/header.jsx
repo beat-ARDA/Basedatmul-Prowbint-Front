@@ -6,7 +6,7 @@ function Header() {
 
     const navigate = useNavigate();
     const [mobileActive, setMobileActive] = useState(false);
-    const [sesionActive, setSesionActive] = useState(false);
+    const [sesionActive, setSesionActive] = useState(true);
 
     return (
         <>
@@ -227,8 +227,47 @@ function Header() {
                             <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
                                 <Link to="/mis-cursos" className="text-black">Mis cursos</Link>
                             </div>
-                            <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
+                            <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0 perfil-menu">
                                 <div onClick={() => navigate("perfil")} className="perfil-image p-0 m-0"></div>
+                                <ul className="lista-perfil w-25 p-2 mx-2">
+                                    <div className="row pb-2 m-0">
+                                        <div
+                                            onClick={() => navigate("/perfil")}
+                                            className="col-xl-12 d-flex justify-content-between perfil-item">
+                                            <li>Perfil</li>
+                                            <svg
+                                                className="categoria-icon"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512">
+                                                <path
+                                                    d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
+                                        </div>
+                                    </div>
+                                    <div className="row pb-2 m-0">
+                                        <div
+                                            onClick={() => navigate("/mis-cursos")}
+                                            className="col-xl-12 d-flex justify-content-between perfil-item">
+                                            <li>Mis cursos</li>
+                                            <svg
+                                                className="categoria-icon"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512">
+                                                <path
+                                                    d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
+                                        </div>
+                                    </div>
+                                    <div className="row pb-2 m-0">
+                                        <div onClick={() => navigate("/")} className="col-xl-12 d-flex justify-content-between perfil-item">
+                                            <li>Cerrar sesion</li>
+                                            <svg
+                                                className="categoria-icon"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512">
+                                                <path
+                                                    d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
+                                        </div>
+                                    </div>
+                                </ul>
                             </div>
                         </div>
                     </nav>
@@ -407,8 +446,47 @@ function Header() {
                         {
                             mobileActive ?
                                 <div className="content-header-mobile pt-2">
-                                    <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-1">
-                                        <div onClick={() => navigate("/perfil")} className="perfil-image-mobile p-0 m-0"></div>
+                                    <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-1 perfil-menu">
+                                        <div className="perfil-image-mobile p-0 m-0"></div>
+                                        <ul className="lista-perfil-mobile w-25 p-2 mx-2">
+                                            <div className="row pb-2 m-0">
+                                                <div
+                                                    onClick={() => navigate("/perfil")}
+                                                    className="col-xl-12 d-flex justify-content-between perfil-item">
+                                                    <li>Perfil</li>
+                                                    <svg
+                                                        className="categoria-icon"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 384 512">
+                                                        <path
+                                                            d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
+                                                </div>
+                                            </div>
+                                            <div className="row pb-2 m-0">
+                                                <div
+                                                    onClick={() => navigate("/mis-cursos")}
+                                                    className="col-xl-12 d-flex justify-content-between perfil-item">
+                                                    <li>Mis cursos</li>
+                                                    <svg
+                                                        className="categoria-icon"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 384 512">
+                                                        <path
+                                                            d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
+                                                </div>
+                                            </div>
+                                            <div className="row pb-2 m-0">
+                                                <div onClick={() => navigate("/")} className="col-xl-12 d-flex justify-content-between perfil-item">
+                                                    <li>Cerrar sesion</li>
+                                                    <svg
+                                                        className="categoria-icon"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 384 512">
+                                                        <path
+                                                            d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
+                                                </div>
+                                            </div>
+                                        </ul>
                                     </div>
                                     <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-1">
                                         <Link to="/perfil" className="text-black">Alvaro Ramses Duron Alejo</Link>
