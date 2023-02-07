@@ -1,0 +1,8 @@
+@media (width <1200px) {
+   .padre-registro {
+    width: 100%!important;
+    position: absolute;
+    top: 5rem;
+    z-index: -1;
+   }
+}
