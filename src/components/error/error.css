@@ -43,8 +43,6 @@
     height: 8rem;
 }
 
-
-
 @media (width <1200px) {
     .error-text {
         font-size: 0.8rem;
