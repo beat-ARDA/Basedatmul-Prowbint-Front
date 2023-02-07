@@ -1,4 +1,5 @@
 import { React, useState } from "react";
+import { Link } from "react-router-dom";
 import './login.css';
 
 function Login() {
@@ -22,7 +23,7 @@ function Login() {
                     <button type="submit" className="mb-2 ingresar-button w-100">Ingresar</button>
                 </div>
             </div>
-            <a href="./" className="">¿No tienes cuenta? registrate!</a>
+            <Link to={"./"}>¿No tienes cuenta? registrate!</Link>
         </form>
     );
 }

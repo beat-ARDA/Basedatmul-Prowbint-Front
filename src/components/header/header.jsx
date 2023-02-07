@@ -1,5 +1,6 @@
 import { React, useState } from "react";
 import './header.css'
+import { Link } from "react-router-dom";
 
 function Header() {
 
@@ -40,6 +41,7 @@ function Header() {
                                         <path d="M3948 550 c-96 -29 -154 -133 -128 -229 13 -48 67 -113 108 -130 20 -8 360 -11 1259 -9 l1231 3 39 31 c51 41 73 87 73 153 0 77 -33 131 -102 165 l-52 26 -1200 -1 c-661 0 -1213 -4 -1228 -9z" />
                                     </g>
                                 </svg>
+
                             </div>
                             <div className="col-xl-1 d-flex justify-content-center align-items-center p-0 m-0">
                                 <div className="categorias-link">
@@ -475,10 +477,10 @@ function Header() {
                                             </button>
                                         </form>
                                     </div>
-
                                 </div> : null
                         }
                     </nav>
+
             }
         </>
     );

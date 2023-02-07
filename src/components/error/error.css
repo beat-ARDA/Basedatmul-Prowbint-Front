@@ -1,0 +1,52 @@
+.cls-1 {
+    fill: #fd0
+}
+
+.cls-2 {
+    fill: #40bdff;
+}
+
+.cls-3 {
+    fill: #2197f7;
+}
+
+.cls-4 {
+    fill: #effafe;
+}
+
+.cls-5 {
+    fill: #eb5639;
+}
+
+.cls-6 {
+    fill: #d84936;
+}
+
+.cls-7 {
+    fill: #228ed6;
+}
+
+.cls-8 {
+    fill: #efc803;
+}
+
+.cls-9 {
+    fill: #e4ebed;
+}
+
+.cls-10 {
+    fill: #263238;
+}
+
+.error-icon {
+    width: 8rem;
+    height: 8rem;
+}
+
+
+
+@media (width <1200px) {
+    .error-text {
+        font-size: 0.8rem;
+    }
+}
