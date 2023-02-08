@@ -6,3 +6,22 @@
     z-index: -1;
    }
 }
+
+.input-file__btn {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background-color: rgba(30, 110, 255, 1);
+   color: white;
+   width: 18rem;
+   text-align: center;
+   cursor: pointer;
+   font-family: Arial, Helvetica, sans-serif;
+   font-weight: bold;
+   height: 2rem;
+   font-size: 0.8rem;
+}
+
+.input-file__btn:hover {
+   background-color: rgba(30, 20, 255, 0.5);
+}
