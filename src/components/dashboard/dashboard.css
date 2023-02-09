@@ -1,0 +1,12 @@
+@media (width <1200px) {
+    .texto-boton {
+        font-size: 0.7rem;
+        height: 100%;
+    }
+}
+
+.padre-dashboard {
+    position: absolute;
+    top: 4rem;
+    z-index: -1;
+}

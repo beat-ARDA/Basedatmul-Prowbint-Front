@@ -5,3 +5,9 @@
     background-repeat: no-repeat;
     background-size: contain;
 }
+
+@media (width <1200px) {
+    .estrella-icon {
+        width: 100% !important;
+    }
+}
