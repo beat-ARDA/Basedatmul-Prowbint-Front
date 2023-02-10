@@ -86,8 +86,6 @@ export default function Registro() {
     const [imagenPerfil, setImagenPerfil] = useState('');
     const [correo, setCorreo] = useState('');
     const [contraseña, setContraseña] = useState('');
-    const [tipoUsuario, setTipoUsuario] = useState('');
-    const [genero, setGenero] = useState('');
 
     return (
         <div className='container-fluid d-flex justify-content-center align-items-center'>
@@ -175,6 +173,8 @@ export default function Registro() {
                 <div className='row m-0 pb-1'>
                     <div className='col-12 m-0 p-0 d-flex justify-content-center align-items-center'>
                         <input
+                            value={correo}
+                            onChange={(e) => setCorreo(e.target.value)}
                             onInput={e => {
                                 e.target.value ?
                                     setCorreoCompleto(validarCorreo(e.target.value)) :
@@ -194,6 +194,8 @@ export default function Registro() {
                 <div className='row m-0 pb-1'>
                     <div className='col-12 m-0 p-0 d-flex justify-content-center align-items-center'>
                         <input
+                            value={contraseña}
+                            onChange={(e) => setContraseña(e.target.value)}
                             onInput={e => {
                                 e.target.value ?
                                     setContraseñaCompleto(validarContraseña(e.target.value)) :

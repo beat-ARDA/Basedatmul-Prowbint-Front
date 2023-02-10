@@ -6,3 +6,9 @@
     background-size: cover;
     border-radius: 10rem;
 }
+
+.basura-icon {
+    width: 1.3rem;
+    cursor: pointer;
+    position: absolute;
+}
