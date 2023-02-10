@@ -5,12 +5,26 @@ import { Link } from 'react-router-dom';
 
 export default function Perfil() {
 
+    const regexNombres = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+(\s[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/;
+    const regexCorreo = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+    const regexContraseña = /^(?=(?:.*\d))(?=.*[A-Z])(?=.*[a-z])(?=.*[.,*!?¿¡/#$%&])\S{8,64}$/;
+
+    function validarNombres(nombres) {
+        return regexNombres.test(nombres) ? true : false;
+    }
+
     const [nombresPerfil, setNombresPerfil] = useState('Alvaro Ramses');
     const [apellidosPerfil, setApellidosPerfil] = useState('Duron Alejo');
     const [fechaNacimientoPerfil, setFechaNacimientoPerfil] = useState('1996-05-17');
     const [imagenPerfil, setImagenPerfil] = useState('');
     const [correoPerfil, setCorreoPerfil] = useState('alvaro_07051@outlook.com');
     const [contraseñaPerfil, setContraseñaPerfil] = useState('LinkinBeatlesBu$1');
+
+    const [nombresPerfilBool, setNombresPerfilBool] = useState(true);
+    const [apellidosPerfilBool, setApellidosPerfilBool] = useState(true);
+    const [fechaNacimientoPerfilBool, setFechaNacimientoPerfilBool] = useState(false);
+    const [correoPerfilBool, setCorreoPerfilBool] = useState(false);
+    const [contraseñaPerfilBool, setContraseñaPerfilBool] = useState(false);
 
 
     function manejoImagenPerfil(e) {
@@ -28,7 +42,6 @@ export default function Perfil() {
 
         const objectURL = URL.createObjectURL(archivo);
         setImagenPerfil(objectURL);
-
     }
 
     return (
@@ -44,7 +57,10 @@ export default function Perfil() {
                         </div>
                         <div className='col-2 p-0 m-0'>
                             <svg
-                                onClick={() => setImagenPerfil('')}
+                                onClick={() => {
+                                    setImagenPerfil('');
+                                    setImagenPerfilBool(false);
+                                }}
                                 className='basura-icon'
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 448 512">
@@ -54,7 +70,6 @@ export default function Perfil() {
                     </div>
                 </div>
                 <div className='col-12 d-flex justify-content-center align-items-center'>
-
                     <h6 className='fw-bold p-0 m-0'>26 años</h6>
                 </div>
                 <div className='col-12 d-flex justify-content-center align-items-center'>
@@ -75,16 +90,42 @@ export default function Perfil() {
                     <label htmlFor='nombresPerfil' className=' fw-bold'>Nombre(s): </label>
                 </div>
                 <div className='col-11 d-flex justify-content-center align-items-center p-0 m-0'>
-                    <input name="nombresPerfil" id="nombresPerfil" className='form-control' value={nombresPerfil} onChange={(e) => setNombresPerfil(e.target.value)} type="text" />
+                    <input
+                        aria-describedby="reglas-nombres"
+                        name="nombresPerfil"
+                        id="nombresPerfil"
+                        className='form-control'
+                        value={nombresPerfil}
+                        onInput={e => {
+                            e.target.value == " " ? setNombresPerfil("") : setNombresPerfil(e.target.value.replace(/(\s{2,})/g, ' '));
+                            e.target.value ? setNombresPerfilBool(validarNombres(e.target.value)) : setNombresPerfilBool(false);
+                        }}
+                        type="text" />
                 </div>
+            </div>
+            <div id="reglas-nombres" className={`form-text col-12 ${nombresPerfilBool ? 'text-success' : 'text-danger'}`}>
+                {nombresPerfilBool ? '¡Campo validado!' : '¡El texto no coincide o esta vacio!'}
             </div>
             <div className='row pt-1'>
                 <div className='col-1 d-flex justify-content-start align-items-center p-0 m-0'>
                     <label htmlFor='apellidosPerfil' className='fw-bold'>Apellido(s): </label>
                 </div>
                 <div className='col-11 d-flex justify-content-center align-items-center p-0 m-0'>
-                    <input name="apellidosPerfil" id="apellidosPerfil" className='form-control' value={apellidosPerfil} type="text" onChange={(e) => setApellidosPerfil(e.target.value)} />
+                    <input
+                    aria-describedby="reglas-apellidos"
+                        name="apellidosPerfil"
+                        id="apellidosPerfil"
+                        className='form-control'
+                        value={apellidosPerfil}
+                        type="text"
+                        onInput={e => {
+                            e.target.value == " " ? setApellidosPerfil("") : setApellidosPerfil(e.target.value.replace(/(\s{2,})/g, ' '));
+                            e.target.value ? setApellidosPerfilBool(validarNombres(e.target.value)) : setApellidosPerfilBool(false);
+                        }} />
                 </div>
+                <div id="reglas-apellidos" className={`form-text col-12 ${apellidosPerfilBool ? 'text-success' : 'text-danger'}`}>
+                {apellidosPerfilBool ? '¡Campo validado!' : '¡El texto no coincide o esta vacio!'}
+            </div>
             </div>
             <div className='row pt-1'>
                 <div className='col-1 d-flex justify-content-start align-items-center p-0 m-0'>
