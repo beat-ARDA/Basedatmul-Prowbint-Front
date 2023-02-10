@@ -1,0 +1,8 @@
+.perfil-imagen {
+    width: 6rem;
+    height: 6rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10rem;
+}

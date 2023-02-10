@@ -6,7 +6,7 @@ function Header() {
 
     const navigate = useNavigate();
     const [mobileActive, setMobileActive] = useState(false);
-    const [sesionActive, setSesionActive] = useState(false);
+    const [sesionActive, setSesionActive] = useState(true);
 
     return (
         <>
