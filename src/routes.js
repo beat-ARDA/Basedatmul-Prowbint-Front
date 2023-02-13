@@ -4,6 +4,7 @@ import ErrorPage from "./components/error/error";
 import Registro from './components/registro/registro';
 import Dashboard from './components/dashboard/dashboard';
 import Perfil from './components/perfil/perfil';
+import Curso from './components/curso/curso';
 
 export default function Router() {
     return (
@@ -12,6 +13,7 @@ export default function Router() {
             <Route path='/ingresar' element={<Login />} />
             <Route path='/registrarse' element={<Registro />} />
             <Route path='/perfil' element={<Perfil />} />
+            <Route path='/curso' element={<Curso />} />
             <Route path='*' element={<ErrorPage />} />
         </Routes>
     );

@@ -1,0 +1,21 @@
+.video {
+    width: 100%!important;
+    height: 100%!important;
+}
+
+.texto-navegacion-click{
+    color: black!important;
+    border-bottom: 0.1rem black solid;
+}
+
+.texto-navegacion:hover {
+    cursor: pointer;
+}
+
+.imagen-comentario {
+    width: 200px;
+    height: 200px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
