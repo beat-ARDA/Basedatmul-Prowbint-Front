@@ -1,6 +1,7 @@
 import { React, useState } from 'react';
 import './perfil.css';
 import perfilImageVacia from '../../images/perfilSola.jpg'
+import { useNavigate } from 'react-router-dom';
 
 export default function Perfil() {
 
@@ -25,6 +26,9 @@ export default function Perfil() {
     const [contraseñaPerfilBool, setContraseñaPerfilBool] = useState(true);
     const [tipoUsuarioPerfilBool, setTipoUsuarioPerfilBool] = useState(true);
     const [generoPerfilBool, setGeneroPerfilBool] = useState(true);
+    const [imagenPerfilBool, setImagenPerfilBool] = useState(true);
+
+    const navigate = useNavigate();
 
     function manejoImagenPerfil(e) {
         const archivo = e.target.files[0];
@@ -106,7 +110,7 @@ export default function Perfil() {
     }
 
     return (
-        <form onSubmit={handleSubmit} className='container py-3'>
+        <form onSubmit={handleSubmit} className='container-fluid perfil-padre px-xl-4 pb-2'>
             <div className='row d-flex flex-column justify-content-center align-items-center'>
                 <div className='col-12 d-flex justify-content-center pt-1'>
                     <div className='row d-flex flex-row p-0 m-0'>
@@ -147,10 +151,10 @@ export default function Perfil() {
                 </div>
             </div>
             <div className='row pt-1'>
-                <div className='col-1 d-flex justify-content-start align-items-center p-0 m-0'>
+                <div className='col-xl-1 col-3 d-flex justify-content-xl-start justify-content-center align-items-center p-0 m-0'>
                     <label htmlFor='nombresPerfil' className=' fw-bold'>Nombre(s): </label>
                 </div>
-                <div className='col-11 d-flex justify-content-center align-items-center p-0 m-0'>
+                <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                     <input
                         aria-describedby="reglas-nombres"
                         name="nombresPerfil"
@@ -164,14 +168,16 @@ export default function Perfil() {
                         type="text" />
                 </div>
             </div>
-            <div id="reglas-nombres" className={`form-text col-12 ${nombresPerfilBool ? 'text-success' : 'text-danger'}`}>
-                {nombresPerfilBool ? '¡Campo validado!' : '¡El texto no coincide o esta vacio!'}
+            <div id="reglas-nombres" className={`form-text row ${nombresPerfilBool ? 'text-success' : 'text-danger'}`}>
+                <div className='col-xl-12 col-6 '>
+                    {nombresPerfilBool ? '¡Campo validado!' : '¡El texto no coincide o esta vacio!'}
+                </div>
             </div>
             <div className='row pt-1'>
-                <div className='col-1 d-flex justify-content-start align-items-center p-0 m-0'>
+                <div className='col-xl-1 col-3 d-flex justify-content-xl-start justify-content-center align-items-center p-0 m-0'>
                     <label htmlFor='apellidosPerfil' className='fw-bold'>Apellido(s): </label>
                 </div>
-                <div className='col-11 d-flex justify-content-center align-items-center p-0 m-0'>
+                <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                     <input
                         aria-describedby="reglas-apellidos"
                         name="apellidosPerfil"
@@ -184,15 +190,17 @@ export default function Perfil() {
                             e.target.value ? setApellidosPerfilBool(validarNombres(e.target.value)) : setApellidosPerfilBool(false);
                         }} />
                 </div>
-                <div id="reglas-apellidos" className={`form-text col-12 ${apellidosPerfilBool ? 'text-success' : 'text-danger'}`}>
-                    {apellidosPerfilBool ? '¡Campo validado!' : '¡El texto no coincide o esta vacio!'}
+                <div id="reglas-apellidos" className={`form-text row ${apellidosPerfilBool ? 'text-success' : 'text-danger'}`}>
+                    <div className='col-xl-12 col-6 '>
+                        {apellidosPerfilBool ? '¡Campo validado!' : '¡El texto no coincide o esta vacio!'}
+                    </div>
                 </div>
             </div>
             <div className='row pt-1'>
-                <div className='col-1 d-flex justify-content-start align-items-center p-0 m-0'>
-                    <label htmlFor='fechaNacimientoPerfil' className='fw-bold'>Fecha nacimiento: </label>
+                <div className='col-xl-1 col-3 d-flex justify-content-xl-start justify-content-center align-items-center p-0 m-0'>
+                    <label htmlFor='fechaNacimientoPerfil' className='fw-bold'>Fecha: </label>
                 </div>
-                <div className='col-11 d-flex justify-content-center align-items-center p-0 m-0'>
+                <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                     <input
                         value={fechaNacimientoPerfil}
                         max={maxFechaNacimiento()}
@@ -207,15 +215,17 @@ export default function Perfil() {
                         aria-describedby="reglas-fecha-nacmiento-perfil"
                     />
                 </div>
-                <div id="reglas-fecha-nacmiento" className={`form-text col-12 ${fechaNacimientoPerfilBool ? 'text-success' : 'text-danger'}`}>
-                    {fechaNacimientoPerfilBool ? '¡Edad valida!' : 'Debes de ser mayor de 18 años'}
+                <div id="reglas-fecha-nacmiento" className={`form-text row ${fechaNacimientoPerfilBool ? 'text-success' : 'text-danger'}`}>
+                    <div className='col-xl-12 col-6 '>
+                        {fechaNacimientoPerfilBool ? '¡Edad valida!' : 'Debes de ser mayor de 18 años'}
+                    </div>
                 </div>
             </div>
             <div className='row pt-1'>
-                <div className='col-1 d-flex justify-content-start align-items-center p-0 m-0'>
+                <div className='col-xl-1 col-3 d-flex justify-content-xl-start justify-content-center align-items-center p-0 m-0'>
                     <label htmlFor='correoPerfil' className='fw-bold'>Correo: </label>
                 </div>
-                <div className='col-11 d-flex justify-content-center align-items-center p-0 m-0'>
+                <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                     <input
                         value={correoPerfil}
                         onChange={(e) => setCorreoPerfil(e.target.value)}
@@ -231,15 +241,17 @@ export default function Perfil() {
                         className='form-control'
                         type="email" />
                 </div>
-                <div id="reglas-correo-perfil" className={`form-text ${correoPerfilBool ? 'text-success' : 'text-danger'}`}>
-                    {correoPerfilBool ? '¡Correo valido!' : 'Introduce un correo valido'}
+                <div id="reglas-correo-perfil" className={`form-text row ${correoPerfilBool ? 'text-success' : 'text-danger'}`}>
+                    <div className='col-xl-12 col-6 '>
+                        {correoPerfilBool ? '¡Correo valido!' : 'Introduce un correo valido'}
+                    </div>
                 </div>
             </div>
             <div className='row pt-1'>
-                <div className='col-1 d-flex justify-content-start align-items-center p-0 m-0'>
+                <div className='col-xl-1 col-3 d-flex justify-content-xl-start justify-content-center align-items-center p-0 m-0'>
                     <label htmlFor='contraseñaPerfil' className='fw-bold'>Contraseña: </label>
                 </div>
-                <div className='col-11 d-flex justify-content-center align-items-center p-0 m-0'>
+                <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                     <input
                         aria-describedby="reglas-contraseña-perfil"
                         name="contraseñaPerfil"
@@ -255,15 +267,17 @@ export default function Perfil() {
                         }}
                     />
                 </div>
-                <div id="reglas-contraseña-perfil" className={`form-text col-12 ${contraseñaPerfilBool ? 'text-success' : 'text-danger'}`}>
-                    {contraseñaPerfilBool ? '¡Contraseña valida!' : '8 caracteres al menos, una mayuscula, un caracter especial y un numero al menos.'}
+                <div id="reglas-contraseña-perfil" className={`form-text row ${contraseñaPerfilBool ? 'text-success' : 'text-danger'}`}>
+                    <div className='col-xl-12 col-6 '>
+                        {contraseñaPerfilBool ? '¡Contraseña valida!' : '8 caracteres al menos, una mayuscula, un caracter especial y un numero al menos.'}
+                    </div>
                 </div>
             </div>
             <div className='row pt-1'>
-                <div className='col-1 d-flex justify-content-start align-items-center p-0 m-0'>
+                <div className='col-xl-1 col-3 d-flex justify-content-xl-start justify-content-center align-items-center p-0 m-0'>
                     <label htmlFor='tipo-usuario' className='fw-bold'>Tipo usuario:</label>
                 </div>
-                <div className='col-11 d-flex justify-content-center align-items-center p-0 m-0'>
+                <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                     <select
                         onChange={(e) => setTipoUsuarioPerfil(e.target.value)}
                         onInput={e => {
@@ -282,15 +296,17 @@ export default function Perfil() {
                         <option value="Instructor">Instructor</option>
                     </select>
                 </div>
-                <div id="reglas-tipo-usuario-perfil" className={`form-text col-12 ${tipoUsuarioPerfilBool ? 'text-success' : 'text-danger'}`}>
-                    {tipoUsuarioPerfilBool ? '¡Campo validado!' : 'Este campo es (Obligatorio)'}
+                <div id="reglas-tipo-usuario-perfil" className={`form-text row ${tipoUsuarioPerfilBool ? 'text-success' : 'text-danger'}`}>
+                    <div className='col-xl-12 col-6 '>
+                        {tipoUsuarioPerfilBool ? '¡Campo validado!' : 'Este campo es (Obligatorio)'}
+                    </div>
                 </div>
             </div>
             <div className='row pt-1'>
-                <div className='col-1 d-flex justify-content-start align-items-center p-0 m-0'>
+                <div className='col-xl-1 col-3 d-flex justify-content-xl-start justify-content-center align-items-center p-0 m-0'>
                     <label htmlFor='genero-perfil' className='fw-bold'>Genero:</label>
                 </div>
-                <div className='col-11 d-flex justify-content-center align-items-center p-0 m-0'>
+                <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                     <select
                         onChange={(e) => setGeneroPerfil(e.target.value)}
                         onInput={e => {
@@ -309,14 +325,16 @@ export default function Perfil() {
                         <option value="Femenino">Femenino</option>
                     </select>
                 </div>
-                <div id="reglas-genero-perfil" className={`form-text col-12 ${generoPerfilBool ? 'text-success' : 'text-danger'}`}>
-                    {generoPerfilBool ? '¡Campo validado!' : 'Este campo es (Obligatorio)'}
+                <div id="reglas-genero-perfil" className={`form-text row ${generoPerfilBool ? 'text-success' : 'text-danger'}`}>
+                    <div className='col-xl-12 col-6 '>
+                        {generoPerfilBool ? '¡Campo validado!' : 'Este campo es (Obligatorio)'}
+                    </div>
                 </div>
             </div>
             <div className='row pt-3 m-0'>
                 <div className='col-12 d-flex justify-content-end p-0 m-0'>
-                    <button className='btn btn-dark w-25 me-2' type="button">Volver</button>
-                    <button data-bs-toggle="modal" data-bs-target="#exampleModal" className='btn btn-dark w-25' type="submit">Actualizar</button>
+                    <button onClick={() => navigate('/')} className='btn btn-dark w-xl-25 w-100 me-2' type="button">Volver</button>
+                    <button data-bs-toggle="modal" data-bs-target="#exampleModal" className='btn btn-dark w-xl-25 w-100' type="submit">Actualizar</button>
                 </div>
             </div>
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -327,7 +345,7 @@ export default function Perfil() {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                           {textoModal}
+                            {textoModal}
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-dark" data-bs-dismiss="modal">Close</button>

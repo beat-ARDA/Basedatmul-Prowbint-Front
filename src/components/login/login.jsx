@@ -4,7 +4,7 @@ import './login.css';
 
 function Login() {
     return (
-        <form className="d-flex flex-column w-100 h-75 align-items-center justify-content-center" action="#">
+        <form className="d-flex flex-column w-100 h-75 align-items-center justify-content-center login-padre" action="#">
             <h5>¡Ingresa tu cuenta de cursos!</h5>
             <svg
                 className="login-icon mb-3"
@@ -23,7 +23,7 @@ function Login() {
                     <button type="submit" className="mb-2 ingresar-button w-100">Ingresar</button>
                 </div>
             </div>
-            <Link to={"./"}>¿No tienes cuenta? registrate!</Link>
+            <Link to="/registrarse">¿No tienes cuenta? registrate!</Link>
         </form>
     );
 }

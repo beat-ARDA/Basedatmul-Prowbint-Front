@@ -1,7 +1,8 @@
-import React from 'react';
+import { React } from 'react';
+import { Link } from 'react-router-dom';
 import './tarjeta-dashboard.css';
 
-export default function TarjetaDashboard({
+const TarjetaDashboard = ({
     imagen,
     titulo,
     descripcion,
@@ -9,7 +10,8 @@ export default function TarjetaDashboard({
     estrellas,
     fecha,
     precio
-}) {
+}) => {
+
     return (
         <div className='row border-bottom border-secondary'>
             <div className='col-3 col-xl-2'>
@@ -18,7 +20,9 @@ export default function TarjetaDashboard({
                 }}></div>
             </div>
             <div className='col-5 col-xl-8 d-flex flex-column align-items-start justify-content-center'>
-                <h5 className='fw-bold'>{titulo}</h5>
+                <Link to="curso">
+                    <h5 className='fw-bold text-dark'>{titulo}</h5>
+                </Link>
                 <h6>{descripcion}</h6>
                 <h6 className='form-text'>{instructor}</h6>
             </div>
@@ -317,3 +321,5 @@ export default function TarjetaDashboard({
         </div >
     )
 }
+
+export default TarjetaDashboard;

@@ -1,6 +1,8 @@
-import { React, useState } from 'react';
+import { React } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './dashboard.css';
 import TarjetaDashboard from '../tarjeta-dashboard/tarjeta-dashboard';
+import '../tarjeta-dashboard/tarjeta-dashboard.css'
 import reactImage from "../../images/react.jpg";
 import cImage from "../../images/c++.png";
 import angularImage from "../../images/angular.png";
@@ -16,7 +18,8 @@ const arreglo = [
     { titulo: "Mysql", descripcion: "Curso para aprender Mysql", instructor: "Veronica Alejo", imagen: mySqlImage, estrellas: 4, fecha: "2023-12-05", precio: "$400" },
     { titulo: "Ajax", descripcion: "Curso para aprender Ajax", instructor: "Homero Duron", imagen: ajaxImage, estrellas: 5, fecha: "2023-12-05", precio: "$1000" }]
 
-export default function Dashboard() {
+const Dashboard = () => {
+
     return (
         <div className='container-fluid padre-dashboard'>
             <div className='row mt-4'>
@@ -49,7 +52,9 @@ export default function Dashboard() {
                             instructor={dato.instructor}
                             estrellas={dato.estrellas}
                             fecha={dato.fecha}
-                            precio={dato.precio} />)
+                            precio={dato.precio}
+                        />
+                    )
                 })}
             </div>
             <nav aria-label="Page navigation example" className='d-flex justify-content-center'>
@@ -72,3 +77,5 @@ export default function Dashboard() {
         </div>
     )
 }
+
+export default Dashboard;

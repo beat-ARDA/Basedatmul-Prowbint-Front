@@ -12,3 +12,9 @@
     cursor: pointer;
     position: absolute;
 }
+
+.perfil-padre {
+    position: absolute;
+    top: 5rem;
+    z-index: 1;
+}

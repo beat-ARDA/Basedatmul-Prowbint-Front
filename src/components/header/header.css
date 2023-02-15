@@ -1,9 +1,13 @@
 .header {
     background: linear-gradient(to right, #ff8800, #ff9300, #ff8800);
+    position: absolute;
+    z-index: 2;
 }
 
 .header-mobile {
     background: linear-gradient(to right, #ff8800, #ff9300, #ff8800);
+    position: absolute;
+    z-index: 2;
 }
 
 .header-logo {
@@ -54,7 +58,8 @@
 }
 
 .login-button {
-    background-color: rgba(0, 0, 0, 1);;
+    background-color: rgba(0, 0, 0, 1);
+    ;
     color: white;
     outline: none;
     border: none;
@@ -111,11 +116,11 @@
     cursor: pointer;
 }
 
-.perfil-menu:hover .lista-perfil{
+.perfil-menu:hover .lista-perfil {
     display: block;
 }
 
-.perfil-menu:hover .lista-perfil-mobile{
+.perfil-menu:hover .lista-perfil-mobile {
     display: block;
 }
 
@@ -154,14 +159,12 @@
     width: 0.7rem;
 }
 
-.categoria-item:hover
-{
+.categoria-item:hover {
     background-color: lightgray;
     cursor: pointer;
 }
 
-.perfil-item:hover
-{
+.perfil-item:hover {
     background-color: lightgray;
     cursor: pointer;
 }
@@ -186,6 +189,6 @@
     }
 
     .lista-perfil-mobile {
-        width: 50%!important;
+        width: 50% !important;
     }
 }

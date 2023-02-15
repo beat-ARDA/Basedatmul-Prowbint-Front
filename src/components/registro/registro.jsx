@@ -1,5 +1,6 @@
 import { React, useState } from 'react';
 import './registro.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function Registro() {
 
@@ -57,6 +58,8 @@ export default function Registro() {
     function manejoImagenPerfil(e) {
         const archivo = e.target.files[0];
 
+        console.log(archivo);
+
         var allowedExtensions = /(.jpg|.jpeg|.png)$/i;
         if (!allowedExtensions.exec(archivo.name)) {
             alert("Extension de imagen no permitida");
@@ -68,8 +71,31 @@ export default function Registro() {
         }
 
         const objectURL = URL.createObjectURL(archivo);
+
         setImagenPerfil(objectURL);
 
+    }
+
+    function validacionesCampos() {
+        let parametro =
+            nombresCompleto &&
+                apellidosCompleto &&
+                fechaCompleto &&
+                correoCompleto &&
+                contraseñaCompleto &&
+                setTipoUsuarioCompleto &&
+                generoCompleto ? true : false;
+
+        return parametro;
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+
+        validacionesCampos() ? setTextoModal("Cuenta creada") : setTextoModal("Faltan campos por rellenar");
+
+        return comprobacion;
     }
 
     const [nombresCompleto, setNombresCompleto] = useState(false);
@@ -86,10 +112,13 @@ export default function Registro() {
     const [imagenPerfil, setImagenPerfil] = useState('');
     const [correo, setCorreo] = useState('');
     const [contraseña, setContraseña] = useState('');
+    const [textoModal, setTextoModal] = useState('');
+
+    const navigate = useNavigate();
 
     return (
-        <div className='container-fluid d-flex justify-content-center align-items-center'>
-            <form className='w-50 padre-registro'>
+        <>
+            <form onSubmit={handleSubmit} className='w-100 padre-registro'>
                 <div className='row m-0 pb-1'>
                     <div className='col-12 m-0 p-0 d-flex justify-content-center align-items-center'>
                         <h4 className='fw-bold'>Empieza hoy con tu cuenta de cursos!</h4>
@@ -167,7 +196,7 @@ export default function Registro() {
                 </div>
                 <div className='row m-0 pb-1'>
                     <div className='col-12 m-0 p-0 d-flex justify-content-center align-items-center'>
-                        <img id="imagen-perfil-prev" className="texto-perfil-fake w-25 h-100 rounded" src={imagenPerfil} alt="Imagen prev"></img>
+                        <img id="imagen-perfil-prev" className="imagen-perfil rounded" src={imagenPerfil} alt="Imagen prev"></img>
                     </div>
                 </div>
                 <div className='row m-0 pb-1'>
@@ -258,7 +287,7 @@ export default function Registro() {
                 </div>
                 <div className='row m-0 p-0'>
                     <div className='col-12 m-0 p-0 d-flex justify-content-center align-items-center'>
-                        <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" className="btn btn-dark w-100">Registrarse</button>
+                        <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="submit" className="btn btn-dark w-100">Registrarse</button>
                     </div>
                 </div>
             </form>
@@ -270,15 +299,16 @@ export default function Registro() {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            Faltan campos por rellenar
+                            {textoModal}
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-dark" data-bs-dismiss="modal">Close</button>
-
+                            <button onClick={() => {
+                                textoModal == "Cuenta creada" ? navigate('/') : null;
+                            }} type="button" className="btn btn-dark" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

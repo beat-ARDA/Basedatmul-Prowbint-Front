@@ -20,3 +20,8 @@
     outline: none;
     border-radius: 2rem;
 }
+
+.login-padre {
+    position: absolute;
+    z-index: 1;
+}

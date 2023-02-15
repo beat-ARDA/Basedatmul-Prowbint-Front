@@ -3,10 +3,6 @@ body {
   font-family: Roboto-Regular;  
 }
 
-.padre {
-  height: 100vh;
-}
-
 @font-face {
   font-family: Roboto-Regular;
   src: url('./fonts/Roboto-Regular.ttf');
