@@ -24,7 +24,9 @@ const TarjetaDashboard = ({
                     <h5 className='fw-bold text-dark'>{titulo}</h5>
                 </Link>
                 <h6>{descripcion}</h6>
-                <h6 className='form-text'>{instructor}</h6>
+                <Link to="/messages">
+                    <h6 className='form-text'>{instructor}</h6>
+                </Link>
             </div>
             <div className='col-4 col-xl-2 d-flex flex-column justify-content-center'>
                 {/*Estrellas vacias*/}

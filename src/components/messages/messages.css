@@ -1,0 +1,50 @@
+.padre-messages {
+    position: absolute;
+    top: 4rem;
+    z-index: 1;
+}
+
+.imagen-tarjeta-mensaje {
+    width: 2rem;
+    height: 2rem;
+}
+
+.box-messages {
+    overflow: auto;
+    height: 25rem;
+}
+
+.texto-ultimo-mensaje {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.tarjeta-mensaje {
+    cursor: pointer;
+}
+
+.tarjeta-mensaje:hover {
+    background-color: whitesmoke;
+}
+
+.imagen-caja-mensaje {
+    width: 3rem;
+    height: 3rem;
+}
+
+.mensajes-area {
+    height: 12rem;
+    overflow: auto;
+}
+
+@media (width < 1200px) {
+    .box-messages {
+        overflow: auto;
+        height: 8rem;
+    }
+    
+    .boton-enviar-mensaje {
+        width: 100%!important;
+    }
+}

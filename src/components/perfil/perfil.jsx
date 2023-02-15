@@ -337,7 +337,7 @@ export default function Perfil() {
                     <button data-bs-toggle="modal" data-bs-target="#exampleModal" className='btn btn-dark w-xl-25 w-100' type="submit">Actualizar</button>
                 </div>
             </div>
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal fade modal-xd" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">

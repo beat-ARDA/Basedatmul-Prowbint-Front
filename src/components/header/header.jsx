@@ -47,7 +47,9 @@ function Header() {
                             </div>
                             <div className="col-xl-1 d-flex justify-content-center align-items-center p-0 m-0">
                                 <div className="categorias-link">
-                                    <h6 className="m-0 p-0 text-black col-12" href="./">Categorías</h6>
+                                    <Link to="/categorias">
+                                        <h6 className="m-0 p-0 text-black col-12" href="./">Categorías</h6>
+                                    </Link>
                                     <ul className="lista-categorias p-2 mx-2 w-25 ">
                                         <div className="row pb-2 m-0">
                                             <div className="col-xl-12 d-flex justify-content-between categoria-item">
@@ -103,14 +105,20 @@ function Header() {
                                 </form>
                             </div>
                             <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
-                                <Link to="/carrito">
-                                    <svg
+                                <Link to="/messages">
+                                    {/* <svg
                                         className="cart-icon"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 576 512">
                                         <path
                                             d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                                    </svg>
+                                    </svg> */}
+                                    <svg
+                                        className="cart-icon"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 512 512">
+                                        <path
+                                            d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z" /></svg>
                                 </Link>
                             </div>
                             <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0 pe-1">
@@ -157,7 +165,9 @@ function Header() {
                             </div>
                             <div className="col-xl-1 d-flex justify-content-center align-items-center p-0 m-0">
                                 <div className="categorias-link">
-                                    <h6 className="m-0 p-0 text-black col-12" href="./">Categorías</h6>
+                                    <Link to="/categorias">
+                                        <h6 className="m-0 p-0 text-black col-12" href="./">Categorías</h6>
+                                    </Link>
                                     <ul className="lista-categorias p-2 mx-2 w-25 ">
                                         <div className="row pb-2 m-0">
                                             <div className="col-xl-12 d-flex justify-content-between categoria-item">
@@ -213,15 +223,13 @@ function Header() {
                                 </form>
                             </div>
                             <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
-                                <Link to={"/carrito"}>
+                                <Link to={"/messages"}>
                                     <svg
-                                        onClick={() => navigate("carrito")}
                                         className="cart-icon"
                                         xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 576 512">
+                                        viewBox="0 0 512 512">
                                         <path
-                                            d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                                    </svg>
+                                            d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z" /></svg>
                                 </Link>
                             </div>
                             <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
@@ -319,7 +327,9 @@ function Header() {
                                     <div className="row m-0 pb-2">
                                         <div className="col-sm-6 col-6 d-flex justify-content-center align-items-center m-0 p-0">
                                             <div className="categorias-link">
-                                                <h6 className="m-0 p-0 text-black col-12" href="./">Categorías</h6>
+                                                <Link to="/categorias">
+                                                    <h6 className="m-0 p-0 text-black col-12" href="./">Categorías</h6>
+                                                </Link>
                                                 <ul className="lista-categorias p-2 mx-2 w-75 ">
                                                     <div className="row pb-2 m-0">
                                                         <div className="col-xl-12 d-flex justify-content-between categoria-item">
@@ -358,17 +368,16 @@ function Header() {
                                             </div>
                                         </div>
                                         <div className="col-sm-6 col-6 d-flex justify-content-center align-items-center m-0 p-0">
-                                            <button className="cart-button m-0 p-0" type="button">
+                                            {/* <button className="cart-button m-0 p-0" type="button"> */}
+                                            <Link to="/messages">
                                                 <svg
-                                                    onClick={() => navigate("/carrito")}
                                                     className="cart-icon"
                                                     xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 576 512">
+                                                    viewBox="0 0 512 512">
                                                     <path
-                                                        d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                                                </svg>
-
-                                            </button>
+                                                        d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z" /></svg>
+                                            </Link>
+                                            {/* </button> */}
                                         </div>
                                     </div>
                                     <div className="col-sm-12 col-12 m-0 pb-2 d-flex justify-content-center">
@@ -496,7 +505,9 @@ function Header() {
                                     </div>
                                     <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-1">
                                         <div className="categorias-link">
-                                            <h6 className="m-0 p-0 text-black col-12" href="./">Categorías</h6>
+                                            <Link to="/categorias">
+                                                <h6 className="m-0 p-0 text-black col-12" href="./">Categorías</h6>
+                                            </Link>
                                             <ul className="lista-categorias p-2 mx-2 w-75 ">
                                                 <div className="row pb-2 m-0">
                                                     <div className="col-xl-12 d-flex justify-content-between categoria-item">
@@ -535,15 +546,16 @@ function Header() {
                                         </div>
                                     </div>
                                     <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-2">
-                                        <button onClick={() => navigate("/carrito")} className="cart-button m-0 p-0" type="button">
+                                        {/* <button className="cart-button m-0 p-0" type="button"> */}
+                                        <Link to="/messages">
                                             <svg
                                                 className="cart-icon"
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 576 512">
+                                                viewBox="0 0 512 512">
                                                 <path
-                                                    d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                                            </svg>
-                                        </button>
+                                                    d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z" /></svg>
+                                        </Link>
+                                        {/* </button> */}
                                     </div>
 
                                     <div className="col-sm-12 col-12 m-0 pb-2 d-flex justify-content-center">

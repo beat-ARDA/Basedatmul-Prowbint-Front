@@ -6,6 +6,8 @@ import Dashboard from './components/dashboard/dashboard';
 import Perfil from './components/perfil/perfil';
 import Curso from './components/curso/curso';
 import Layout from './Layout';
+import Messages from './components/messages/messages';
+import Categorias from './components/categorias/categorias';
 
 export default function Router() {
     return (
@@ -16,6 +18,8 @@ export default function Router() {
                 <Route path='registrarse' element={<Registro />} />
                 <Route path='perfil' element={<Perfil />} />
                 <Route path='curso' element={<Curso />} />
+                <Route path="messages" element={<Messages />} />
+                <Route path="categorias" element={<Categorias/>} />
                 <Route path='*' element={<ErrorPage />} />
             </Route>
         </Routes>

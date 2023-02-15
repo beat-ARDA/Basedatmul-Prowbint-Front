@@ -1,0 +1,25 @@
+.padre-categorias {
+    position: absolute;
+    top: 4rem;
+}
+
+.caja-categorias {
+    height: 25rem;
+    overflow: auto;
+}
+
+.tarjeta-categoria:hover {
+    background-color: whitesmoke;
+}
+
+.icon-categoria {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+@media (width < 1200px) {
+    .caja-categorias {
+        height: 15rem;
+        overflow: auto;
+    }
+}
