@@ -1,0 +1,9 @@
+.padre-kardex {
+    position: absolute;
+    top: 4rem;
+}
+
+.imagen-tarjeta-kardex {
+    width: 5rem;
+    height: 5rem;
+}
