@@ -1,0 +1,15 @@
+.padre-ventas {
+    position: absolute;
+    top: 4rem;
+}
+
+.altura-lista {
+    height: 10rem;
+    overflow: auto;
+}
+
+@media (width <1200px) {
+   .texto-mobile {
+    font-size: 0.5rem;
+   }
+}

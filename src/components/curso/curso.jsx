@@ -635,22 +635,33 @@ function SectionContenido({ nombreSeccion }) {
     );
 }
 
+function Comprar({ display }) {
+    return (
+        <div className={`col-12 justify-content-center flex-column align-items-center py-3 m-0 ${display ? 'd-flex' : 'd-none'}`}>
+            <h6 className='fw-bold text-dark p-0 m-0 text-center py-2'>Consigue el curso ahora!</h6>
+            <button className='btn btn-dark w-50' type='button'>Comprar</button>
+        </div>
+    );
+}
+
 function NavegacionVideo() {
     const [descripcionGeneral, setDescrpcionGeneral] = useState(true);
     const [valoraciones, setValoraciones] = useState(false);
     const [certificado, setCertificado] = useState(false);
     const [contenidoCurso, setContenidoCurso] = useState(false);
+    const [comprar, setComprar] = useState(false);
 
     return (
         <div className='bg-transparent d-flex flex-column justify-content-center py-2'>
             <div className='row p-0 m-0 w-100'>
-                <div className='col-3 h-100 p-0 m-0'>
+                <div className='col-2 h-100 p-0 m-0'>
                     <h6
                         onClick={() => {
                             setDescrpcionGeneral(true);
                             setValoraciones(false);
                             setCertificado(false);
                             setContenidoCurso(false);
+                            setComprar(false);
                         }}
                         className={`
                 text-center 
@@ -662,13 +673,14 @@ function NavegacionVideo() {
                         Descripcion general
                     </h6>
                 </div>
-                <div className='col-3 p-0 m-0'>
+                <div className='col-2 p-0 m-0'>
                     <h6
                         onClick={() => {
                             setDescrpcionGeneral(false);
                             setValoraciones(false);
                             setCertificado(false);
                             setContenidoCurso(true);
+                            setComprar(false);
                         }}
                         className={`
                 text-center 
@@ -680,13 +692,14 @@ function NavegacionVideo() {
                         Contenido del curso
                     </h6>
                 </div>
-                <div className='col-3 p-0 m-0'>
+                <div className='col-2 p-0 m-0'>
                     <h6
                         onClick={() => {
                             setDescrpcionGeneral(false);
                             setValoraciones(true);
                             setCertificado(false);
                             setContenidoCurso(false);
+                            setComprar(false);
                         }}
                         className={`
                 text-center 
@@ -698,13 +711,14 @@ function NavegacionVideo() {
                         Valoraciones
                     </h6>
                 </div>
-                <div className='col-3 p-0 m-0'>
+                <div className='col-2 p-0 m-0'>
                     <h6
                         onClick={() => {
                             setDescrpcionGeneral(false);
                             setValoraciones(false);
                             setCertificado(true);
                             setContenidoCurso(false);
+                            setComprar(false);
                         }}
                         className={`
                 text-center 
@@ -714,6 +728,25 @@ function NavegacionVideo() {
                 fw-bold 
                 m-0 texto-navegacion ${certificado ? 'texto-navegacion-click' : null}`}>
                         Certificado
+                    </h6>
+                </div>
+                <div className='col-2 p-0 m-0'>
+                    <h6
+                        onClick={() => {
+                            setDescrpcionGeneral(false);
+                            setValoraciones(false);
+                            setCertificado(false);
+                            setContenidoCurso(false);
+                            setComprar(true);
+                        }}
+                        className={`
+                text-center 
+                form-text 
+                text-secondary 
+                fs-6 
+                fw-bold 
+                m-0 texto-navegacion ${comprar ? 'texto-navegacion-click' : null}`}>
+                        Comprar
                     </h6>
                 </div>
             </div>
@@ -729,6 +762,7 @@ function NavegacionVideo() {
                     porcentajeCuatroEstrella={"5%"}
                     porcentajeCincoEstrella={"70%"} />
                 <Certificado display={certificado} />
+                <Comprar display={comprar} />
             </div>
         </div>);
 }
