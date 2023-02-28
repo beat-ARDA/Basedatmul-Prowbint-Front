@@ -1,5 +1,6 @@
 import { React, useSatate } from 'react';
 import './ventas.css';
+import { Link } from 'react-router-dom';
 
 function ItemCursoVentas({ curso, cantidadAlumnos, nivelPromedio, totalCurso }) {
     return (
@@ -114,9 +115,11 @@ function ListaAlumnosVentas() {
                     id="curso-ventas">
                     <option defaultValue={"none"}>Selecciona un curso</option>
                     <option value="React">React</option>
-
                 </select>
-                <button className="btn btn-dark text-white fw-bold w-25 h-75">Desactivar curso</button>
+                <button className="btn btn-danger text-white fw-bold w-25 h-75">Desactivar curso</button>
+                <Link className="btn btn-dark text-white fw-bold w-25 h-75" to="/crear-curso">
+                    <button>Crear curso</button>
+                </Link>
             </div>
             <div className='row w-100 d-flex justify-content-center align-items border-bottom border-dark'>
                 <div className='col-1 d-flex justify-content-center align-items-center'>

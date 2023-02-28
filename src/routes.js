@@ -10,6 +10,7 @@ import Messages from './components/messages/messages';
 import Categorias from './components/categorias/categorias';
 import Kardex from './components/kardex/kardex.jsx';
 import Ventas from './components/ventas/ventas';
+import CrearCurso from './components/crear-curso/crear-curso';
 
 export default function Router() {
     return (
@@ -21,9 +22,10 @@ export default function Router() {
                 <Route path='perfil' element={<Perfil />} />
                 <Route path='curso' element={<Curso />} />
                 <Route path="messages" element={<Messages />} />
-                <Route path="categorias" element={<Categorias/>} />
-                <Route path="mis-cursos" element={<Kardex/>} />
-                <Route path="ventas" element={<Ventas/>} />
+                <Route path="categorias" element={<Categorias />} />
+                <Route path="mis-cursos" element={<Kardex />} />
+                <Route path="ventas" element={<Ventas />} />
+                <Route path="crear-curso" element={<CrearCurso />} />
                 <Route path='*' element={<ErrorPage />} />
             </Route>
         </Routes>
