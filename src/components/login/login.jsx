@@ -3,8 +3,17 @@ import { Link } from "react-router-dom";
 import './login.css';
 
 function Login() {
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        fetch('http://localhost:3000/api/user')           //api for the get request
+            .then(response => response.text())
+            .then(data => console.log(data))
+    };
+
     return (
-        <form className="d-flex flex-column w-100 h-75 align-items-center justify-content-center login-padre" action="#">
+        <form onSubmit={handleSubmit} className="d-flex flex-column w-100 h-75 align-items-center justify-content-center login-padre" action="#">
             <h5>¡Ingresa tu cuenta de cursos!</h5>
             <svg
                 className="login-icon mb-3"
