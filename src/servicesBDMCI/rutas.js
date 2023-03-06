@@ -1,0 +1,1 @@
+export const usuariosPath = 'http://localhost/api/usuarios';

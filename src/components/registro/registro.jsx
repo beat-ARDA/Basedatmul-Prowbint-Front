@@ -98,6 +98,18 @@ export default function Registro() {
         return comprobacion;
     }
 
+    const handleRegister = (event) => {
+        event.preventDefault();
+        const data = new FormData(document.getElementById('registerForm'));
+        
+        // fetch('http://localhost/BDMCI-API/controllers/userRegister.php', {
+        //     method: 'POST',
+        //     body: data
+        // })
+        //     .then(response => response.text())
+        //     .then(data => console.log(JSON.parse(data)))
+    };
+
     const [nombresCompleto, setNombresCompleto] = useState(false);
     const [apellidosCompleto, setApellidosCompleto] = useState(false);
     const [fechaCompleto, setFechaCompleto] = useState(false);
@@ -118,7 +130,7 @@ export default function Registro() {
 
     return (
         <>
-            <form onSubmit={handleSubmit} className='w-100 padre-registro'>
+            <form id="registerForm" onSubmit={handleRegister} className='w-100 padre-registro'>
                 <div className='row m-0 pb-1'>
                     <div className='col-12 m-0 p-0 d-flex justify-content-center align-items-center'>
                         <h4 className='fw-bold'>Empieza hoy con tu cuenta de cursos!</h4>
@@ -133,7 +145,7 @@ export default function Registro() {
                                 e.target.value ? setNombresCompleto(validarNombres(e.target.value)) : setNombresCompleto(false);
                             }}
                             aria-describedby="reglas-nombres"
-                            name="nombres"
+                            name="firstNames"
                             className='form-control'
                             type={"text"}
                             placeholder="Nombres..."
@@ -152,7 +164,7 @@ export default function Registro() {
                                 e.target.value ? setApellidosCompleto(validarNombres(e.target.value)) : setApellidosCompleto(false);
                             }}
                             aria-describedby="reglas-apellidos"
-                            name="apellidos"
+                            name="lastNames"
                             className='form-control'
                             type={"text"}
                             placeholder="Apellidos..." />
@@ -173,7 +185,7 @@ export default function Registro() {
                             aria-describedby="reglas-fecha-nacmiento"
                             className='form-control'
                             type="date"
-                            name="Fecha nacimiento"
+                            name="birthDate"
                         />
                     </div>
                     <div id="reglas-fecha-nacmiento" className={`form-text ${fechaCompleto ? 'text-success' : 'text-danger'}`}>
@@ -189,7 +201,7 @@ export default function Registro() {
                             className="d-none"
                             id="imagen-perfil"
                             accept="image/png, image/jpg, image/jpeg"
-                            name="imagen-perfil"
+                            name="imageProfile"
                             type="file" />
                         <label id="imagen-perfil-fake" className="btn btn-dark" htmlFor="imagen-perfil">Selecciona una imagen de perfil</label>
                     </div>
@@ -214,7 +226,7 @@ export default function Registro() {
                             className="form-control"
                             type="email"
                             id="correo"
-                            name="correo" />
+                            name="email" />
                     </div>
                     <div id="reglas-correo" className={`form-text ${correoCompleto ? 'text-success' : 'text-danger'}`}>
                         {correoCompleto ? '¡Correo valido!' : 'Introduce un correo valido'}
@@ -235,7 +247,7 @@ export default function Registro() {
                             className="form-control"
                             type="password"
                             id="contraseña"
-                            name="contraseña" />
+                            name="password" />
                     </div>
                     <div id="reglas-contraseña" className={`form-text ${contraseñaCompleto ? 'text-success' : 'text-danger'}`}>
                         {contraseñaCompleto ? '¡Contraseña valida!' : '8 caracteres al menos, una mayuscula, un caracter especial y un numero al menos.'}
@@ -253,7 +265,7 @@ export default function Registro() {
                             aria-describedby="reglas-tipo-usuario"
                             className="form-select text-secondary"
                             aria-label="Tipo de usuario"
-                            name="tipo-usuario">
+                            name="userType">
                             <option defaultValue={"none"}>Selecciona el tipo de usuario</option>
                             <option value="Alumno">Alumno</option>
                             <option value="Instructor">Instructor</option>
@@ -275,7 +287,7 @@ export default function Registro() {
                             aria-describedby="reglas-genero"
                             className="form-select text-secondary"
                             aria-label="Tipo de usuario"
-                            name="tipo-usuario">
+                            name="gender">
                             <option defaultValue={"none"}>Selecciona un genero</option>
                             <option value="Masculino">Masculino</option>
                             <option value="femenino">Femenino</option>
