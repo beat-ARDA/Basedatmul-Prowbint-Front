@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import './header.css'
 import { Link, useNavigate } from "react-router-dom";
 
@@ -6,7 +6,11 @@ function Header() {
 
     const navigate = useNavigate();
     const [mobileActive, setMobileActive] = useState(false);
-    const [sesionActive, setSesionActive] = useState(true);
+    const [sesionActive, setSesionActive] = useState(false);
+
+    useEffect(() => {
+        localStorage.getItem('token') ? setSesionActive(true) : null;
+    }, []);
 
     return (
         <>
@@ -272,7 +276,11 @@ function Header() {
                                         </div>
                                     </div>
                                     <div className="row pb-2 m-0">
-                                        <div onClick={() => navigate("/")} className="col-xl-12 d-flex justify-content-between perfil-item">
+                                        <div onClick={() => {
+                                            localStorage.removeItem('token');
+                                            location.href = '/ingresar';
+
+                                        }} className="col-xl-12 d-flex justify-content-between perfil-item">
                                             <li>Cerrar sesion</li>
                                             <svg
                                                 className="categoria-icon"
@@ -492,7 +500,10 @@ function Header() {
                                                 </div>
                                             </div>
                                             <div className="row pb-2 m-0">
-                                                <div onClick={() => navigate("/")} className="col-xl-12 d-flex justify-content-between perfil-item">
+                                                <div onClick={() => {
+                                                    localStorage.removeItem('token');
+                                                    location.href = '/ingresar';
+                                                }} className="col-xl-12 d-flex justify-content-between perfil-item">
                                                     <li>Cerrar sesion</li>
                                                     <svg
                                                         className="categoria-icon"

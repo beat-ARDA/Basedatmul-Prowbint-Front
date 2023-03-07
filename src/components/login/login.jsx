@@ -1,9 +1,11 @@
-import { React, useState } from "react";
-import { Link } from "react-router-dom";
-import { handleLogIn } from "../../servicesBDMCI/usuarios";
+import { React, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import './login.css';
 
 function Login() {
+    const navigate = useNavigate();
+    const [sesionValida, setSesionValida] = useState(false);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         fetch('http://localhost:3000/api/user')           //api for the get request
@@ -15,13 +17,22 @@ function Login() {
         event.preventDefault();
         const data = new FormData(document.getElementById('loginForm'));
 
-        fetch('http://localhost/BDMCI-API/controllers/users.php', {
+        fetch('http://localhost/BDMCI-API/controllers/userInitSesion.php', {
             method: 'POST',
             body: data
         })
             .then(response => response.text())
-            .then(data => console.log(JSON.parse(data)))
+            .then(data => {
+                console.log(JSON.parse(data));
+                JSON.parse(data).token ? localStorage.setItem('token', JSON.parse(data).token) : null;
+                JSON.parse(data).token ? setSesionValida(true) : null;
+            })
+        // .then(data => console.log(data))
     };
+
+    useEffect(() => {
+        sesionValida ? location.href = '/' : null;
+    });
 
     return (
         <form

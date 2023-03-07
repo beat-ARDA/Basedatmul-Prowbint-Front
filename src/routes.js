@@ -11,21 +11,24 @@ import Categorias from './components/categorias/categorias';
 import Kardex from './components/kardex/kardex.jsx';
 import Ventas from './components/ventas/ventas';
 import CrearCurso from './components/crear-curso/crear-curso';
+import { RouteGuard } from './components/RouteGuard';
 
 export default function Router() {
     return (
         <Routes>
             <Route path='/' element={<Layout />} >
                 <Route index element={<Dashboard />} />
-                <Route path='ingresar' element={<Login />} />
                 <Route path='registrarse' element={<Registro />} />
-                <Route path='perfil' element={<Perfil />} />
-                <Route path='curso' element={<Curso />} />
-                <Route path="messages" element={<Messages />} />
-                <Route path="categorias" element={<Categorias />} />
-                <Route path="mis-cursos" element={<Kardex />} />
-                <Route path="ventas" element={<Ventas />} />
-                <Route path="crear-curso" element={<CrearCurso />} />
+                <Route path='ingresar' element={<Login />} />
+                <Route element={<RouteGuard />}>
+                    <Route path='perfil' element={<Perfil />} />
+                    <Route path='curso' element={<Curso />} />
+                    <Route path="messages" element={<Messages />} />
+                    <Route path="categorias" element={<Categorias />} />
+                    <Route path="mis-cursos" element={<Kardex />} />
+                    <Route path="ventas" element={<Ventas />} />
+                    <Route path="crear-curso" element={<CrearCurso />} />
+                </Route>
                 <Route path='*' element={<ErrorPage />} />
             </Route>
         </Routes>
