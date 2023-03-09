@@ -1,10 +1,9 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import './perfil.css';
 import perfilImageVacia from '../../images/perfilSola.jpg'
 import { useNavigate } from 'react-router-dom';
 
 export default function Perfil() {
-
     const regexNombres = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+(\s[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/;
     const regexCorreo = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
     const regexContraseña = /^(?=(?:.*\d))(?=.*[A-Z])(?=.*[a-z])(?=.*[.,*!?¿¡/#$%&])\S{8,64}$/;
@@ -108,6 +107,24 @@ export default function Perfil() {
     function validarNombres(nombres) {
         return regexNombres.test(nombres) ? true : false;
     }
+
+    async function handleGetUserBDM() {
+        await fetch('http://localhost/BDMCI-API/controllers/users.php?' + `/${localStorage.getItem('userId')}`, {
+            method: 'GET',
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log("estoy aqui")
+                console.log(data);
+                // dataJson.token ? localStorage.setItem('token', dataJson.token) : null;
+                // dataJson.token ? setSesionValida(true) : null;
+                // setMensajeApi(dataJson.message ? dataJson.message : null);
+            });
+    };
+
+    useEffect(() => {
+        handleGetUserBDM();
+    }, []);
 
     return (
         <form onSubmit={handleSubmit} className='container-fluid perfil-padre px-xl-4 pb-2'>

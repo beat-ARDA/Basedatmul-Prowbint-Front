@@ -78,10 +78,10 @@ function Login() {
                     dataJson.token ? localStorage.setItem('token', dataJson.token) : null;
                     dataJson.token ? setSesionValida(true) : null;
                     setMensajeApi(dataJson.message ? dataJson.message : null);
+                    dataJson.userId ? localStorage.setItem('userId', dataJson.userId) : null;
                 });
         }
-        else{setMensajeApi('Te faltan campos por rellenar')}
-        // .then(data => console.log(data))
+        else { setMensajeApi('Te faltan campos por rellenar'); }
     };
 
     useEffect(() => {

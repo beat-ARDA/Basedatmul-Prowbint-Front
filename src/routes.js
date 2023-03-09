@@ -23,7 +23,7 @@ export default function Router() {
                     <Route path='ingresar' element={<Login />} />
                 </Route>
                 <Route element={<RouteGuard sesion={false} />}>
-                    <Route path='perfil' element={<Perfil />} />
+                    <Route path='perfil/:userId' element={<Perfil />} />
                     <Route path='curso' element={<Curso />} />
                     <Route path="messages" element={<Messages />} />
                     <Route path="categorias" element={<Categorias />} />

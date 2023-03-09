@@ -234,11 +234,11 @@ function Header() {
                                 <Link to="/mis-cursos" className="text-black">Mis cursos</Link>
                             </div>
                             <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0 perfil-menu">
-                                <div onClick={() => navigate("perfil")} className="perfil-image p-0 m-0"></div>
+                                <div onClick={() => navigate(`/perfil/${localStorage.getItem('userId')}`)} className="perfil-image p-0 m-0"></div>
                                 <ul className="lista-perfil w-25 p-2 mx-2">
                                     <div className="row pb-2 m-0">
                                         <div
-                                            onClick={() => navigate("/perfil")}
+                                            onClick={() => navigate(`/perfil/${localStorage.getItem('userId')}`)}
                                             className="col-xl-12 d-flex justify-content-between perfil-item">
                                             <li>Perfil</li>
                                             <svg
@@ -475,7 +475,7 @@ function Header() {
                                         <ul className="lista-perfil-mobile w-25 p-2 mx-2">
                                             <div className="row pb-2 m-0">
                                                 <div
-                                                    onClick={() => navigate("/perfil")}
+                                                    onClick={() => navigate(`/perfil/${localStorage.getItem('userId')}`)}
                                                     className="col-xl-12 d-flex justify-content-between perfil-item">
                                                     <li>Perfil</li>
                                                     <svg
@@ -516,7 +516,7 @@ function Header() {
                                         </ul>
                                     </div>
                                     <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-1">
-                                        <Link to="/perfil" className="text-black">Alvaro Ramses Duron Alejo</Link>
+                                        <Link to="/perfil/:userId" className="text-black">Alvaro Ramses Duron Alejo</Link>
                                     </div>
                                     <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-1">
                                         <Link to="/mis-cursos" className="text-black">Mis cursos</Link>
