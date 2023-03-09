@@ -1,9 +1,9 @@
 import { React, useEffect, useState } from "react";
-import './header.css'
+import './header.css';
 import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
-
+    
     const navigate = useNavigate();
     const [mobileActive, setMobileActive] = useState(false);
     const [sesionActive, setSesionActive] = useState(false);
