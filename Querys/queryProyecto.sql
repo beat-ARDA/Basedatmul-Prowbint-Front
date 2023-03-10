@@ -46,6 +46,46 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE sp_ActualizarUsuario(
+IN _userId INT,
+IN _email VARCHAR(50), 
+IN _pass VARCHAR(100), 
+IN _userType VARCHAR(50), 
+IN _firstNames VARCHAR(100), 
+IN _lastNames VARCHAR(100), 
+IN _imageProfile LONGBLOB, 
+IN _gender VARCHAR(10), 
+IN _birthDate DATE)
+BEGIN
+IF _imageProfile <> '' THEN 
+   UPDATE users SET 
+   email = _email, 
+   pass = _pass, 
+   userType = _userType, 
+   firstNames = _firstNames, 
+   lastNames = _lastNAmes, 
+   imageProfile = _imageProfile, 
+   gender = _gender, 
+   birthDate = _birthDate 
+   WHERE userId = _userId;
+END IF;
+
+IF _imageProfile = '' THEN 
+   UPDATE users SET 
+   email = _email, 
+   pass = _pass, 
+   userType = _userType, 
+   firstNames = _firstNames, 
+   lastNames = _lastNAmes, 
+   gender = _gender, 
+   birthDate = _birthDate 
+   WHERE userId = _userId;
+END IF;
+  
+END //
+DELIMITER ;
+
 CALL sp_LogInPassword('alvaro.duronalj@uanl.edu.mx', '123');
 CALL sp_LogInEmail('alvaro.duronalj@uanl.edu.mx');
 CALL sp_ObtenerUsuarioPorId(1);
@@ -59,3 +99,7 @@ UPDATE users SET firstNames = 'Alvaro Ramses' WHERE userId = 1;
 UPDATE users SET birthDate = '1996-05-17' WHERE userId = 1;
 UPDATE users SET userType = 'Instructor' WHERE userId = 1;
 UPDATE users SET gender = 'Masculino' WHERE userId = 1;
+UPDATE users SET imageProfile = '' WHERE userId = 1;
+
+ALTER TABLE users   
+MODIFY imageProfile LONGBLOB; 

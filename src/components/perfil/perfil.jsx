@@ -9,13 +9,13 @@ export default function Perfil() {
     const regexContraseña = /^(?=(?:.*\d))(?=.*[A-Z])(?=.*[a-z])(?=.*[.,*!?¿¡/#$%&])\S{8,64}$/;
 
     const [nombresPerfil, setNombresPerfil] = useState('');
-    const [apellidosPerfil, setApellidosPerfil] = useState('Duron Alejo');
-    const [fechaNacimientoPerfil, setFechaNacimientoPerfil] = useState('1996-05-17');
+    const [apellidosPerfil, setApellidosPerfil] = useState('');
+    const [fechaNacimientoPerfil, setFechaNacimientoPerfil] = useState('');
     const [imagenPerfil, setImagenPerfil] = useState('');
-    const [correoPerfil, setCorreoPerfil] = useState('alvaro_07051@outlook.com');
-    const [contraseñaPerfil, setContraseñaPerfil] = useState('LinkinBeatlesBu$1');
-    const [tipoUsuarioPerfil, setTipoUsuarioPerfil] = useState('Alumno');
-    const [generoPerfil, setGeneroPerfil] = useState('Masculino');
+    const [correoPerfil, setCorreoPerfil] = useState('');
+    const [contraseñaPerfil, setContraseñaPerfil] = useState('');
+    const [tipoUsuarioPerfil, setTipoUsuarioPerfil] = useState('');
+    const [generoPerfil, setGeneroPerfil] = useState('');
     const [textoModal, setTextoModal] = useState('');
 
     const [nombresPerfilBool, setNombresPerfilBool] = useState(true);
@@ -101,6 +101,16 @@ export default function Perfil() {
                 contraseñaPerfilBool &&
                 tipoUsuarioPerfilBool &&
                 generoPerfilBool ? true : false;
+        const data = new FormData(document.getElementById('perfilForm'));
+        fetch('http://localhost/BDMCI-API/controllers/users.php/' + `${localStorage.getItem('userId')}`, {
+            method: 'POST',
+            body: data,
+            dataType: "json"
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+            });
 
         comprobacion ? setTextoModal("Registro actualizado") : setTextoModal("Faltan campos por rellenar");
         return comprobacion;
@@ -111,12 +121,22 @@ export default function Perfil() {
     }
 
     async function handleGetUserBDM() {
-        await fetch('http://localhost/BDMCI-API/controllers/users.php?' + `/${localStorage.getItem('userId')}`, {
+        await fetch('http://localhost/BDMCI-API/controllers/users.php/' + `${localStorage.getItem('userId')}`, {
             method: 'GET',
         })
             .then(response => response.text())
             .then(data => {
-                setDataPerfil(JSON.parse(data));
+                console.log(data);
+                let jsonData = JSON.parse(data);
+                setDataPerfil(jsonData);
+                setImagenPerfil(`data:image/jpeg;base64,${JSON.parse(data).user.imageProfile}`);
+                setNombresPerfil(jsonData.user.firstNames);
+                setApellidosPerfil(jsonData.user.lastNames);
+                setCorreoPerfil(jsonData.user.email);
+                setContraseñaPerfil(jsonData.user.pass);
+                setGeneroPerfil(jsonData.user.gender);
+                setTipoUsuarioPerfil(jsonData.user.userType);
+                setFechaNacimientoPerfil(jsonData.user.birthDate);
             });
     };
 
@@ -124,10 +144,8 @@ export default function Perfil() {
         handleGetUserBDM();
     }, []);
     if (dataPerfil) {
-        console.log(dataPerfil);
         return (
-
-            <form onSubmit={handleSubmit} className='container-fluid perfil-padre px-xl-4 pb-2'>
+            <form id='perfilForm' encType="multipart/form-data" onSubmit={handleSubmit} className='container-fluid perfil-padre px-xl-4 pb-2'>
                 <div className='row d-flex flex-column justify-content-center align-items-center'>
                     <div className='col-12 d-flex justify-content-center pt-1'>
                         <div className='row d-flex flex-row p-0 m-0'>
@@ -177,7 +195,7 @@ export default function Perfil() {
                             name="nombresPerfil"
                             id="nombresPerfil"
                             className='form-control'
-                            value={dataPerfil.user.firstNames}
+                            value={nombresPerfil}
                             onInput={e => {
                                 e.target.value == " " ? setNombresPerfil("") : setNombresPerfil(e.target.value.replace(/(\s{2,})/g, ' '));
                                 e.target.value ? setNombresPerfilBool(validarNombres(e.target.value)) : setNombresPerfilBool(false);
@@ -200,7 +218,7 @@ export default function Perfil() {
                             name="apellidosPerfil"
                             id="apellidosPerfil"
                             className='form-control'
-                            value={dataPerfil.user.lastNames}
+                            value={apellidosPerfil}
                             type="text"
                             onInput={e => {
                                 e.target.value == " " ? setApellidosPerfil("") : setApellidosPerfil(e.target.value.replace(/(\s{2,})/g, ' '));
@@ -219,7 +237,7 @@ export default function Perfil() {
                     </div>
                     <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                         <input
-                            value={dataPerfil.user.birthDate}
+                            value={fechaNacimientoPerfil}
                             max={maxFechaNacimiento()}
                             name="fechaNacimientoPerfil"
                             id="fechaNacimientoPerfil"
@@ -244,7 +262,7 @@ export default function Perfil() {
                     </div>
                     <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                         <input
-                            value={dataPerfil.user.email}
+                            value={correoPerfil}
                             onChange={(e) => setCorreoPerfil(e.target.value)}
                             onInput={(e) => {
                                 e.target.value ?
@@ -274,7 +292,7 @@ export default function Perfil() {
                             name="contraseñaPerfil"
                             id="contraseñaPerfil"
                             className='form-control'
-                            value={dataPerfil.user.pass}
+                            value={contraseñaPerfil}
                             type="password"
                             onChange={(e) => setContraseñaPerfil(e.target.value)}
                             onInput={e => {
@@ -296,14 +314,14 @@ export default function Perfil() {
                     </div>
                     <div className='col-xl-11 col-9 d-flex justify-content-center align-items-center p-0 m-0'>
                         <select
-                        
+
                             onChange={(e) => setTipoUsuarioPerfil(e.target.value)}
                             onInput={e => {
                                 e.target.value && e.target.value != "Selecciona el tipo de usuario" ?
                                     setTipoUsuarioPerfilBool(true) :
                                     setTipoUsuarioPerfilBool(false)
                             }}
-                            defaultValue={dataPerfil.user.userType}
+                            defaultValue={tipoUsuarioPerfil}
                             aria-describedby="reglas-tipo-usuario-perfil"
                             className="form-select text-secondary"
                             aria-label="Tipo de usuario"
@@ -332,7 +350,7 @@ export default function Perfil() {
                                     setGeneroPerfilBool(true) :
                                     setGeneroPerfilBool(false)
                             }}
-                            defaultValue={dataPerfil.user.gender}
+                            defaultValue={generoPerfil}
                             aria-describedby="reglas-genero-perfil"
                             className="form-select text-secondary"
                             aria-label="Genero"
