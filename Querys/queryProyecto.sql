@@ -56,9 +56,11 @@ IN _firstNames VARCHAR(100),
 IN _lastNames VARCHAR(100), 
 IN _imageProfile LONGBLOB, 
 IN _gender VARCHAR(10), 
-IN _birthDate DATE)
+IN _birthDate DATE,
+IN _borroImagen BOOLEAN)
 BEGIN
-IF _imageProfile <> '' THEN 
+
+IF _imageProfile <> '' OR _borroImagen THEN 
    UPDATE users SET 
    email = _email, 
    pass = _pass, 
@@ -70,8 +72,7 @@ IF _imageProfile <> '' THEN
    birthDate = _birthDate 
    WHERE userId = _userId;
 END IF;
-
-IF _imageProfile = '' THEN 
+IF _imageProfile = '' AND NOT _borroImagen THEN 
    UPDATE users SET 
    email = _email, 
    pass = _pass, 
@@ -82,7 +83,22 @@ IF _imageProfile = '' THEN
    birthDate = _birthDate 
    WHERE userId = _userId;
 END IF;
-  
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE sp_RegistrarUsuario(
+IN _email VARCHAR(50), 
+IN _pass VARCHAR(100), 
+IN _userType VARCHAR(50), 
+IN _firstNames VARCHAR(100), 
+IN _lastNames VARCHAR(100), 
+IN _imageProfile LONGBLOB, 
+IN _gender VARCHAR(10), 
+IN _birthDate DATE)
+BEGIN
+  INSERT INTO users (email, pass, userType, firstNames, lastNames, imageProfile, gender, birthdate)
+  VALUES (_email, _pass, _userType, _firstNames, _lastNames, _imageProfile, _gender, _birthDate);
 END //
 DELIMITER ;
 

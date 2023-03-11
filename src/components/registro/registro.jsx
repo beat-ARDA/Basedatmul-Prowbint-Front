@@ -1,13 +1,10 @@
 import { React, useState } from 'react';
 import './registro.css';
 import { useNavigate } from 'react-router-dom';
+import { PostUserProfile } from '../../servicesBDM/userService';
+import { regexNombres, regexCorreo, regexContraseña } from '../../helpers';
 
 export default function Registro() {
-
-    const regexNombres = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+(\s[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/;
-    const regexCorreo = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
-    const regexContraseña = /^(?=(?:.*\d))(?=.*[A-Z])(?=.*[a-z])(?=.*[.,*!?¿¡/#$%&])\S{8,64}$/;
-
     function validarNombres(nombres) {
         return regexNombres.test(nombres) ? true : false;
     }
@@ -89,27 +86,6 @@ export default function Registro() {
         return parametro;
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-
-        validacionesCampos() ? setTextoModal("Cuenta creada") : setTextoModal("Faltan campos por rellenar");
-
-        return comprobacion;
-    }
-
-    const handleRegister = (event) => {
-        event.preventDefault();
-        const data = new FormData(document.getElementById('registerForm'));
-        
-        // fetch('http://localhost/BDMCI-API/controllers/userRegister.php', {
-        //     method: 'POST',
-        //     body: data
-        // })
-        //     .then(response => response.text())
-        //     .then(data => console.log(JSON.parse(data)))
-    };
-
     const [nombresCompleto, setNombresCompleto] = useState(false);
     const [apellidosCompleto, setApellidosCompleto] = useState(false);
     const [fechaCompleto, setFechaCompleto] = useState(false);
@@ -130,7 +106,20 @@ export default function Registro() {
 
     return (
         <>
-            <form id="registerForm" onSubmit={handleRegister} className='w-100 padre-registro'>
+            <form
+                id="registerForm"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    const bodyData = new FormData(document.getElementById('registerForm'));
+                    validacionesCampos() ?
+                        PostUserProfile(bodyData).then(response => {
+                            setTextoModal(response.message);
+                            location.href = '/ingresar';
+                        })
+                        : setTextoModal('Faltan campos por rellenar');
+                }}
+                className='w-100 padre-registro'
+            >
                 <div className='row m-0 pb-1'>
                     <div className='col-12 m-0 p-0 d-flex justify-content-center align-items-center'>
                         <h4 className='fw-bold'>Empieza hoy con tu cuenta de cursos!</h4>
@@ -247,7 +236,7 @@ export default function Registro() {
                             className="form-control"
                             type="password"
                             id="contraseña"
-                            name="password" />
+                            name="pass" />
                     </div>
                     <div id="reglas-contraseña" className={`form-text ${contraseñaCompleto ? 'text-success' : 'text-danger'}`}>
                         {contraseñaCompleto ? '¡Contraseña valida!' : '8 caracteres al menos, una mayuscula, un caracter especial y un numero al menos.'}
@@ -290,7 +279,7 @@ export default function Registro() {
                             name="gender">
                             <option defaultValue={"none"}>Selecciona un genero</option>
                             <option value="Masculino">Masculino</option>
-                            <option value="femenino">Femenino</option>
+                            <option value="Femenino">Femenino</option>
                         </select>
                     </div>
                     <div id="reglas-genero" className={`form-text ${generoCompleto ? 'text-success' : 'text-danger'}`}>

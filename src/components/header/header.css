@@ -78,7 +78,6 @@
 }
 
 .perfil-image {
-    background-image: url("../../images/perfil.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -90,7 +89,6 @@
 }
 
 .perfil-image-mobile {
-    background-image: url("../../images/perfil.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

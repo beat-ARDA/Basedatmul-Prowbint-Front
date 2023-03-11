@@ -2,12 +2,10 @@ import { React, useState, useEffect } from 'react';
 import './perfil.css';
 import perfilImageVacia from '../../images/perfilSola.jpg'
 import { useNavigate } from 'react-router-dom';
+import { regexNombres, regexCorreo, regexContraseña } from '../../helpers';
+import { GetUserProfileBDM, UpdateUserProfileBDM } from '../../servicesBDM/userService';
 
 export default function Perfil() {
-    const regexNombres = /^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+(\s[a-zA-ZÀ-ÿ\u00f1\u00d1\s]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/;
-    const regexCorreo = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
-    const regexContraseña = /^(?=(?:.*\d))(?=.*[A-Z])(?=.*[a-z])(?=.*[.,*!?¿¡/#$%&])\S{8,64}$/;
-
     const [nombresPerfil, setNombresPerfil] = useState('');
     const [apellidosPerfil, setApellidosPerfil] = useState('');
     const [fechaNacimientoPerfil, setFechaNacimientoPerfil] = useState('');
@@ -17,7 +15,6 @@ export default function Perfil() {
     const [tipoUsuarioPerfil, setTipoUsuarioPerfil] = useState('');
     const [generoPerfil, setGeneroPerfil] = useState('');
     const [textoModal, setTextoModal] = useState('');
-
     const [nombresPerfilBool, setNombresPerfilBool] = useState(true);
     const [apellidosPerfilBool, setApellidosPerfilBool] = useState(true);
     const [fechaNacimientoPerfilBool, setFechaNacimientoPerfilBool] = useState(true);
@@ -26,10 +23,24 @@ export default function Perfil() {
     const [tipoUsuarioPerfilBool, setTipoUsuarioPerfilBool] = useState(true);
     const [generoPerfilBool, setGeneroPerfilBool] = useState(true);
     const [imagenPerfilBool, setImagenPerfilBool] = useState(true);
-
     const [dataPerfil, setDataPerfil] = useState();
+    const [borroImagen, setBorroImagen] = useState(false);
+    const [imagenServidor, setImagenServidor] = useState(true);
 
     const navigate = useNavigate();
+
+    function calcularEdad(fecha) {
+        var hoy = new Date();
+        var cumpleanos = new Date(fecha);
+        var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+        var m = hoy.getMonth() - cumpleanos.getMonth();
+
+        if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+            edad--;
+        }
+
+        return edad;
+    }
 
     function manejoImagenPerfil(e) {
         const archivo = e.target.files[0];
@@ -46,6 +57,8 @@ export default function Perfil() {
 
         const objectURL = URL.createObjectURL(archivo);
         setImagenPerfil(objectURL);
+        setBorroImagen(false);
+        setImagenServidor(false);
     }
 
     function maxFechaNacimiento() {
@@ -91,45 +104,16 @@ export default function Perfil() {
         return regexContraseña.test(contraseña) ? true : false;
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        let comprobacion =
-            nombresPerfilBool &&
-                apellidosPerfilBool &&
-                fechaNacimientoPerfilBool &&
-                correoPerfilBool &&
-                contraseñaPerfilBool &&
-                tipoUsuarioPerfilBool &&
-                generoPerfilBool ? true : false;
-        const data = new FormData(document.getElementById('perfilForm'));
-        fetch('http://localhost/BDMCI-API/controllers/users.php/' + `${localStorage.getItem('userId')}`, {
-            method: 'POST',
-            body: data,
-            dataType: "json"
-        })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data);
-            });
-
-        comprobacion ? setTextoModal("Registro actualizado") : setTextoModal("Faltan campos por rellenar");
-        return comprobacion;
-    }
-
     function validarNombres(nombres) {
         return regexNombres.test(nombres) ? true : false;
     }
 
-    async function handleGetUserBDM() {
-        await fetch('http://localhost/BDMCI-API/controllers/users.php/' + `${localStorage.getItem('userId')}`, {
-            method: 'GET',
-        })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data);
-                let jsonData = JSON.parse(data);
+    useEffect(() => {
+        //Obtener el perfil del usuario
+        GetUserProfileBDM()
+            .then(jsonData => {
                 setDataPerfil(jsonData);
-                setImagenPerfil(`data:image/jpeg;base64,${JSON.parse(data).user.imageProfile}`);
+                setImagenPerfil(jsonData.user.imageProfile);
                 setNombresPerfil(jsonData.user.firstNames);
                 setApellidosPerfil(jsonData.user.lastNames);
                 setCorreoPerfil(jsonData.user.email);
@@ -138,21 +122,39 @@ export default function Perfil() {
                 setTipoUsuarioPerfil(jsonData.user.userType);
                 setFechaNacimientoPerfil(jsonData.user.birthDate);
             });
-    };
-
-    useEffect(() => {
-        handleGetUserBDM();
     }, []);
+
     if (dataPerfil) {
         return (
-            <form id='perfilForm' encType="multipart/form-data" onSubmit={handleSubmit} className='container-fluid perfil-padre px-xl-4 pb-2'>
+            <form
+                id='perfilForm'
+                encType="multipart/form-data"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    let comprobacion =
+                        nombresPerfilBool &&
+                            apellidosPerfilBool &&
+                            fechaNacimientoPerfilBool &&
+                            correoPerfilBool &&
+                            contraseñaPerfilBool &&
+                            tipoUsuarioPerfilBool &&
+                            generoPerfilBool ? true : false;
+                    const bodyData = new FormData(document.getElementById('perfilForm'));
+
+                    bodyData.append('borroImagen', borroImagen ? true : false);
+
+                    comprobacion ? UpdateUserProfileBDM(bodyData).then(response => {
+                        setTextoModal(response.message);
+                    }) : setTextoModal("Faltan campos por rellenar");
+                }}
+                className='container-fluid perfil-padre px-xl-4 pb-2'>
                 <div className='row d-flex flex-column justify-content-center align-items-center'>
                     <div className='col-12 d-flex justify-content-center pt-1'>
                         <div className='row d-flex flex-row p-0 m-0'>
                             <div className='col-10 p-0 m-0'>
                                 <div
                                     className='perfil-imagen'
-                                    style={{ backgroundImage: `url(${imagenPerfil !== "" ? imagenPerfil : perfilImageVacia})` }}>
+                                    style={{ backgroundImage: `url(${imagenPerfil !== "" ? (imagenServidor ? `data:image/jpeg;base64,${imagenPerfil}` : imagenPerfil) : perfilImageVacia})` }}>
                                 </div>
                             </div>
                             <div className='col-2 p-0 m-0'>
@@ -160,6 +162,8 @@ export default function Perfil() {
                                     onClick={() => {
                                         setImagenPerfil('');
                                         setImagenPerfilBool(false);
+                                        setBorroImagen(true);
+                                        setImagenServidor(false);
                                     }}
                                     className='basura-icon'
                                     xmlns="http://www.w3.org/2000/svg"
@@ -170,7 +174,7 @@ export default function Perfil() {
                         </div>
                     </div>
                     <div className='col-12 d-flex justify-content-center align-items-center'>
-                        <h6 className='fw-bold p-0 m-0'>26 años</h6>
+                        <h6 className='fw-bold p-0 m-0'>{calcularEdad(dataPerfil.user.birthDate)} años</h6>
                     </div>
                     <div className='col-12 d-flex justify-content-center align-items-center'>
                         <input
@@ -377,15 +381,14 @@ export default function Perfil() {
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Error</h1>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Mensaje</h1>
+                                <button onClick={() => location.reload()} type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
                                 {textoModal}
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-dark" data-bs-dismiss="modal">Close</button>
-
+                                <button onClick={() => location.reload()} type="button" className="btn btn-dark" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
