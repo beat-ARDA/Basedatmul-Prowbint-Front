@@ -1,24 +1,3 @@
-CREATE DATABASE APICURSOS;
-USE APICURSOS;
-
-CREATE TABLE Users(
-    userId INT NOT NULL AUTO_INCREMENT,
-    email VARCHAR(50) NOT NULL,
-    pass VARCHAR(100) NOT NULL,
-    userType VARCHAR(50) NOT NULL,
-    firstNames VARCHAR(100) NOT NULL,
-    lastNames VARCHAR(100) NOT NULL,
-    imageProfile BLOB,
-    gender varchar(10) NOT NULL,
-    birthdate DATE NOT NULL,
-    registrationDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    dateUpdate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    attemps INT NOT NULL DEFAULT 0,
-    PRIMARY KEY (userId)
-);
-
-
-
 DELIMITER //
 CREATE PROCEDURE sp_LogInEmail(IN _email varchar(50))
 BEGIN
@@ -103,23 +82,3 @@ BEGIN
   VALUES (_email, _pass, _userType, _firstNames, _lastNames, _imageProfile, _gender, _birthDate);
 END //
 DELIMITER ;
-
-CALL sp_LogInPassword('alvaro.duronalj@uanl.edu.mx', '123');
-CALL sp_LogInEmail('alvaro.duronalj@uanl.edu.mx');
-CALL sp_ObtenerUsuarioPorId(1);
-
-INSERT INTO Users (email, pass, userType, firstNames, lastNames, gender, birthdate)
-VALUES ('alvaro.duronalj@uanl.edu.mx', '123', 'alumn', 'Alvaro Ramses', 'Duron Alejo', 'male', '1996-05-17');
-
-SELECT * FROM  Users;
-UPDATE users SET attemps = 0 WHERE email = 'alvaro.duronalj@uanl.edu.mx';
-UPDATE users SET firstNames = 'Alvaro Ramses' WHERE userId = 1;
-UPDATE users SET birthDate = '1996-05-17' WHERE userId = 1;
-UPDATE users SET userType = 'Instructor' WHERE userId = 1;
-UPDATE users SET gender = 'Masculino' WHERE userId = 1;
-UPDATE users SET imageProfile = '' WHERE userId = 1;
-
-DELETE from users WHERE userId = 2;
-
-ALTER TABLE users   
-MODIFY imageProfile LONGBLOB; 
