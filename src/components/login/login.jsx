@@ -23,7 +23,6 @@ function Login() {
         event.preventDefault();
         if (email != '' && password != '') {
             const data = new FormData(document.getElementById('loginForm'));
-
             fetch('http://localhost/BDMCI-API/controllers/userInitSesion.php', {
                 method: 'POST',
                 body: data
@@ -31,7 +30,6 @@ function Login() {
                 .then(response => response.text())
                 .then(data => {
                     let dataJson = JSON.parse(data);
-                    console.log(JSON.parse(data));
                     dataJson.token ? localStorage.setItem('token', dataJson.token) : null;
                     dataJson.token ? setSesionValida(true) : null;
                     setMensajeApi(dataJson.message ? dataJson.message : null);
@@ -47,9 +45,7 @@ function Login() {
         var bsToast = Toast.getInstance(myToast);
 
         if (!bsToast) {
-            // initialize Toast
             bsToast = new Toast(myToast, { autohide: false })
-            // hide after init
             bsToast.hide();
             toast = setToast(false);
         }

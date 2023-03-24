@@ -20,6 +20,7 @@ async function UpdateUserProfileBDM(bodyData) {
 }
 
 async function PostUserProfile(bodyData) {
+    console.log(bodyData);
     return await fetch(postUserProfile, {
         method: 'POST',
         body: bodyData,

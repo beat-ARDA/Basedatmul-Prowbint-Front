@@ -2,3 +2,29 @@
     position: absolute;
     top: 4rem;
 }
+
+#icono-add-curso {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+#icono-add-curso:hover {
+    background-color: whitesmoke;
+    cursor: pointer;
+}
+
+.icono-delete-nivel {
+    width: 1rem;
+    height: 1rem;
+}
+
+.icono-delete-nivel:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+}
+
+.table-style {
+    max-height: 100px;
+    overflow: auto;
+    display: inline-block;
+}

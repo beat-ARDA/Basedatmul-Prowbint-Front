@@ -233,7 +233,7 @@ function Header() {
                                     </Link>
                                 </div>
                                 <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
-                                 <small className="text-black fw-bold">{dataPerfil.user.firstNames + ' ' + dataPerfil.user.lastNames}</small>
+                                    <small className="text-black fw-bold">{dataPerfil.user.firstNames + ' ' + dataPerfil.user.lastNames}</small>
                                 </div>
                                 <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0 perfil-menu">
                                     <div
