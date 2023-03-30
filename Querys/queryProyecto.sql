@@ -104,7 +104,7 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL sp_LogInPassword('alvaro.duronalj@uanl.edu.mx', '123');
+CALL sp_LogInPassword('alvaro.duronalj@uanl.edu.mx', 'BeatSociety.162');
 CALL sp_LogInEmail('alvaro.duronalj@uanl.edu.mx');
 CALL sp_ObtenerUsuarioPorId(1);
 
