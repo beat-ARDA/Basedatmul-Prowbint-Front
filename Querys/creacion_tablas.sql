@@ -110,7 +110,7 @@ CREATE TABLE Mensajes(
 CREATE TABLE Comentarios(
     idComentario INT NOT NULL AUTO_INCREMENT,
     idCurso INT NOT NULL,
-    idUsuario INT NOT NULL,
+    idUsuario INT NOT NULL comment 'es el id del usuario que hace el comentario',
     comentario VARCHAR(500) NOT NULL,
     calificaion INT NOT NULL,
     fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -129,3 +129,6 @@ CREATE TABLE Videos(
     FOREIGN KEY (idSeccion) REFERENCES Secciones(idSecciones),
     FOREIGN KEY (idUsuario) REFERENCES users(userId)
 );
+
+select * from users;
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Pink$1624';

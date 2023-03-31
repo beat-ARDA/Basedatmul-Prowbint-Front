@@ -9,14 +9,32 @@ function Login() {
     const [mensajeApi, setMensajeApi] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [api, setApi] = useState('pw2');
 
     const toastRef = useRef();
 
-    const handleSubmit = (event) => {
+    const handleLogInPwa = (event) => {
         event.preventDefault();
-        fetch('http://localhost:3000/api/user')           //api for the get request
-            .then(response => response.text())
-            .then(data => console.log(data))
+        if (email != '' && password != '') {
+            const data = new FormData(document.getElementById('loginForm'));
+            fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                body: new URLSearchParams(data),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                }
+            })
+                .then(response => response.text())
+                .then(data => {
+                   
+                    let dataJson = JSON.parse(data);
+                    // dataJson.token ? localStorage.setItem('token', dataJson.token) : null;
+                    dataJson.token ? setSesionValida(true) : null;
+                    setMensajeApi(dataJson.message ? dataJson.message : null);
+                    dataJson.userId ? localStorage.setItem('userId', dataJson.userId) : null;
+                });
+        }
+        else { setMensajeApi('Te faltan campos por rellenar'); }
     };
 
     const handleLogInBDM = (event) => {
@@ -58,7 +76,7 @@ function Login() {
     return (
         <>
             <form
-                onSubmit={handleLogInBDM}
+                onSubmit={api == 'pw2' ? handleLogInPwa : handleLogInBDM}
                 className="d-flex flex-column w-100 h-75 align-items-center justify-content-center login-padre"
                 action="#"
                 id="loginForm">
