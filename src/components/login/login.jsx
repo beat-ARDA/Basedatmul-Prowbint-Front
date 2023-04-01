@@ -22,13 +22,13 @@ function Login() {
                 method: 'POST',
                 body: new URLSearchParams(data),
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'   
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
                 }
             })
                 .then(response => response.text())
                 .then(data => {
                     let dataJson = JSON.parse(data);
-                    localStorage.setItem('token', 'ASDFASDFASDFASDF');
+                    dataJson.token ? localStorage.setItem('token', 'ASDFASDFASDFASDF') : null;
                     dataJson.token ? setSesionValida(true) : null;
                     setMensajeApi(dataJson.message ? dataJson.message : null);
                     dataJson.userId ? localStorage.setItem('userId', dataJson.userId) : null;

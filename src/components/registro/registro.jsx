@@ -115,7 +115,10 @@ export default function Registro() {
                     const bodyData = new FormData(document.getElementById('registerForm'));
                     validacionesCampos() ?
                         (
-                            api == 'pw2' ? register(bodyData) :
+                            api == 'pw2' ? register(bodyData).then(response => {
+                                setTextoModal(response.message);
+                                location.href = '/ingresar';
+                            }) :
                                 PostUserProfile(bodyData).then(response => {
                                     setTextoModal(response.message);
                                     location.href = '/ingresar';
