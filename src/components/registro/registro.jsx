@@ -1,8 +1,9 @@
 import { React, useState } from 'react';
 import './registro.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useResolvedPath } from 'react-router-dom';
 import { PostUserProfile } from '../../servicesBDM/userService';
 import { regexNombres, regexCorreo, regexContraseña } from '../../helpers';
+import { register } from '../../servicesPw2/user';
 
 export default function Registro() {
     function validarNombres(nombres) {
@@ -101,6 +102,7 @@ export default function Registro() {
     const [correo, setCorreo] = useState('');
     const [contraseña, setContraseña] = useState('');
     const [textoModal, setTextoModal] = useState('');
+    const [api, setApi] = useState('pw2');
 
     const navigate = useNavigate();
 
@@ -112,10 +114,13 @@ export default function Registro() {
                     e.preventDefault();
                     const bodyData = new FormData(document.getElementById('registerForm'));
                     validacionesCampos() ?
-                        PostUserProfile(bodyData).then(response => {
-                            setTextoModal(response.message);
-                            location.href = '/ingresar';
-                        })
+                        (
+                            api == 'pw2' ? register(bodyData) :
+                                PostUserProfile(bodyData).then(response => {
+                                    setTextoModal(response.message);
+                                    location.href = '/ingresar';
+                                })
+                        )
                         : setTextoModal('Faltan campos por rellenar');
                 }}
                 className='w-100 padre-registro'

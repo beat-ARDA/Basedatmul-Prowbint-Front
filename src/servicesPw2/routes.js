@@ -1,0 +1,1 @@
+export const endRegister = 'http://localhost:3000/api/register';

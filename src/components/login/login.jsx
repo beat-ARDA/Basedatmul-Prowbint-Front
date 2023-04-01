@@ -4,6 +4,7 @@ import { Toast } from "bootstrap";
 import './login.css';
 
 function Login() {
+
     const [sesionValida, setSesionValida] = useState(false);
     var [toast, setToast] = useState(false);
     const [mensajeApi, setMensajeApi] = useState('');
@@ -21,14 +22,13 @@ function Login() {
                 method: 'POST',
                 body: new URLSearchParams(data),
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'   
                 }
             })
                 .then(response => response.text())
                 .then(data => {
-                   
                     let dataJson = JSON.parse(data);
-                    // dataJson.token ? localStorage.setItem('token', dataJson.token) : null;
+                    localStorage.setItem('token', 'ASDFASDFASDFASDF');
                     dataJson.token ? setSesionValida(true) : null;
                     setMensajeApi(dataJson.message ? dataJson.message : null);
                     dataJson.userId ? localStorage.setItem('userId', dataJson.userId) : null;

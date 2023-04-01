@@ -3,14 +3,14 @@ CREATE PROCEDURE sp_LogInEmail(IN _email varchar(50))
 BEGIN
     SELECT attemps FROM users WHERE email = _email;
 END //
-DELIMITER ;
+DELIMITER;
 
 DELIMITER //
 CREATE PROCEDURE sp_LogInPassword(IN emaiil varchar(50), IN _password varchar(50))
 BEGIN
     SELECT userId FROM users WHERE email = emaiil AND pass = _password;
 END //
-DELIMITER ;
+DELIMITER;
 
 DELIMITER //
 CREATE PROCEDURE sp_IncrementUserAttemps(IN _attemps INT, IN _email varchar(50))
@@ -82,3 +82,7 @@ BEGIN
   VALUES (_email, _pass, _userType, _firstNames, _lastNames, _imageProfile, _gender, _birthDate);
 END //
 DELIMITER ;
+
+select * from users;
+
+update users set attemps = 0 where userId = 1;
