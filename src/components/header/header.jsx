@@ -3,16 +3,18 @@ import './header.css';
 import { Link, useNavigate } from "react-router-dom";
 import { GetUserProfileBDM } from "../../servicesBDM/userService";
 import perfilImageVacia from '../../images/perfilSola.jpg';
+import { getUser } from "../../servicesPw2/user";
 
 function Header() {
     const navigate = useNavigate();
     const [mobileActive, setMobileActive] = useState(false);
     const [sesionActive, setSesionActive] = useState(false);
     const [dataPerfil, setDataPerfil] = useState();
+    const [api, setApi] = useState('pw2');
 
     useEffect(() => {
-        localStorage.getItem('userId') ? GetUserProfileBDM()
-            .then(response => { console.log(response); setDataPerfil(response) }) : null;
+        localStorage.getItem('userId') ? (api == 'pw2' ? getUser().then(response => { console.log(response); setDataPerfil(response) }) : GetUserProfileBDM()
+            .then(response => { console.log(response); setDataPerfil(response) })) : null;
 
         localStorage.getItem('token') ? setSesionActive(true) : null;
     }, []);

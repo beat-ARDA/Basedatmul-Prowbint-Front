@@ -4,6 +4,7 @@ import perfilImageVacia from '../../images/perfilSola.jpg'
 import { useNavigate } from 'react-router-dom';
 import { regexNombres, regexCorreo, regexContraseña } from '../../helpers';
 import { GetUserProfileBDM, UpdateUserProfileBDM } from '../../servicesBDM/userService';
+import { getUser } from '../../servicesPw2/user';
 
 export default function Perfil() {
     const [nombresPerfil, setNombresPerfil] = useState('');
@@ -26,6 +27,7 @@ export default function Perfil() {
     const [dataPerfil, setDataPerfil] = useState();
     const [borroImagen, setBorroImagen] = useState(false);
     const [imagenServidor, setImagenServidor] = useState(true);
+    const [api, setApi] = useState('pw2');
 
     const navigate = useNavigate();
 
@@ -110,18 +112,31 @@ export default function Perfil() {
 
     useEffect(() => {
         //Obtener el perfil del usuario
-        GetUserProfileBDM()
-            .then(jsonData => {
-                setDataPerfil(jsonData);
-                setImagenPerfil(jsonData.user.imageProfile);
-                setNombresPerfil(jsonData.user.firstNames);
-                setApellidosPerfil(jsonData.user.lastNames);
-                setCorreoPerfil(jsonData.user.email);
-                setContraseñaPerfil(jsonData.user.pass);
-                setGeneroPerfil(jsonData.user.gender);
-                setTipoUsuarioPerfil(jsonData.user.userType);
-                setFechaNacimientoPerfil(jsonData.user.birthDate);
-            });
+
+        api == 'pw2' ? getUser().then(jsonData => {
+            setDataPerfil(jsonData);
+            setImagenPerfil(jsonData.user.imageProfile);
+            setNombresPerfil(jsonData.user.firstNames);
+            setApellidosPerfil(jsonData.user.lastNames);
+            setCorreoPerfil(jsonData.user.email);
+            setContraseñaPerfil(jsonData.user.pass);
+            setGeneroPerfil(jsonData.user.gender);
+            setTipoUsuarioPerfil(jsonData.user.userType);
+            setFechaNacimientoPerfil(jsonData.user.birthDate);
+        }) :
+            GetUserProfileBDM()
+                .then(jsonData => {
+                    setDataPerfil(jsonData);
+                    setImagenPerfil(jsonData.user.imageProfile);
+                    setNombresPerfil(jsonData.user.firstNames);
+                    setApellidosPerfil(jsonData.user.lastNames);
+                    setCorreoPerfil(jsonData.user.email);
+                    setContraseñaPerfil(jsonData.user.pass);
+                    setGeneroPerfil(jsonData.user.gender);
+                    setTipoUsuarioPerfil(jsonData.user.userType);
+                    setFechaNacimientoPerfil(jsonData.user.birthDate);
+                });
+
     }, []);
 
     if (dataPerfil) {

@@ -1,4 +1,4 @@
-import { endRegister } from "./routes";
+import { endRegister, getUserProfile } from "./routes";
 
 async function register(bodyData) {
     console.log(bodyData);
@@ -15,4 +15,13 @@ async function register(bodyData) {
         .then(data => { console.log(data); return JSON.parse(data); });
 }
 
-export { register };
+async function getUser() {
+    return await fetch(getUserProfile, {
+        method: 'GET',
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data) })
+        .catch(error => console.warn(error));
+};
+
+export { register, getUser };
