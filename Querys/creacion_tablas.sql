@@ -129,6 +129,6 @@ CREATE TABLE Videos(
     FOREIGN KEY (idSeccion) REFERENCES Secciones(idSecciones),
     FOREIGN KEY (idUsuario) REFERENCES users(userId)
 );
-
+USE APICURSOS;
 select * from users;
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Pink$1624';

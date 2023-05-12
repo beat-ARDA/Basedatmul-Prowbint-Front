@@ -83,6 +83,18 @@ BEGIN
 END //
 DELIMITER ;
 
-select * from users;
+DELIMITER //
+CREATE PROCEDURE sp_InsertarCategoria(
+IN _descripcion VARCHAR(50),
+IN _nombre varchar(50))
+BEGIN
+  INSERT INTO categorias (descripcion, nombre)
+  VALUES (_descripcion, _nombre);
+END //
+DELIMITER ;
 
+CALL sp_InsertarCategoria('Descripction', 'Tecnologia');
+
+select * from users;
+USE APICURSOS;
 update users set attemps = 0 where userId = 1;

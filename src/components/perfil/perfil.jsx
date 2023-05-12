@@ -27,7 +27,7 @@ export default function Perfil() {
     const [dataPerfil, setDataPerfil] = useState();
     const [borroImagen, setBorroImagen] = useState(false);
     const [imagenServidor, setImagenServidor] = useState(true);
-    const [api, setApi] = useState('pw2');
+    const [api, setApi] = useState('bdm');
 
     const navigate = useNavigate();
 
@@ -136,7 +136,6 @@ export default function Perfil() {
                     setTipoUsuarioPerfil(jsonData.user.userType);
                     setFechaNacimientoPerfil(jsonData.user.birthDate);
                 });
-
     }, []);
 
     if (dataPerfil) {

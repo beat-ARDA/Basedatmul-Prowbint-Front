@@ -102,7 +102,7 @@ export default function Registro() {
     const [correo, setCorreo] = useState('');
     const [contraseña, setContraseña] = useState('');
     const [textoModal, setTextoModal] = useState('');
-    const [api, setApi] = useState('pw2');
+    const [api, setApi] = useState('bdm');
 
     const navigate = useNavigate();
 

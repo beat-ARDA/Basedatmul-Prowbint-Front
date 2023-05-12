@@ -1,1 +1,0 @@
-export const usuariosPath = 'http://localhost:3307/api/usuarios';

@@ -1,5 +1,6 @@
 import { React, useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { LogIn } from "../../servicesBDM/userService";
 import { Toast } from "bootstrap";
 import './login.css';
 
@@ -10,7 +11,7 @@ function Login() {
     const [mensajeApi, setMensajeApi] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [api, setApi] = useState('pw2');
+    const [api, setApi] = useState('bdm');
 
     const toastRef = useRef();
 
@@ -41,13 +42,9 @@ function Login() {
         event.preventDefault();
         if (email != '' && password != '') {
             const data = new FormData(document.getElementById('loginForm'));
-            fetch('http://localhost/BDMCI-API/controllers/userInitSesion.php', {
-                method: 'POST',
-                body: data
-            })
-                .then(response => response.text())
+            LogIn(data)
                 .then(data => {
-                    let dataJson = JSON.parse(data);
+                    let dataJson = data;
                     dataJson.token ? localStorage.setItem('token', dataJson.token) : null;
                     dataJson.token ? setSesionValida(true) : null;
                     setMensajeApi(dataJson.message ? dataJson.message : null);
@@ -76,7 +73,7 @@ function Login() {
     return (
         <>
             <form
-                onSubmit={api == 'pw2' ? handleLogInPwa : handleLogInBDM}
+                onSubmit={api === 'pw2' ? handleLogInPwa : handleLogInBDM}
                 className="d-flex flex-column w-100 h-75 align-items-center justify-content-center login-padre"
                 action="#"
                 id="loginForm">

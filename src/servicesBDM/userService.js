@@ -1,7 +1,5 @@
-import { getUserProfileById, postUserProfile, updateUserProfileById } from "../components/apiRoutes";
-
 async function GetUserProfileBDM() {
-    return await fetch(getUserProfileById, {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/users.php/${localStorage.getItem('userId')}`, {
         method: 'GET',
     })
         .then(response => response.text())
@@ -10,23 +8,33 @@ async function GetUserProfileBDM() {
 };
 
 async function UpdateUserProfileBDM(bodyData) {
-    return await fetch(updateUserProfileById, {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/users.php/${localStorage.getItem('userId')}`, {
         method: 'POST',
         body: bodyData,
         dataType: "json"
     })
         .then(response => response.text())
-        .then(data => { console.log(data); return JSON.parse(data); });
+        .then(data => { return JSON.parse(data); });
+}
+
+async function LogIn(bodyData) {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/userInitSesion.php`, {
+        method: 'POST',
+        body: bodyData,
+        dataType: "json"
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data); });
 }
 
 async function PostUserProfile(bodyData) {
-    return await fetch(postUserProfile, {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/userRegister.php`, {
         method: 'POST',
         body: bodyData,
         dataType: "json"
     })
         .then(response => response.text())
-        .then(data => { console.log(data); return JSON.parse(data); });
+        .then(data => { return JSON.parse(data); });
 }
 
-export { GetUserProfileBDM, UpdateUserProfileBDM, PostUserProfile }
+export { GetUserProfileBDM, UpdateUserProfileBDM, PostUserProfile, LogIn }
