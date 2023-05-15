@@ -1,7 +1,9 @@
 import { React, useState } from 'react';
 import './curso.css';
 import perfil from '../../images/perfil.jpg';
-
+import { useEffect } from 'react';
+import { GetCourse } from '../../servicesBDM/courses';
+import { useParams } from 'react-router-dom';
 
 function TarjetaComentarios({
     imagen,
@@ -524,20 +526,21 @@ function Valoraciones({
     );
 }
 
-function DescripcionGeneral({ display }) {
-    return (
-        <div className={`container-fluid p-0 m-0 ${display ? 'd-flex' : 'd-none'}`}>
-            <div className='row p-0 m-0 w-100'>
-                <div className='col-12'>
-                    <h5 className='fw-bold text-center py-4'>Descripcion</h5>
-                </div>
-                <div className='col-12'>
-                    <p>Why do we use it?
-                        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
+function DescripcionGeneral({ display, dataCurso }) {
+
+    if (dataCurso)
+        return (
+            <div className={`container-fluid p-0 m-0 ${display ? 'd-flex' : 'd-none'}`}>
+                <div className='row p-0 m-0 w-100'>
+                    <div className='col-12'>
+                        <h5 className='fw-bold text-center py-4'>Descripcion</h5>
+                    </div>
+                    <div className='col-12'>
+                        <p>{dataCurso.descripcion}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
 }
 
 function Certificado({ display }) {
@@ -644,149 +647,180 @@ function Comprar({ display }) {
     );
 }
 
-function NavegacionVideo() {
+function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones }) {
+
     const [descripcionGeneral, setDescrpcionGeneral] = useState(true);
     const [valoraciones, setValoraciones] = useState(false);
     const [certificado, setCertificado] = useState(false);
     const [contenidoCurso, setContenidoCurso] = useState(false);
     const [comprar, setComprar] = useState(false);
 
-    return (
-        <div className='bg-transparent d-flex flex-column justify-content-center py-2'>
-            <div className='row p-0 m-0 w-100'>
-                <div className='col-2 h-100 p-0 m-0'>
-                    <h6
-                        onClick={() => {
-                            setDescrpcionGeneral(true);
-                            setValoraciones(false);
-                            setCertificado(false);
-                            setContenidoCurso(false);
-                            setComprar(false);
-                        }}
-                        className={`
+    useEffect(() => {
+
+    }, []);
+
+    if (dataCurso) {
+        return (
+            <div className='bg-transparent d-flex flex-column justify-content-center py-2'>
+                <div className='row p-0 m-0 w-100'>
+                    <div className='col-2 h-100 p-0 m-0'>
+                        <h6
+                            onClick={() => {
+                                setDescrpcionGeneral(true);
+                                setValoraciones(false);
+                                setCertificado(false);
+                                setContenidoCurso(false);
+                                setComprar(false);
+                            }}
+                            className={`
                 text-center 
                 form-text 
                 text-secondary 
                 fs-6 
                 fw-bold 
                 m-0 texto-navegacion ${descripcionGeneral ? 'texto-navegacion-click' : null}`}>
-                        Descripcion general
-                    </h6>
-                </div>
-                <div className='col-2 p-0 m-0'>
-                    <h6
-                        onClick={() => {
-                            setDescrpcionGeneral(false);
-                            setValoraciones(false);
-                            setCertificado(false);
-                            setContenidoCurso(true);
-                            setComprar(false);
-                        }}
-                        className={`
+                            Descripcion general
+                        </h6>
+                    </div>
+                    <div className='col-2 p-0 m-0'>
+                        <h6
+                            onClick={() => {
+                                setDescrpcionGeneral(false);
+                                setValoraciones(false);
+                                setCertificado(false);
+                                setContenidoCurso(true);
+                                setComprar(false);
+                            }}
+                            className={`
                 text-center 
                 form-text 
                 text-secondary 
                 fs-6 
                 fw-bold 
                 m-0 texto-navegacion ${contenidoCurso ? 'texto-navegacion-click' : null}`}>
-                        Contenido del curso
-                    </h6>
-                </div>
-                <div className='col-2 p-0 m-0'>
-                    <h6
-                        onClick={() => {
-                            setDescrpcionGeneral(false);
-                            setValoraciones(true);
-                            setCertificado(false);
-                            setContenidoCurso(false);
-                            setComprar(false);
-                        }}
-                        className={`
+                            Contenido del curso
+                        </h6>
+                    </div>
+                    <div className='col-2 p-0 m-0'>
+                        <h6
+                            onClick={() => {
+                                setDescrpcionGeneral(false);
+                                setValoraciones(true);
+                                setCertificado(false);
+                                setContenidoCurso(false);
+                                setComprar(false);
+                            }}
+                            className={`
                 text-center 
                 form-text 
                 text-secondary 
                 fs-6 
                 fw-bold 
                 m-0 texto-navegacion ${valoraciones ? 'texto-navegacion-click' : null}`}>
-                        Valoraciones
-                    </h6>
-                </div>
-                <div className='col-2 p-0 m-0'>
-                    <h6
-                        onClick={() => {
-                            setDescrpcionGeneral(false);
-                            setValoraciones(false);
-                            setCertificado(true);
-                            setContenidoCurso(false);
-                            setComprar(false);
-                        }}
-                        className={`
+                            Valoraciones
+                        </h6>
+                    </div>
+                    <div className='col-2 p-0 m-0'>
+                        <h6
+                            onClick={() => {
+                                setDescrpcionGeneral(false);
+                                setValoraciones(false);
+                                setCertificado(true);
+                                setContenidoCurso(false);
+                                setComprar(false);
+                            }}
+                            className={`
                 text-center 
                 form-text 
                 text-secondary 
                 fs-6 
                 fw-bold 
                 m-0 texto-navegacion ${certificado ? 'texto-navegacion-click' : null}`}>
-                        Certificado
-                    </h6>
-                </div>
-                <div className='col-2 p-0 m-0'>
-                    <h6
-                        onClick={() => {
-                            setDescrpcionGeneral(false);
-                            setValoraciones(false);
-                            setCertificado(false);
-                            setContenidoCurso(false);
-                            setComprar(true);
-                        }}
-                        className={`
+                            Certificado
+                        </h6>
+                    </div>
+                    <div className='col-2 p-0 m-0'>
+                        <h6
+                            onClick={() => {
+                                setDescrpcionGeneral(false);
+                                setValoraciones(false);
+                                setCertificado(false);
+                                setContenidoCurso(false);
+                                setComprar(true);
+                            }}
+                            className={`
                 text-center 
                 form-text 
                 text-secondary 
                 fs-6 
                 fw-bold 
                 m-0 texto-navegacion ${comprar ? 'texto-navegacion-click' : null}`}>
-                        Comprar
-                    </h6>
+                            Comprar
+                        </h6>
+                    </div>
+                </div>
+                <div className='row p-0 m-0 w-100'>
+                    <DescripcionGeneral
+                        dataCurso={dataCurso}
+                        display={descripcionGeneral} />
+                    <Contentido display={contenidoCurso} />
+                    <Valoraciones
+                        display={valoraciones}
+                        numeroEstrellas={"4.5"}
+                        porcentajeUnaEstrella={"10%"}
+                        porcentajeDosEstrella={"10%"}
+                        porcentajeTresEstrella={"5%"}
+                        porcentajeCuatroEstrella={"5%"}
+                        porcentajeCincoEstrella={"70%"} />
+                    <Certificado display={certificado} />
+                    <Comprar display={comprar} />
                 </div>
             </div>
-            <div className='row p-0 m-0 w-100'>
-                <DescripcionGeneral display={descripcionGeneral} />
-                <Contentido display={contenidoCurso} />
-                <Valoraciones
-                    display={valoraciones}
-                    numeroEstrellas={"4.5"}
-                    porcentajeUnaEstrella={"10%"}
-                    porcentajeDosEstrella={"10%"}
-                    porcentajeTresEstrella={"5%"}
-                    porcentajeCuatroEstrella={"5%"}
-                    porcentajeCincoEstrella={"70%"} />
-                <Certificado display={certificado} />
-                <Comprar display={comprar} />
-            </div>
-        </div>);
+        );
+    }
 }
 
 export default function Curso() {
-    return (
-        <div className='container-fluid p-0 m-0'>
-            <div className='row p-0 m-0'>
-                <div className='col-12 p-0 m-0 d-flex justify-content-center'>
-                    <iframe
-                        width="100%"
-                        height="500"
-                        src="https://www.youtube.com/embed/MTEPjRTPW0g"
-                        title="YouTube video player"
-                        frameBorder={0}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowFullScreen></iframe>
+
+    const { idCurso } = useParams();
+
+    const [dataCurso, setDataCurso] = useState([]);
+    const [dataNiveles, setDataNiveles] = useState([]);
+    const [dataSecciones, setDataSecciones] = useState([]);
+
+    useEffect(() => {
+        GetCourse(idCurso).then((course) => {
+            setDataCurso(course.course);
+            setDataNiveles(course.levels);
+            setDataSecciones(course.sections);
+        });
+    }, []);
+
+    if (dataCurso && dataNiveles && dataSecciones) {
+        return (
+            <div className='container-fluid p-0 m-0'>
+                <div className='row p-0 m-0'>
+                    <div className='col-12 p-0 m-0 d-flex justify-content-center'>
+                        <iframe
+                            width="100%"
+                            height="500"
+                            src="https://www.youtube.com/embed/MTEPjRTPW0g"
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen></iframe>
+
+                    </div>
+                </div>
+                <div className='row p-0 m-0'>
+                    <div className='col-12 p-0 m-0'>
+                        <NavegacionVideo
+                            dataCurso={dataCurso}
+                            dataNiveles={dataNiveles}
+                            dataSecciones={dataSecciones} />
+                    </div>
                 </div>
             </div>
-            <div className='row p-0 m-0'>
-                <div className='col-12 p-0 m-0'>
-                    <NavegacionVideo />
-                </div>
-            </div>
-        </div>
-    );
+        );
+    }
 }

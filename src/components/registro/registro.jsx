@@ -112,7 +112,9 @@ export default function Registro() {
                 id="registerForm"
                 onSubmit={(e) => {
                     e.preventDefault();
+
                     const bodyData = new FormData(document.getElementById('registerForm'));
+
                     validacionesCampos() ?
                         (
                             api == 'pw2' ? register(bodyData).then(response => {

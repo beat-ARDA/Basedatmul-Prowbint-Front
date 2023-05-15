@@ -19,7 +19,10 @@ function Header() {
             .then(response => { setDataPerfil(response) })) : null;
         localStorage.getItem('token') ? setSesionActive(true) : null;
 
-        api === 'pw2' ? null : GetCategories().then(response => { console.log(response); setCategories(response.categories) });
+        api === 'pw2' ? null : GetCategories().then(response => {
+            setCategories(response.categories)
+        });
+
     }, []);
 
     if (dataPerfil && dataCategories) {
@@ -65,20 +68,20 @@ function Header() {
                                         <ul className="lista-categorias p-2 mx-2 w-25 ">
                                             {
                                                 dataCategories.map((category, index) => {
-                                           
-                                                        return (
-                                                            <div key={index} className="row pb-2 m-0">
-                                                                <div className="col-xl-12 d-flex justify-content-between categoria-item">
-                                                                    <li>{category.nombre}</li>
-                                                                    <svg
-                                                                        className="categoria-icon"
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                        viewBox="0 0 384 512">
-                                                                        <path
-                                                                            d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
-                                                                </div>
+
+                                                    return (
+                                                        <div key={index} className="row pb-2 m-0">
+                                                            <div className="col-xl-12 d-flex justify-content-between categoria-item">
+                                                                <li>{category.nombre}</li>
+                                                                <svg
+                                                                    className="categoria-icon"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 384 512">
+                                                                    <path
+                                                                        d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
                                                             </div>
-                                                        );
+                                                        </div>
+                                                    );
                                                 })
                                             }
                                         </ul>
@@ -161,19 +164,19 @@ function Header() {
                                         <ul className="lista-categorias p-2 mx-2 w-25 ">
                                             {
                                                 dataCategories.map((category, index) => {
-                                        
-                                                        return (
-                                                            <div key={index} className="row pb-2 m-0">
-                                                                <div className="col-xl-12 d-flex justify-content-between categoria-item">
-                                                                    <li>{category.nombre}</li>
-                                                                    <svg
-                                                                        className="categoria-icon"
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                        viewBox="0 0 384 512">
-                                                                        <path
-                                                                            d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
-                                                                </div>
-                                                            </div>);
+
+                                                    return (
+                                                        <div key={index} className="row pb-2 m-0">
+                                                            <div className="col-xl-12 d-flex justify-content-between categoria-item">
+                                                                <li>{category.nombre}</li>
+                                                                <svg
+                                                                    className="categoria-icon"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 384 512">
+                                                                    <path
+                                                                        d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
+                                                            </div>
+                                                        </div>);
                                                 })
                                             }
                                         </ul>
@@ -327,20 +330,20 @@ function Header() {
                                                     <ul className="lista-categorias p-2 mx-2 w-75 ">
                                                         {
                                                             dataCategories.map((category, index) => {
-                                                
-                                                                    return (
-                                                                        <div key={index} className="row pb-2 m-0">
-                                                                            <div className="col-xl-12 d-flex justify-content-between categoria-item">
-                                                                                <li>{category.nombre}</li>
-                                                                                <svg
-                                                                                    className="categoria-icon"
-                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                    viewBox="0 0 384 512">
-                                                                                    <path
-                                                                                        d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
-                                                                            </div>
+
+                                                                return (
+                                                                    <div key={index} className="row pb-2 m-0">
+                                                                        <div className="col-xl-12 d-flex justify-content-between categoria-item">
+                                                                            <li>{category.nombre}</li>
+                                                                            <svg
+                                                                                className="categoria-icon"
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                viewBox="0 0 384 512">
+                                                                                <path
+                                                                                    d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
                                                                         </div>
-                                                                    );
+                                                                    </div>
+                                                                );
                                                             })
 
                                                         }
@@ -499,20 +502,20 @@ function Header() {
                                                 <ul className="lista-categorias p-2 mx-2 w-75 ">
                                                     {
                                                         dataCategories.map((category, index) => {
-                                            
-                                                                return (
-                                                                    <div key={index} className="row pb-2 m-0">
-                                                                        <div className="col-xl-12 d-flex justify-content-between categoria-item">
-                                                                            <li>{category.nombre}</li>
-                                                                            <svg
-                                                                                className="categoria-icon"
-                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                viewBox="0 0 384 512">
-                                                                                <path
-                                                                                    d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
-                                                                        </div>
+
+                                                            return (
+                                                                <div key={index} className="row pb-2 m-0">
+                                                                    <div className="col-xl-12 d-flex justify-content-between categoria-item">
+                                                                        <li>{category.nombre}</li>
+                                                                        <svg
+                                                                            className="categoria-icon"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            viewBox="0 0 384 512">
+                                                                            <path
+                                                                                d="M342.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L274.7 256 105.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" /></svg>
                                                                     </div>
-                                                                );
+                                                                </div>
+                                                            );
                                                         })
                                                     }
                                                 </ul>

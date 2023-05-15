@@ -24,7 +24,7 @@ export default function Router() {
                 </Route>
                 <Route element={<RouteGuard sesion={false} />}>
                     <Route path='perfil/:userId' element={<Perfil />} />
-                    <Route path='curso' element={<Curso />} />
+                    <Route path='curso/:idCurso' element={<Curso />} />
                     <Route path="messages" element={<Messages />} />
                     <Route path="categorias" element={<Categorias />} />
                     <Route path="mis-cursos" element={<Kardex />} />

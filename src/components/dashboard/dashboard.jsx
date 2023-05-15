@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './dashboard.css';
 import TarjetaDashboard from '../tarjeta-dashboard/tarjeta-dashboard';
@@ -9,6 +9,8 @@ import angularImage from "../../images/angular.png";
 import phpImage from "../../images/php.png";
 import mySqlImage from "../../images/mysql.png";
 import ajaxImage from "../../images/ajax.png";
+import { GetCourses } from '../../servicesBDM/courses';
+import { useState } from 'react';
 
 const arreglo = [
     { titulo: "C++", descripcion: "Curso para aprender C++", instructor: "Alvaro Duron", imagen: cImage, estrellas: 0, fecha: "2023-12-05", precio: "$200" },
@@ -19,63 +21,87 @@ const arreglo = [
     { titulo: "Ajax", descripcion: "Curso para aprender Ajax", instructor: "Homero Duron", imagen: ajaxImage, estrellas: 5, fecha: "2023-12-05", precio: "$1000" }]
 
 const Dashboard = () => {
+    const [dataCursos, setDataCursos] = useState([]);
 
-    return (
-        <div className='container-fluid padre-dashboard'>
-            <div className='row mt-4'>
-                <div className='col-12 border-bottom border-secondary'>
-                    <h4 className='fw-bold m-0 p-0 text-center'>Titulo de la busqueda</h4>
+    function getImageType(base64Image) {
+        const header = base64Image.substring(0, 23);
+        if (header.startsWith('iVBORw0KGg')) {
+            return 'png';
+        } else if (header.startsWith('/9j/')) {
+            return 'jpeg';
+        } else {
+            return false;
+        }
+    }
+
+    useEffect(() => {
+        GetCourses().then((courses) => {
+            setDataCursos(courses.courses);
+        });
+    }, []);
+
+    if (dataCursos) {
+        return (
+            <div className='container-fluid padre-dashboard'>
+                <div className='row mt-4'>
+                    <div className='col-12 border-bottom border-secondary'>
+                        <h4 className='fw-bold m-0 p-0 text-center'>Titulo de la busqueda</h4>
+                    </div>
                 </div>
+                <form className='row border-bottom border-secondary py-2 '>
+                    <div className='col-3 d-flex justify-content-end align-items-center'>
+                        <button className='btn btn-dark w-100 texto-boton p-0 m-0' type="submit">Todos</button>
+                    </div>
+                    <div className='col-3 d-flex justify-content-center align-items-center'>
+                        <button className='btn btn-dark w-100 texto-boton p-0 m-0' type="submit">Mejor calificados</button>
+                    </div>
+                    <div className='col-3 d-flex justify-content-center align-items-center'>
+                        <button className='btn btn-dark w-100 texto-boton p-0 m-0' type="submit">Mas vendidos</button>
+                    </div>
+                    <div className='col-3 d-flex justify-content-start align-items-center'>
+                        <button className='btn btn-dark w-100 texto-boton p-0 m-0' type="submit">Mas recientes</button>
+                    </div>
+                </form>
+                <div>
+                    {dataCursos.map((curso, index) => {
+
+                        const pathImage = 'data:image/' + getImageType(curso.imagen) + ';base64,' + curso.imagen;
+
+                        return (
+                            <TarjetaDashboard
+                                id={curso.idCurso}
+                                key={index}
+                                imagen={pathImage}
+                                titulo={curso.titulo}
+                                descripcion={curso.descripcion}
+                                instructor={curso.instructor}
+                                estrellas={curso.promedio}
+                                fecha={curso.fecha_creacion}
+                                precio={curso.cost}
+                            />
+                        )
+                    })}
+                </div>
+                <nav aria-label="Page navigation example" className='d-flex justify-content-center'>
+                    <ul className="pagination">
+                        <li className="page-item">
+                            <a className="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li className="page-item"><a className="page-link" href="#">1</a></li>
+                        <li className="page-item"><a className="page-link" href="#">2</a></li>
+                        <li className="page-item"><a className="page-link" href="#">3</a></li>
+                        <li className="page-item">
+                            <a className="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <form className='row border-bottom border-secondary py-2 '>
-                <div className='col-3 d-flex justify-content-end align-items-center'>
-                    <button className='btn btn-dark w-100 texto-boton p-0 m-0' type="submit">Todos</button>
-                </div>
-                <div className='col-3 d-flex justify-content-center align-items-center'>
-                    <button className='btn btn-dark w-100 texto-boton p-0 m-0' type="submit">Mejor calificados</button>
-                </div>
-                <div className='col-3 d-flex justify-content-center align-items-center'>
-                    <button className='btn btn-dark w-100 texto-boton p-0 m-0' type="submit">Mas vendidos</button>
-                </div>
-                <div className='col-3 d-flex justify-content-start align-items-center'>
-                    <button className='btn btn-dark w-100 texto-boton p-0 m-0' type="submit">Mas recientes</button>
-                </div>
-            </form>
-            <div>
-                {arreglo.map((dato, index) => {
-                    return (
-                        <TarjetaDashboard
-                            key={index}
-                            imagen={dato.imagen}
-                            titulo={dato.titulo}
-                            descripcion={dato.descripcion}
-                            instructor={dato.instructor}
-                            estrellas={dato.estrellas}
-                            fecha={dato.fecha}
-                            precio={dato.precio}
-                        />
-                    )
-                })}
-            </div>
-            <nav aria-label="Page navigation example" className='d-flex justify-content-center'>
-                <ul className="pagination">
-                    <li className="page-item">
-                        <a className="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                    <li className="page-item">
-                        <a className="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    )
+        )
+    }
 }
 
 export default Dashboard;

@@ -28,3 +28,20 @@
     overflow: auto;
     display: inline-block;
 }
+
+.altura-seccion {
+    max-height: 10rem;
+}
+
+.altura-nivel {
+    max-height: 20rem;
+}
+
+.img-curso {
+    height: 5rem;
+    max-width: 100% !important;
+}
+
+.altura-categorias {
+    height: 6rem;
+}

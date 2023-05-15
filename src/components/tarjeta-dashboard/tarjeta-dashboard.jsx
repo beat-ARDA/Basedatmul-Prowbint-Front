@@ -1,8 +1,10 @@
-import { React } from 'react';
+import { React, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './tarjeta-dashboard.css';
+import { GetCourse } from '../../servicesBDM/courses';
 
 const TarjetaDashboard = ({
+    id,
     imagen,
     titulo,
     descripcion,
@@ -11,16 +13,13 @@ const TarjetaDashboard = ({
     fecha,
     precio
 }) => {
-
     return (
         <div className='row border-bottom border-secondary'>
             <div className='col-3 col-xl-2'>
-                <div className='imagen-curso d-flex justify-content-start' style={{
-                    backgroundImage: `url(${imagen})`
-                }}></div>
+                <img className='imagen-curso d-flex justify-content-start' src={imagen} />
             </div>
             <div className='col-5 col-xl-8 d-flex flex-column align-items-start justify-content-center'>
-                <Link to="curso">
+                <Link to={`curso/${id}`}>
                     <h5 className='fw-bold text-dark'>{titulo}</h5>
                 </Link>
                 <h6>{descripcion}</h6>
