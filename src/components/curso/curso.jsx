@@ -552,26 +552,81 @@ function Certificado({ display }) {
     );
 }
 
-function Contentido({ display }) {
-    return (
-        <>
-            <div className={`col-12 d-flex flex-column justify-content-center align-items-center py-3 ${display ? 'd-flex' : 'd-none'}`}>
-                <div className='row w-75 border-bottom border-secondary'>
-                    <div className='col-12'>
-                        <h5 className='text-dark fw-bold p-0 m-0 text-center' >Contenido del curso</h5>
+function Contentido({ display, dataNiveles, dataSecciones, enviarVideo }) {
+
+    if (dataNiveles && dataSecciones) {
+        return (
+            <>
+                <div className={`col-12 d-flex flex-column justify-content-center align-items-center py-3 ${display ? 'd-flex' : 'd-none'}`}>
+                    <div className='row w-75 border-bottom border-secondary mb-2'>
+                        <div className='col-12'>
+                            <h5
+                                className='text-dark fw-bold p-0 m-0 text-center' >
+                                Contenido del curso
+                            </h5>
+                        </div>
+                    </div>
+                    <div className='row w-50 border border-dark'>
+                        <div className='col-12 w-100 d-flex justify-content-center d-flex flex-column'>
+                            {
+                                dataNiveles.map((nivel, indexNivel) => {
+                                    return (
+                                        <div key={indexNivel}>
+                                            <div className='row text-center d-flex'>
+                                                <div className='col-12'>
+                                                    <h6
+                                                        className='fw-bold text-dark'>
+                                                        {nivel.titulo}
+                                                        <small
+                                                            className='text-success'>
+                                                            $ {nivel.costo}
+                                                        </small>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                            {dataSecciones.map((seccion, indexSeccion) => {
+                                                if (seccion.nivel === nivel.idNivelCurso) {
+                                                    return (
+                                                        <div
+                                                            key={indexSeccion}
+                                                            className='row text-center'>
+                                                            <h6
+                                                                className='text-dark m-0'>
+                                                                {seccion.titulo}
+                                                            </h6>
+                                                            <button
+                                                                onClick={() => enviarVideo(seccion.video)}
+                                                                className={`${seccion.video ? 'd-block btn btn-secondary' : 'd-none'}`}>
+                                                                Ver video
+                                                            </button>
+                                                            <a
+                                                                className={`${seccion.contenido || seccion.link ? 'display-block' : 'd-none'}`}
+                                                                download={'Archivo'}
+                                                                href={
+                                                                    seccion.contenido ?
+                                                                        `data:application/octet-stream;base64,`
+                                                                        + seccion.contenido : (seccion.link ? seccion.link : '')}>
+                                                                {seccion.contenido ? 'Contenido' : (seccion.link ? 'link' : '')}
+                                                            </a>
+                                                        </div>
+                                                    )
+
+                                                }
+                                            })}
+                                        </div>
+                                    )
+                                })}
+                        </div>
                     </div>
                 </div>
-                <SectionContenido nombreSeccion={"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"} />
-                <SectionContenido nombreSeccion={"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore"} />
-            </div>
-        </>
-    );
+            </>
+        );
+    }
 }
 
 function SectionContenido({ nombreSeccion }) {
 
     const [up, setUp] = useState(true);
-
 
     return (
         <>
@@ -647,7 +702,7 @@ function Comprar({ display }) {
     );
 }
 
-function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones }) {
+function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones, enviarVideo }) {
 
     const [descripcionGeneral, setDescrpcionGeneral] = useState(true);
     const [valoraciones, setValoraciones] = useState(false);
@@ -763,7 +818,11 @@ function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones }) {
                     <DescripcionGeneral
                         dataCurso={dataCurso}
                         display={descripcionGeneral} />
-                    <Contentido display={contenidoCurso} />
+                    <Contentido
+                        enviarVideo={enviarVideo}
+                        display={contenidoCurso}
+                        dataNiveles={dataNiveles}
+                        dataSecciones={dataSecciones} />
                     <Valoraciones
                         display={valoraciones}
                         numeroEstrellas={"4.5"}
@@ -787,6 +846,12 @@ export default function Curso() {
     const [dataCurso, setDataCurso] = useState([]);
     const [dataNiveles, setDataNiveles] = useState([]);
     const [dataSecciones, setDataSecciones] = useState([]);
+    const [video, setVideo] = useState();
+
+    const enviarVideo = (dataVideo) => {
+        console.log(dataVideo);
+        setVideo(dataVideo);
+    };
 
     useEffect(() => {
         GetCourse(idCurso).then((course) => {
@@ -804,17 +869,19 @@ export default function Curso() {
                         <iframe
                             width="100%"
                             height="500"
-                            src="https://www.youtube.com/embed/MTEPjRTPW0g"
-                            title="YouTube video player"
+                            src={`http://localhost/videos/${video}`}
+                            title="Video curso"
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen></iframe>
+                            allowFullScreen>
+                        </iframe>
 
                     </div>
                 </div>
                 <div className='row p-0 m-0'>
                     <div className='col-12 p-0 m-0'>
                         <NavegacionVideo
+                            enviarVideo={enviarVideo}
                             dataCurso={dataCurso}
                             dataNiveles={dataNiveles}
                             dataSecciones={dataSecciones} />

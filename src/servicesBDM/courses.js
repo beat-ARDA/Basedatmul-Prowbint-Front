@@ -5,7 +5,7 @@ async function InsertCourse(bodyData) {
         dataType: "json"
     })
         .then(response => response.text())
-        .then(data => { return JSON.parse(data); })
+        .then(data => { console.log(data); return JSON.parse(data); })
         .catch(error => console.warn(error));
 }
 
