@@ -602,6 +602,12 @@ function Certificado({ display }) {
 
                             context.fillText('React', 320, 200);
 
+                            ///////////////////////////////////////////////////////
+                            //                     NOMBRE INSTRUCTOR             //
+                            ///////////////////////////////////////////////////////
+
+                            context.fillText('Mateo Alfonso', 550, 550);
+
                             // Convertir el lienzo a una imagen base64
                             var imageData = canvas.toDataURL('image/png');
 
