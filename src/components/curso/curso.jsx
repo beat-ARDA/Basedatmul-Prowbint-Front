@@ -2,8 +2,11 @@ import { React, useState } from 'react';
 import './curso.css';
 import perfil from '../../images/perfil.jpg';
 import { useEffect } from 'react';
-import { GetCourse } from '../../servicesBDM/courses';
+import { GetCourse, InsertShopingCourse } from '../../servicesBDM/courses';
 import { useParams } from 'react-router-dom';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import * as PDFJS from "pdfjs-dist/build/pdf";
+import jsPDF from 'jspdf';
 
 function TarjetaComentarios({
     imagen,
@@ -547,13 +550,79 @@ function Certificado({ display }) {
     return (
         <div className={`col-12 justify-content-center flex-column align-items-center py-3 m-0 ${display ? 'd-flex' : 'd-none'}`}>
             <h6 className='fw-bold text-dark p-0 m-0 text-center py-2'>Consigue el certificado al completar todo el curso (No completado)</h6>
-            <button className='btn btn-dark w-50' type='button'>Certificado del curso</button>
+            <button
+                onClick={() => {
+
+                    PDFJS.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS.version}/pdf.worker.js`;
+                    const windowWidth = window.innerWidth;
+                    const windowHeight = window.innerHeight;
+                    PDFJS.getDocument(process.env.REACT_APP_PATH_FRONT + '/certificado.pdf').promise.then(function (pdf) {
+                        // Obtener la primera página del PDF
+                        return pdf.getPage(1);
+                    }).then(function (page) {
+
+                        // Crear un contexto de renderizado
+                        var canvas = document.createElement('canvas');
+                        var context = canvas.getContext('2d');
+                        var viewport = page.getViewport({ scale: 1 });
+
+                        // Establecer dimensiones para el lienzo
+                        canvas.width = 3400;
+                        canvas.height = 1200;
+
+                        // Renderizar la página en el lienzo
+                        page.render({ canvasContext: context, viewport: viewport }).promise.then(function () {
+                            // Escribir texto en el lienzo
+                            context.font = '30px Arial';
+                            context.fillStyle = 'black';
+
+                            ///////////////////////////////////////////////////////
+                            //                     NOMBRE ALUMNO                 //
+                            ///////////////////////////////////////////////////////
+                            context.fillText('Alvaro Ramses Duron Alejo', 150, 330);
+
+                            ///////////////////////////////////////////////////////
+                            //                        FECHA                      //
+                            ///////////////////////////////////////////////////////
+                            const fechaActual = new Date();
+
+                            // Obtener los componentes de la fecha
+                            const año = fechaActual.getFullYear();
+                            const mes = fechaActual.getMonth() + 1; // Los meses se indexan desde 0, por lo tanto se suma 1
+                            const dia = fechaActual.getDate();
+
+                            // Formatear la fecha como una cadena en el formato deseado
+                            const fechaFormateada = `${año}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`;
+
+                            context.fillText(fechaFormateada, 650, 50);
+
+                            ///////////////////////////////////////////////////////
+                            //                     NOMBRE CURSO                  //
+                            ///////////////////////////////////////////////////////
+
+                            context.fillText('React', 320, 200);
+
+                            // Convertir el lienzo a una imagen base64
+                            var imageData = canvas.toDataURL('image/png');
+
+                            // Crear un objeto PDF en memoria
+                            var doc = new jsPDF();
+
+                            // Agregar la imagen al documento PDF
+                            doc.addImage(imageData, 'PNG', 0, 0, viewport.width, viewport.height);
+
+                            // Guardar el archivo PDF
+                            doc.save('nuevo-archivo.pdf');
+                        });
+                    });
+                }}
+                className='btn btn-dark w-50' type='button'>Certificado del curso</button>
         </div>
     );
 }
 
 function Contentido({ display, dataNiveles, dataSecciones, enviarVideo }) {
-
+    const { idCurso } = useParams();
     if (dataNiveles && dataSecciones) {
         return (
             <>
@@ -573,15 +642,51 @@ function Contentido({ display, dataNiveles, dataSecciones, enviarVideo }) {
                                     return (
                                         <div key={indexNivel}>
                                             <div className='row text-center d-flex'>
-                                                <div className='col-12'>
-                                                    <h6
+                                                <div className='col-12 d-flex justify-content-center'>
+                                                    <h3
                                                         className='fw-bold text-dark'>
                                                         {nivel.titulo}
                                                         <small
                                                             className='text-success'>
                                                             $ {nivel.costo}
                                                         </small>
-                                                    </h6>
+                                                    </h3>
+                                                    <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_CLIENT_ID_PAYPAL }}>
+                                                        <PayPalButtons
+                                                            createOrder={(data, actions) => {
+                                                                return actions.order.create({
+                                                                    purchase_units: [
+                                                                        {
+                                                                            amount: {
+                                                                                value: `${nivel.costo}`,
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                });
+                                                            }}
+
+                                                            onApprove={(data, actions) => {
+
+                                                                const formData = new FormData();
+
+                                                                formData.append('alumno', localStorage.getItem('userId'));
+                                                                formData.append('compro_completo', 0);
+                                                                formData.append('termino_curso', 0);
+                                                                formData.append('forma_pago', 'PayPal');
+                                                                formData.append('cantidad_pagada', nivel.costo);
+                                                                formData.append('idLevels', JSON.stringify([nivel]));
+
+                                                                InsertShopingCourse(formData, idCurso).then((data) => {
+                                                                    console.log(data);
+                                                                });
+
+                                                                return actions.order.capture().then((details) => {
+                                                                    const name = details.payer.name.given_name;
+                                                                    console.log(`Transaction completed by ${name}`);
+                                                                });
+                                                            }}
+                                                        />
+                                                    </PayPalScriptProvider>
                                                 </div>
                                             </div>
                                             {dataSecciones.map((seccion, indexSeccion) => {
@@ -590,10 +695,10 @@ function Contentido({ display, dataNiveles, dataSecciones, enviarVideo }) {
                                                         <div
                                                             key={indexSeccion}
                                                             className='row text-center'>
-                                                            <h6
+                                                            <h4
                                                                 className='text-dark m-0'>
                                                                 {seccion.titulo}
-                                                            </h6>
+                                                            </h4>
                                                             <button
                                                                 onClick={() => enviarVideo(seccion.video)}
                                                                 className={`${seccion.video ? 'd-block btn btn-secondary' : 'd-none'}`}>
@@ -601,12 +706,13 @@ function Contentido({ display, dataNiveles, dataSecciones, enviarVideo }) {
                                                             </button>
                                                             <a
                                                                 className={`${seccion.contenido || seccion.link ? 'display-block' : 'd-none'}`}
-                                                                download={'Archivo'}
+                                                                download={'archivo_curso'}
                                                                 href={
                                                                     seccion.contenido ?
-                                                                        `data:application/octet-stream;base64,`
-                                                                        + seccion.contenido : (seccion.link ? seccion.link : '')}>
-                                                                {seccion.contenido ? 'Contenido' : (seccion.link ? 'link' : '')}
+                                                                        `data:${seccion.mime};base64,${seccion.contenido}` : (seccion.link ? seccion.link : '')}>
+                                                                {
+                                                                    seccion.contenido ? 'Contenido' : (seccion.link ? 'link' : '')
+                                                                }
                                                             </a>
                                                         </div>
                                                     )
@@ -693,13 +799,57 @@ function SectionContenido({ nombreSeccion }) {
     );
 }
 
-function Comprar({ display }) {
-    return (
-        <div className={`col-12 justify-content-center flex-column align-items-center py-3 m-0 ${display ? 'd-flex' : 'd-none'}`}>
-            <h6 className='fw-bold text-dark p-0 m-0 text-center py-2'>Consigue el curso ahora!</h6>
-            <button className='btn btn-dark w-50' type='button'>Comprar</button>
-        </div>
-    );
+function Comprar({ display, precio, levels }) {
+
+    const { idCurso } = useParams();
+
+    useEffect(() => {
+
+    }, []);
+
+    if (levels && precio) {
+        return (
+            <div className={`col-12 justify-content-center flex-column align-items-center py-3 m-0 ${display ? 'd-flex' : 'd-none'}`}>
+                <h6 className='fw-bold text-dark p-0 m-0 text-center py-2'>Consigue el curso ahora por ${precio}</h6>
+                <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_CLIENT_ID_PAYPAL }}>
+                    <PayPalButtons
+
+                        createOrder={(data, actions) => {
+                            return actions.order.create({
+                                purchase_units: [
+                                    {
+                                        amount: {
+                                            value: `${precio}`,
+                                        },
+                                    },
+                                ],
+                            });
+                        }}
+
+                        onApprove={(data, actions) => {
+
+                            const formData = new FormData();
+
+                            formData.append('alumno', localStorage.getItem('userId'));
+                            formData.append('compro_completo', 1);
+                            formData.append('termino_curso', 0);
+                            formData.append('forma_pago', 'PayPal');
+                            formData.append('cantidad_pagada', precio);
+                            formData.append('idLevels', JSON.stringify(levels));
+
+                            InsertShopingCourse(formData, idCurso).then((data) => {
+                                console.log(data);
+                            });
+
+                            return actions.order.capture().then((details) => {
+                                const name = details.payer.name.given_name;
+                            });
+                        }}
+                    />
+                </PayPalScriptProvider>
+            </div>
+        );
+    }
 }
 
 function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones, enviarVideo }) {
@@ -714,7 +864,7 @@ function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones, enviarVideo })
 
     }, []);
 
-    if (dataCurso) {
+    if (dataCurso && dataNiveles && dataSecciones && enviarVideo) {
         return (
             <div className='bg-transparent d-flex flex-column justify-content-center py-2'>
                 <div className='row p-0 m-0 w-100'>
@@ -832,7 +982,7 @@ function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones, enviarVideo })
                         porcentajeCuatroEstrella={"5%"}
                         porcentajeCincoEstrella={"70%"} />
                     <Certificado display={certificado} />
-                    <Comprar display={comprar} />
+                    <Comprar levels={dataNiveles} display={comprar} precio={dataCurso.cost} />
                 </div>
             </div>
         );
@@ -849,7 +999,6 @@ export default function Curso() {
     const [video, setVideo] = useState();
 
     const enviarVideo = (dataVideo) => {
-        console.log(dataVideo);
         setVideo(dataVideo);
     };
 
@@ -869,7 +1018,7 @@ export default function Curso() {
                         <iframe
                             width="100%"
                             height="500"
-                            src={`http://localhost/videos/${video}`}
+                            src={video ? `${process.env.REACT_APP_PATH_API_VIDEOS}/${video}` : ''}
                             title="Video curso"
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

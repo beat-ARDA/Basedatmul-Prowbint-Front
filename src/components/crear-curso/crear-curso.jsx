@@ -43,14 +43,6 @@ export default function CrearCurso() {
         });
     }, []);
 
-    function HeaderCursoBool() {
-        return imagenBoll && precioBool && nombreCursoBool && descripcionBool ? true : false;
-    }
-
-    function NivelCursoBool() {
-        return tituloNivelBool && precioNivelBool ? true : false;
-    }
-
     if (dataCategories)
         return (
             <form onSubmit={(e) => {
@@ -63,6 +55,7 @@ export default function CrearCurso() {
                 formData.append('sections', JSON.stringify(sectionsArray));
 
                 InsertCourse(formData).then((dato) => {
+                    console.log(dato);
                 });
             }} id="form-curso" className="container-fluid pt-2 padre-crear-curso">
                 <div className="row">
@@ -236,6 +229,7 @@ export default function CrearCurso() {
                                                     "titulo": null,
                                                     "contenido": null,
                                                     "archivo": null,
+                                                    "mime": null,
                                                     "link": null,
                                                     "idUsuario": instructor,
                                                     "saveButton": false,
@@ -325,9 +319,9 @@ export default function CrearCurso() {
                                                                         <input
                                                                             disabled={section.filesButtons}
                                                                             onChange={(e) => {
+                                                                                section.mime = e.target.files[0].type;
                                                                                 const fileReader = new FileReader();
                                                                                 fileReader.readAsDataURL(e.target.files[0]);
-
                                                                                 // Cuando se carga el archivo
                                                                                 fileReader.onload = function () {
                                                                                     // Obtener los datos en base64

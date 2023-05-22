@@ -22,7 +22,6 @@ function Header() {
         api === 'pw2' ? null : GetCategories().then(response => {
             setCategories(response.categories)
         });
-
     }, []);
 
     if (dataPerfil && dataCategories) {
@@ -68,7 +67,6 @@ function Header() {
                                         <ul className="lista-categorias p-2 mx-2 w-25 ">
                                             {
                                                 dataCategories.map((category, index) => {
-
                                                     return (
                                                         <div key={index} className="row pb-2 m-0">
                                                             <div className="col-xl-12 d-flex justify-content-between categoria-item">
@@ -90,6 +88,8 @@ function Header() {
                                 <div className="col-xl-7 m-0 p-0">
                                     <form className="d-flex align-items-center justify-content-center h-100 search-form px-2">
                                         <input
+                                            onChange={(e) => { console.log(e.target.value) }}
+                                            id="buscador"
                                             className="w-100 search-input"
                                             type="search"
                                             placeholder="Busca lo que sea..." />
@@ -185,6 +185,8 @@ function Header() {
                                 <div className="col-xl-7 m-0 p-0">
                                     <form className="d-flex align-items-center justify-content-center h-100 search-form px-2">
                                         <input
+                                            onChange={(e) => { console.log(e.target.value) }}
+                                            id="buscador"
                                             className="w-100 search-input"
                                             type="search"
                                             placeholder="Busca lo que sea..." />
@@ -366,6 +368,8 @@ function Header() {
                                         <div className="col-sm-12 col-12 m-0 pb-2 d-flex justify-content-center">
                                             <form className="d-flex align-items-center justify-content-center h-100 w-100 search-form px-2">
                                                 <input
+                                                    onChange={(e) => { console.log(e.target.value) }}
+                                                    id="buscador"
                                                     className="w-100 search-input"
                                                     type="search"
                                                     placeholder="Busca lo que sea..." />
@@ -535,6 +539,8 @@ function Header() {
                                         <div className="col-sm-12 col-12 m-0 pb-2 d-flex justify-content-center">
                                             <form className="d-flex align-items-center justify-content-center h-100 w-100 search-form px-2">
                                                 <input
+                                                    onChange={(e) => { console.log(e.target.value) }}
+                                                    id="buscador"
                                                     className="w-100 search-input"
                                                     type="search"
                                                     placeholder="Busca lo que sea..." />
