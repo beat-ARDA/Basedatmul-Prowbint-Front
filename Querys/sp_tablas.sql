@@ -95,6 +95,6 @@ DELIMITER ;
 
 CALL sp_InsertarCategoria('Descripction', 'Tecnologia');
 
-select * from users;
+select * from categorias;
 USE APICURSOS;
 update users set attemps = 0 where userId = 1;

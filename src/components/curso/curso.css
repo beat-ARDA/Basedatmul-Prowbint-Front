@@ -38,11 +38,18 @@
     }
 
     .fondo-contenido-seccion {
-        width: 75%!important;
+        width: 75% !important;
     }
 }
 
 .icono-video-section-contenido {
     width: 1rem;
     height: 1rem;
+}
+
+.disabled-a {
+    color: gray;
+    cursor: not-allowed;
+    pointer-events: none;
+    text-decoration: none;
 }

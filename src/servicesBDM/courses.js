@@ -16,7 +16,7 @@ async function InsertShopingCourse(bodyData, idCourse) {
         dataType: "json"
     })
         .then(response => response.text())
-        .then(data => { return JSON.parse(data); })
+        .then(data => { console.log(data); return JSON.parse(data); })
         .catch(error => console.warn(error));
 }
 
@@ -93,6 +93,28 @@ async function SearchCourses() {
         .catch(error => console.warn(error));
 }
 
+async function VerifyCourseComplete(bodyData) {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/verifyCourseCompleteAlumn.php`, {
+        method: 'POST',
+        body: bodyData,
+        dataType: "json"
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data) })
+        .catch(error => console.warn(error));
+}
+
+async function GetPurchasedLevels(bodyData) {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/getPurchasedLevels.php`, {
+        method: 'POST',
+        body: bodyData,
+        dataType: "json"
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data) })
+        .catch(error => console.warn(error));
+}
+
 
 export {
     InsertCourse,
@@ -103,5 +125,7 @@ export {
     GetCoursesBestSellers,
     GetCoursesMostRecents,
     GetCoursesBestCalificated,
-    SearchCourses
+    SearchCourses,
+    VerifyCourseComplete,
+    GetPurchasedLevels
 }
