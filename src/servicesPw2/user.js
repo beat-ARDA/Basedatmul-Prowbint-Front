@@ -15,7 +15,7 @@ async function register(bodyData) {
 }
 
 async function getUser() {
-    return await fetch(getUserProfile, {
+    return await fetch(process.env.REACT_APP_PATH_API + `user/${localStorage.getItem('userId')}`, {
         method: 'GET',
     })
         .then(response => response.text())
