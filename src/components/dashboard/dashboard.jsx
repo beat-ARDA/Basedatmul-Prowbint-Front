@@ -1,14 +1,14 @@
 import { React, useEffect } from 'react';
 import './dashboard.css';
 import TarjetaDashboard from '../tarjeta-dashboard/tarjeta-dashboard';
-import '../tarjeta-dashboard/tarjeta-dashboard.css'
+import '../tarjeta-dashboard/tarjeta-dashboard.css';
 import { GetCourses, GetCoursesBestCalificated, GetCoursesBestSellers, GetCoursesMostRecents } from '../../servicesBDM/courses';
 import { useState } from 'react';
 
 
 const Dashboard = () => {
-
     const [dataCursos, setDataCursos] = useState([]);
+    const api = localStorage.getItem('api');
 
     function getImageType(base64Image) {
         const header = base64Image.substring(0, 23);
@@ -21,10 +21,13 @@ const Dashboard = () => {
         }
     }
 
+
+
     useEffect(() => {
-        GetCourses().then((courses) => {
-            setDataCursos(courses.courses);
-        });
+        if (api === 'bdm')
+            GetCourses().then((courses) => {
+                setDataCursos(courses.courses);
+            });
     }, []);
 
     if (dataCursos) {

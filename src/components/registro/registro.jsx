@@ -56,8 +56,6 @@ export default function Registro() {
     function manejoImagenPerfil(e) {
         const archivo = e.target.files[0];
 
-        console.log(archivo);
-
         var allowedExtensions = /(.jpg|.jpeg|.png)$/i;
         if (!allowedExtensions.exec(archivo.name)) {
             alert("Extension de imagen no permitida");
@@ -102,7 +100,8 @@ export default function Registro() {
     const [correo, setCorreo] = useState('');
     const [contraseña, setContraseña] = useState('');
     const [textoModal, setTextoModal] = useState('');
-    const [api, setApi] = useState('bdm');
+
+    const api = localStorage.getItem('api');
 
     const navigate = useNavigate();
 
@@ -114,6 +113,7 @@ export default function Registro() {
                     e.preventDefault();
 
                     const bodyData = new FormData(document.getElementById('registerForm'));
+                    bodyData.append('image', imagenPerfil);
 
                     validacionesCampos() ?
                         (

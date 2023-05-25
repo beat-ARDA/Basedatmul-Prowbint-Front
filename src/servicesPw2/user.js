@@ -2,10 +2,9 @@ import { endRegister, getUserProfile } from "./routes";
 
 async function register(bodyData) {
     console.log(bodyData);
-    return await fetch(endRegister, {
+    return await fetch(process.env.REACT_APP_PATH_API + 'register', {
         method: 'POST',
         body: bodyData,
-        //dataType: "json",
         body: new URLSearchParams(bodyData),
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'

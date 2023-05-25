@@ -11,7 +11,7 @@ function Login() {
     const [mensajeApi, setMensajeApi] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [api, setApi] = useState('bdm');
+    const api = localStorage.getItem('api');
 
     const toastRef = useRef();
 
@@ -19,7 +19,7 @@ function Login() {
         event.preventDefault();
         if (email != '' && password != '') {
             const data = new FormData(document.getElementById('loginForm'));
-            fetch('http://localhost:3000/api/login', {
+            fetch(process.env.REACT_APP_PATH_API + 'login', {
                 method: 'POST',
                 body: new URLSearchParams(data),
                 headers: {
@@ -29,8 +29,10 @@ function Login() {
                 .then(response => response.text())
                 .then(data => {
                     let dataJson = JSON.parse(data);
-                    dataJson.token ? localStorage.setItem('token', 'ASDFASDFASDFASDF') : null;
-                    dataJson.token ? setSesionValida(true) : null;
+                    // dataJson.token ? localStorage.setItem('token', 'ASDFASDFASDFASDF') : null;
+                    localStorage.setItem('token', 'ASDFASDFASDFASDF');
+                    // dataJson.token ? setSesionValida(true) : null;
+                    setSesionValida(true);
                     setMensajeApi(dataJson.message ? dataJson.message : null);
                     dataJson.userId ? localStorage.setItem('userId', dataJson.userId) : null;
                 });
@@ -55,6 +57,7 @@ function Login() {
     };
 
     useEffect(() => {
+
         sesionValida ? location.href = '/' : null;
         var myToast = toastRef.current
         var bsToast = Toast.getInstance(myToast);
