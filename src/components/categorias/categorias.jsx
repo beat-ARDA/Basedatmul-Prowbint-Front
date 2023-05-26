@@ -2,9 +2,12 @@ import { React, useState } from 'react';
 import './categorias.css';
 import { DeleteCategory, GetCategories, InsertCategory, UpdateCategory } from '../../servicesBDM/categories';
 import { useEffect } from 'react';
+import {getCategoriasActivas} from '../../servicesPw2/categorias.js';
+
 
 
 export default function Categorias() {
+    const api = localStorage.getItem('api');
     const [dataCategories, setDataCategories] = useState();
     const [textoModal, setTextoModal] = useState();
     const [nombreCategoriaBool, setNombreCategoriaBool] = useState();
@@ -35,11 +38,16 @@ export default function Categorias() {
     }
 
     useEffect(() => {
-        GetCategories().then(response => setDataCategories(response.categories))
+        if(api=='pw2'){
+            getCategoriasActivas().then(response=> setDataCategories(response.categories))//meter servicio mio
+        }else{
+            GetCategories().then(response => setDataCategories(response.categories))
+        }
+        
     }, []);
 
 
-    if (dataCategories)
+    if (dataCategories)//checar que esta variable agarre bien los valores se setea cn setDataCategories
         return (
             <div className='container-fluid padre-categorias pt-2'>
                 <div className='row'>
@@ -78,7 +86,7 @@ export default function Categorias() {
                     <form id='categoryForm' className='col-xl-8 col-12 pt-2 d-flex flex-column'
                         onSubmit={(e) => {
                             e.preventDefault();
-                            if (bd === 'pw2')
+                            if (api == 'pw2')
                                 null;
                             else {
                                 const bodyData = new FormData(document.getElementById('categoryForm'));

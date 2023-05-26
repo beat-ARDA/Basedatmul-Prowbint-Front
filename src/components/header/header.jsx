@@ -5,13 +5,14 @@ import { GetUserProfileBDM } from "../../servicesBDM/userService";
 import perfilImageVacia from '../../images/perfilSola.jpg';
 import { getUser } from "../../servicesPw2/user";
 import { GetCategories } from "../../servicesBDM/categories";
+import {getCategoriasActivas} from '../../servicesPw2/categorias.js';
 
 function Header() {
     const navigate = useNavigate();
     const [mobileActive, setMobileActive] = useState(false);
     const [sesionActive, setSesionActive] = useState(false);
     const [dataPerfil, setDataPerfil] = useState();
-    const [dataCategories, setCategories] = useState([]);
+    const [dataCategories, setCategories] = useState();
     // const [api, setApi] = useState(localStorage.getItem('api'));
 
     const api = localStorage.getItem('api');
@@ -23,13 +24,16 @@ function Header() {
 
         localStorage.getItem('token') ? setSesionActive(true) : null;
 
-        api === 'pw2' ? null : GetCategories().then(response => {
+        api === 'pw2' ? getCategoriasActivas().then(response=>{
+            setCategories(response)
+        }) : GetCategories().then(response => {
             setCategories(response.categories)
         });
 
     }, []);
-
+    
     if (dataPerfil && dataCategories) {
+        
         return (
             <>
                 {
