@@ -31,7 +31,7 @@ function Header() {
         });
 
     }, []);
-    
+
     if (dataPerfil && dataCategories) {
         
         return (

@@ -46,16 +46,6 @@ async function getCategoriasActivas() {
         .catch(error => console.warn(error));
 };
 
-async function GetCategories() {
-    return await fetch(`${process.env.REACT_APP_PATH_API}/categories.php`, {
-        method: 'GET',
-        dataType: "json"
-    })
-        .then(response => response.text())
-        .then(data => { return JSON.parse(data) })
-        .catch(error => console.warn(error));
-}
-
 async function getAllCategorias() {
     return await fetch(process.env.REACT_APP_PATH_API + `categorias`, {
         method: 'GET',
