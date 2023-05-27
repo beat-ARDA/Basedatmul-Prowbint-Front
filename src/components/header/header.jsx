@@ -6,6 +6,7 @@ import perfilImageVacia from '../../images/perfilSola.jpg';
 import { getUser } from "../../servicesPw2/user";
 import { GetCategories } from "../../servicesBDM/categories";
 import {getCategoriasActivas} from '../../servicesPw2/categorias.js';
+import { buscar } from "../../servicesPw2/filtros";
 
 function Header() {
     const navigate = useNavigate();
@@ -13,6 +14,7 @@ function Header() {
     const [sesionActive, setSesionActive] = useState(false);
     const [dataPerfil, setDataPerfil] = useState();
     const [dataCategories, setCategories] = useState();
+    const [dataCursos, setDataCursos] = useState([]);
     // const [api, setApi] = useState(localStorage.getItem('api'));
 
     const api = localStorage.getItem('api');
@@ -97,12 +99,15 @@ function Header() {
                                 <div className="col-xl-7 m-0 p-0">
                                     <form className="d-flex align-items-center justify-content-center h-100 search-form px-2">
                                         <input
-                                            onChange={(e) => { console.log(e.target.value) }}
+                                            onChange={(e) => { console.log(e.target.value);  buscar(e.target.value).then((courses) => {
+                                        setDataCursos(courses.cursos);
+                                    });}}
                                             id="buscador"
                                             className="w-100 search-input"
                                             type="search"
                                             placeholder="Busca lo que sea..." />
                                         <button className="search-button">
+                                        
                                             <svg
                                                 className="search-icon"
                                                 xmlns="http://www.w3.org/2000/svg"
