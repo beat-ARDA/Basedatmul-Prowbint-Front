@@ -4,7 +4,7 @@ import perfilImageVacia from '../../images/perfilSola.jpg'
 import { useNavigate } from 'react-router-dom';
 import { regexNombres, regexCorreo, regexContraseña } from '../../helpers';
 import { GetUserProfileBDM, UpdateUserProfileBDM } from '../../servicesBDM/userService';
-import { getUser } from '../../servicesPw2/user';
+import { getUser, updateUser } from '../../servicesPw2/user';
 
 export default function Perfil() {
     const [nombresPerfil, setNombresPerfil] = useState('');
@@ -27,7 +27,8 @@ export default function Perfil() {
     const [dataPerfil, setDataPerfil] = useState();
     const [borroImagen, setBorroImagen] = useState(false);
     const [imagenServidor, setImagenServidor] = useState(true);
-    const [api, setApi] = useState('bdm');
+
+    const api = localStorage.getItem('api');
 
     const navigate = useNavigate();
 
@@ -153,13 +154,16 @@ export default function Perfil() {
                             contraseñaPerfilBool &&
                             tipoUsuarioPerfilBool &&
                             generoPerfilBool ? true : false;
+
                     const bodyData = new FormData(document.getElementById('perfilForm'));
 
                     bodyData.append('borroImagen', borroImagen ? true : false);
 
-                    comprobacion ? UpdateUserProfileBDM(bodyData).then(response => {
+                    comprobacion ? (api == 'pw2' ? updateUser(bodyData).then((response) => {
+                        console.log(response);
+                    }) : UpdateUserProfileBDM(bodyData).then(response => {
                         setTextoModal(response.message);
-                    }) : setTextoModal("Faltan campos por rellenar");
+                    })) : setTextoModal("Faltan campos por rellenar");
                 }}
                 className='container-fluid perfil-padre px-xl-4 pb-2'>
                 <div className='row d-flex flex-column justify-content-center align-items-center'>
