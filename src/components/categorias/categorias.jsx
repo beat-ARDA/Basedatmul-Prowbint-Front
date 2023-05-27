@@ -2,7 +2,7 @@ import { React, useState } from 'react';
 import './categorias.css';
 import { DeleteCategory, GetCategories, InsertCategory, UpdateCategory } from '../../servicesBDM/categories';
 import { useEffect } from 'react';
-import {getCategoriasActivas} from '../../servicesPw2/categorias.js';
+import { getCategoriasActivas,register,modify,deleteById } from '../../servicesPw2/categorias.js';
 
 
 
@@ -26,9 +26,16 @@ export default function Categorias() {
             nombreCategoriaBool && descripcionCategoriaBool ? true : false;
 
         if (comprobacion) {
-            InsertCategory(bodyData).then(response => {
-                setTextoModal(response.message);
-            })
+            if(api == 'pw2'){
+                register(bodyData).then(response => {
+                    setTextoModal(response.message);
+                })
+            }else{
+                InsertCategory(bodyData).then(response => {
+                    setTextoModal(response.message);
+                })
+            }
+            
             setNombreCategoria('');
             setDescripcionCategoria('');
         }
@@ -38,16 +45,18 @@ export default function Categorias() {
     }
 
     useEffect(() => {
-        if(api=='pw2'){
-            getCategoriasActivas().then(response=> setDataCategories(response.categories))//meter servicio mio
-        }else{
+        if (api == 'pw2') {
+            getCategoriasActivas().then(response => setDataCategories(response))//meter servicio mio
+        } else {
             GetCategories().then(response => setDataCategories(response.categories))
         }
-        
+
     }, []);
 
+    console.log(dataCategories)
+    if (dataCategories) {
 
-    if (dataCategories)//checar que esta variable agarre bien los valores se setea cn setDataCategories
+        //checar que esta variable agarre bien los valores se setea cn setDataCategories
         return (
             <div className='container-fluid padre-categorias pt-2'>
                 <div className='row'>
@@ -59,26 +68,26 @@ export default function Categorias() {
                     <div className='col-xl-4 col-12 border caja-categorias'>
                         {
                             dataCategories.map((category, index) => {
-       
-                                    return (
-                                        <div
-                                            onClick={() => {
-                                                setNombreCategoria(category.nombre);
-                                                setDescripcionCategoria(category.descripcion);
-                                                setIdCategoria(category.idCategoria);
-                                                setCategoryMode('editCategory');
-                                                setNombreCategoriaBool(true);
-                                                setDescripcionCategoriaBool(true);
-                                            }}
-                                            key={category.idCategoria}
-                                            className="row border-bottom w-100 d-flex align-items-center tarjeta-categoria mt-2">
-                                            <div className='col-12' id={category.idCategoria}>
-                                                <h6 className='fw-bold text-dark'>{index + 1}- {category.nombre}</h6>
-                                                <h6 className='text-dark'>{category.descripcion}</h6>
-                                                <h6 className='text-secondary'>{category.fecha}</h6>
-                                            </div>
+
+                                return (
+                                    <div
+                                        onClick={() => {
+                                            setNombreCategoria(category.nombre);
+                                            setDescripcionCategoria(category.descripcion);
+                                            setIdCategoria(category.idCategoria);
+                                            setCategoryMode('editCategory');
+                                            setNombreCategoriaBool(true);
+                                            setDescripcionCategoriaBool(true);
+                                        }}
+                                        key={category.idCategoria}
+                                        className="row border-bottom w-100 d-flex align-items-center tarjeta-categoria mt-2">
+                                        <div className='col-12' id={category.idCategoria}>
+                                            <h6 className='fw-bold text-dark'>{index + 1}- {category.nombre}</h6>
+                                            <h6 className='text-dark'>{category.descripcion}</h6>
+                                            <h6 className='text-secondary'>{formatearFecha(category.fecha)}</h6>
                                         </div>
-                                    );
+                                    </div>
+                                );
                             })
                         }
 
@@ -86,8 +95,31 @@ export default function Categorias() {
                     <form id='categoryForm' className='col-xl-8 col-12 pt-2 d-flex flex-column'
                         onSubmit={(e) => {
                             e.preventDefault();
-                            if (api == 'pw2')
-                                null;
+                            if (api == 'pw2'){
+                                const bodyData = new FormData(document.getElementById('categoryForm'));
+                                let comprobacion =
+                                    nombreCategoriaBool && descripcionCategoriaBool ? true : false;
+
+                                if (comprobacion) {
+                                    if (categoryMode === 'newCategory') {
+                                        register(bodyData).then(response => {
+                                            setTextoModal(response.message);
+                                        })
+                                    }
+                                    else {
+                                        modify(bodyData, idCategoria).then(response => {
+                                            setTextoModal(response.message);
+                                        })
+                                    }
+
+                                    setNombreCategoria('');
+                                    setDescripcionCategoria('');
+                                    setIdCategoria('');
+                                }
+
+                                comprobacion ? setTextoModal("Categoria registrada") : setTextoModal("Faltan campos por rellenar");
+                            }
+                                
                             else {
                                 const bodyData = new FormData(document.getElementById('categoryForm'));
                                 let comprobacion =
@@ -126,7 +158,8 @@ export default function Categorias() {
                             <button
                                 data-bs-toggle="modal" data-bs-target="#exampleModal"
                                 onClick={() => {
-                                    DeleteCategory(idCategoria).then((response) => {
+                                    if(api == 'pw2'){
+                                        deleteById(idCategoria).then((response) => {
                                         console.log(response);
                                         setTextoModal(response.message);
                                         setCategoryMode('newCategory');
@@ -134,9 +167,20 @@ export default function Categorias() {
                                         setDescripcionCategoria('');
                                         setIdCategoria('');
                                     });
+                                    }else{
+                                        DeleteCategory(idCategoria).then((response) => {
+                                        console.log(response);
+                                        setTextoModal(response.message);
+                                        setCategoryMode('newCategory');
+                                        setNombreCategoria('');
+                                        setDescripcionCategoria('');
+                                        setIdCategoria('');
+                                    });
+                                    }
+                                    
 
                                 }}
-                                className={`btn btn-danger w-50 ${categoryMode === 'editCategory' ? '' : 'd-none'}`}>Eliminar categoria</button>
+                                className={`btn btn-danger w-50 ${categoryMode === 'editCategory' ? '' : 'd-none'}`}>Actualizar categoria</button>
                         </div>
                         <div className='row'>
                             <div className='col-3 d-flex align-items-center justify-content-center'>
@@ -198,4 +242,20 @@ export default function Categorias() {
                 </div>
             </div >
         );
+    }
+}
+
+function formatearFecha(fecha) {
+    const date = new Date(fecha);
+
+    const dia = date.getUTCDate();
+    const mes = date.getUTCMonth() + 1; // Los meses van de 0 a 11, por eso se suma 1
+    const anio = date.getUTCFullYear();
+
+    // Asegurarse de que el día y el mes tengan dos dígitos
+    const diaFormateado = dia.toString().padStart(2, '0');
+    const mesFormateado = mes.toString().padStart(2, '0');
+
+    // Devolver la fecha formateada
+    return `${diaFormateado}-${mesFormateado}-${anio}`;
 }
