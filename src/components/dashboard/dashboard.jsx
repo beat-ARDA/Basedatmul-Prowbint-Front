@@ -4,7 +4,8 @@ import TarjetaDashboard from '../tarjeta-dashboard/tarjeta-dashboard';
 import '../tarjeta-dashboard/tarjeta-dashboard.css';
 import { GetCourses, GetCoursesBestCalificated, GetCoursesBestSellers, GetCoursesMostRecents } from '../../servicesBDM/courses';
 import { useState } from 'react';
-
+import {getCoursesActive} from '../../servicesPw2/courses'
+import { data } from 'jquery';
 
 const Dashboard = () => {
     const [dataCursos, setDataCursos] = useState([]);
@@ -24,12 +25,22 @@ const Dashboard = () => {
 
 
     useEffect(() => {
-        if (api === 'bdm')
+        if (api === 'bdm'){
+            console.log('bdm')
             GetCourses().then((courses) => {
-                setDataCursos(courses.courses);
+                setDataCursos(courses);
             });
+        }
+        else{
+            getCoursesActive().then((courses) => {
+                console.log(JSON.stringify(courses));
+                setDataCursos(courses.cursos);
+            });
+            
+        }
     }, []);
 
+    console.log('data cursos:'+dataCursos);
     if (dataCursos) {
         return (
             <div className='container-fluid padre-dashboard'>
@@ -43,9 +54,16 @@ const Dashboard = () => {
                     <div className='col-3 d-flex justify-content-end align-items-center'>
                         <button
                             onClick={() => {
-                                GetCourses().then((courses) => {
+                                if(api=='bdm'){
+                                    GetCourses().then((courses) => {
                                     setDataCursos(courses.courses);
                                 });
+                                }else{
+                                    getCoursesActive().then((courses) => {
+                                    setDataCursos(courses);
+                                    });
+                                }
+                                
                             }}
                             className='btn btn-dark w-100 texto-boton p-0 m-0' type="button">Todos</button>
                     </div>

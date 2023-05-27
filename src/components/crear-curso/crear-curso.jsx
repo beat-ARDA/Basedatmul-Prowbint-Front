@@ -3,11 +3,13 @@ import './crear-curso.css';
 import { useState } from "react";
 import { useEffect } from "react";
 import { GetCategories } from "../../servicesBDM/categories";
+import { getCategoriasActivas } from "../../servicesPw2/categorias";
 import { InsertCourse } from "../../servicesBDM/courses";
 import { useNavigate } from "react-router-dom";
+import {getCoursesActive} from '../../servicesPw2/courses'
 
 export default function CrearCurso() {
-
+    const api = localStorage.getItem('api');
     const [dataCategories, setDataCategories] = useState();
     const [sectionsArray, setSectionsArray] = useState([]);
     const [nivelArray, setNivelArray] = useState([]);
@@ -38,9 +40,16 @@ export default function CrearCurso() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        GetCategories().then(response => {
-            setDataCategories(response.categories);
-        });
+        if(api == 'pw2'){
+            getCategoriasActivas().then(response => {
+                setDataCategories(response);
+            });
+        }else{
+            GetCategories().then(response => {
+                setDataCategories(response.categories);
+            });
+        }
+        
     }, []);
 
     if (dataCategories)
