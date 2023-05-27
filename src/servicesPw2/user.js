@@ -16,14 +16,10 @@ async function getUser() {
         .catch(error => console.warn(error));
 };
 
-async function updateUser() {
+async function updateUser(bodyData) {
     return await fetch(process.env.REACT_APP_PATH_API + `user/${localStorage.getItem('userId')}`, {
         method: 'PUT',
-        body: bodyData,
-        body: new URLSearchParams(bodyData),
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-        }
+        body: bodyData
     })
         .then(response => response.text())
         .then(data => { return JSON.parse(data) })
