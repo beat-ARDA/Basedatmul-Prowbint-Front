@@ -24,7 +24,7 @@ function Header() {
         localStorage.getItem('token') ? setSesionActive(true) : null;
 
         api === 'pw2' ? null : GetCategories().then(response => {
-            setCategories(response.categories)
+            setCategories(response.categories);
         });
 
     }, []);
