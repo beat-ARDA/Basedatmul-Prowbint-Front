@@ -114,14 +114,7 @@ function Header() {
                                     </form>
                                 </div>
                                 <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
-                                    <Link to="/messages">
-                                        <svg
-                                            className="cart-icon"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 512 512">
-                                            <path
-                                                d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z" /></svg>
-                                    </Link>
+                                    
                                 </div>
                                 <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0 pe-1">
                                     <button onClick={() => navigate("/registrarse")} className="register-button w-100">
@@ -211,14 +204,7 @@ function Header() {
                                     </form>
                                 </div>
                                 <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
-                                    <Link to={"/messages"}>
-                                        <svg
-                                            className="cart-icon"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 512 512">
-                                            <path
-                                                d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z" /></svg>
-                                    </Link>
+                                   
                                 </div>
                                 <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
                                     <small className="text-black fw-bold">{dataPerfil.user.firstNames + ' ' + dataPerfil.user.lastNames}</small>
@@ -363,14 +349,7 @@ function Header() {
                                             </div>
                                             <div className="col-sm-6 col-6 d-flex justify-content-center align-items-center m-0 p-0">
                                                 {/* <button className="cart-button m-0 p-0" type="button"> */}
-                                                <Link to="/messages">
-                                                    <svg
-                                                        className="cart-icon"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 512 512">
-                                                        <path
-                                                            d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z" /></svg>
-                                                </Link>
+                                                
                                                 {/* </button> */}
                                             </div>
                                         </div>
@@ -545,14 +524,7 @@ function Header() {
                                         </div>
                                         <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-2">
 
-                                            <Link to="/messages">
-                                                <svg
-                                                    className="cart-icon"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 512 512">
-                                                    <path
-                                                        d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z" /></svg>
-                                            </Link>
+                                            
                                         </div>
                                         <div className="col-sm-12 col-12 m-0 pb-2 d-flex justify-content-center">
                                             <form className="d-flex align-items-center justify-content-center h-100 w-100 search-form px-2">

@@ -248,19 +248,15 @@ function Filtros() {
 export default function Ventas() {
     return (
         <div className='container-fluid padre-ventas py-2'>
-            <div className='row d-flex mb-2'>
-                <Filtros />
-            </div>
             <div className="row">
                 <div className="col-12">
-                    <h5 className='fw-bold text-dark p-0 m-0 text-center'>Ventas</h5>
+                    
                 </div>
             </div>
             <div className='row'>
-                <ListaCursosVentas />
-            </div>
-            <div className='row'>
-                <ListaAlumnosVentas />
+                <Link className="d-flex  fw-bold w-25 h-75" to="/crear-curso">
+                    <button className='btn btn-success  '>Crear curso</button>
+                </Link>
             </div>
         </div>
     );
