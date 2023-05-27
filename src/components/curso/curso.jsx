@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import * as PDFJS from "pdfjs-dist/build/pdf";
 import jsPDF from 'jspdf';
+import {getCoursesActive,getCourseById} from '../../servicesPw2/courses'
 
 function TarjetaComentarios({
     imagen,
@@ -1077,11 +1078,20 @@ export default function Curso() {
     };
 
     useEffect(() => {
-        GetCourse(idCurso).then((course) => {
-            setDataCurso(course.course);
-            setDataNiveles(course.levels);
-            setDataSecciones(course.sections);
-        });
+        if(api == 'pw2'){
+            getCourseById(idCurso).then((course) => {
+                setDataCurso(course.course);
+                setDataNiveles(course.levels);
+                setDataSecciones(course.sections);
+            });
+        }else{
+            GetCourse(idCurso).then((course) => {
+                setDataCurso(course.course);
+                setDataNiveles(course.levels);
+                setDataSecciones(course.sections);
+            });
+        }
+        
     }, []);
 
     if (dataCurso && dataNiveles && dataSecciones) {
