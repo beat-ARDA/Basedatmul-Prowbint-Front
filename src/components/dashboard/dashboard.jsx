@@ -5,6 +5,7 @@ import '../tarjeta-dashboard/tarjeta-dashboard.css';
 import { GetCourses, GetCoursesBestCalificated, GetCoursesBestSellers, GetCoursesMostRecents } from '../../servicesBDM/courses';
 import { useState } from 'react';
 import { getCoursesActive } from '../../servicesPw2/courses'
+import { buscar,MasReciente } from '../../servicesPw2/filtros'
 import { data } from 'jquery';
 
 const Dashboard = () => {
@@ -56,23 +57,17 @@ const Dashboard = () => {
                                         setDataCursos(courses.courses);
                                     });
                                 } else {
+                                    
                                     getCoursesActive().then((courses) => {
-                                        setDataCursos(courses);
+                                        console.log(courses.cursos);
+                                        setDataCursos(courses.cursos);
                                     });
                                 }
 
                             }}
                             className='btn btn-dark w-100 texto-boton p-0 m-0' type="button">Todos</button>
                     </div>
-                    <div className='col-3 d-flex justify-content-center align-items-center'>
-                        <button
-                            onClick={() => {
-                                GetCoursesBestCalificated().then((courses) => {
-                                    setDataCursos(courses.courses);
-                                });
-                            }}
-                            className='btn btn-dark w-100 texto-boton p-0 m-0' type="button">Mejor calificados</button>
-                    </div>
+
                     <div className='col-3 d-flex justify-content-center align-items-center'>
                         <button
                             onClick={() => {
@@ -85,9 +80,16 @@ const Dashboard = () => {
                     <div className='col-3 d-flex justify-content-start align-items-center'>
                         <button
                             onClick={() => {
-                                GetCoursesMostRecents().then((courses) => {
+                                if(api == 'pw2'){
+                                    MasReciente().then((courses) => {
+                                    setDataCursos(courses);
+                                    });
+                                }else{
+                                    GetCoursesMostRecents().then((courses) => {
                                     setDataCursos(courses.courses);
-                                });
+                                    });
+                                }
+                                
                             }}
                             className='btn btn-dark w-100 texto-boton p-0 m-0' type="button">Mas recientes</button>
                     </div>
