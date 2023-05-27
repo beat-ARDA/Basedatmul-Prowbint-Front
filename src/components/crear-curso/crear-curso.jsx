@@ -6,7 +6,7 @@ import { GetCategories } from "../../servicesBDM/categories";
 import { getCategoriasActivas } from "../../servicesPw2/categorias";
 import { InsertCourse } from "../../servicesBDM/courses";
 import { useNavigate } from "react-router-dom";
-import {getCoursesActive} from '../../servicesPw2/courses'
+import { postCourse } from "../../servicesPw2/courses";
 
 export default function CrearCurso() {
     const api = localStorage.getItem('api');
@@ -40,16 +40,16 @@ export default function CrearCurso() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(api == 'pw2'){
+        if (api == 'pw2') {
             getCategoriasActivas().then(response => {
+                console.log(response);
                 setDataCategories(response);
             });
-        }else{
+        } else {
             GetCategories().then(response => {
                 setDataCategories(response.categories);
             });
         }
-        
     }, []);
 
     if (dataCategories)
@@ -63,9 +63,16 @@ export default function CrearCurso() {
                 formData.append('levels', JSON.stringify(nivelArray));
                 formData.append('sections', JSON.stringify(sectionsArray));
 
-                InsertCourse(formData).then((dato) => {
-                    console.log(dato);
-                });
+                if (api == 'pw2') {
+                    postCourse(formData).then((response) => {
+                        console.log(response);
+                    });
+                } else {
+                    InsertCourse(formData).then((dato) => {
+                        console.log(dato);
+                    });
+                }
+
             }} id="form-curso" className="container-fluid pt-2 padre-crear-curso">
                 <div className="row">
                     <div className="col-12">
@@ -298,6 +305,7 @@ export default function CrearCurso() {
                                                                             disabled={section.filesButtons}
                                                                             onChange={(e) => {
                                                                                 const fileReader = new FileReader();
+                                                                                
                                                                                 fileReader.readAsDataURL(e.target.files[0]);
 
                                                                                 // Cuando se carga el archivo

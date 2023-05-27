@@ -7,7 +7,9 @@ import { useParams } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import * as PDFJS from "pdfjs-dist/build/pdf";
 import jsPDF from 'jspdf';
-import {getCoursesActive,getCourseById} from '../../servicesPw2/courses'
+import { getCoursesActive, getCourseById, postCourseAlumn } from '../../servicesPw2/courses'
+
+const api = localStorage.getItem('api');
 
 function TarjetaComentarios({
     imagen,
@@ -643,18 +645,24 @@ function Contentido({ display, dataNiveles, dataSecciones, enviarVideo }) {
         formData.append('curso', idCurso);
         formData.append('alumno', localStorage.getItem('userId'));
 
-        VerifyCourseComplete(formData).then((data) => {
-            setCourseComplete(data.compro_completo);
-        });
+        if (api == 'pw2') {
 
-        GetPurchasedLevels(formData).then((data) => {
-            const arrIdLevels = data.levels.map((level) => {
-                return level.nivel
+        } else {
+
+            VerifyCourseComplete(formData).then((data) => {
+                setCourseComplete(data.compro_completo);
             });
 
-            setPurchasedLevels(data.levels);
-            setPurchasedIdLevels(arrIdLevels);
-        });
+            GetPurchasedLevels(formData).then((data) => {
+                const arrIdLevels = data.levels.map((level) => {
+                    return level.nivel
+                });
+
+                setPurchasedLevels(data.levels);
+                setPurchasedIdLevels(arrIdLevels);
+
+            });
+        }
 
     }, []);
 
@@ -689,49 +697,6 @@ function Contentido({ display, dataNiveles, dataSecciones, enviarVideo }) {
                                                     <div className={
                                                         purchasedIdLevels.includes(nivel.idNivelCurso) ? 'd-none' : 'd-block'
                                                     }>
-                                                        <PayPalScriptProvider
-                                                            options={{ "client-id": process.env.REACT_APP_CLIENT_ID_PAYPAL }}>
-                                                            <PayPalButtons
-                                                                createOrder={(data, actions) => {
-                                                                    return actions.order.create({
-                                                                        purchase_units: [
-                                                                            {
-                                                                                amount: {
-                                                                                    value: `${nivel.costo}`,
-                                                                                },
-                                                                            },
-                                                                        ],
-                                                                    });
-                                                                }}
-
-                                                                onApprove={(data, actions) => {
-
-                                                                    const formData = new FormData();
-
-                                                                    formData.append('alumno', localStorage.getItem('userId'));
-                                                                    formData.append('compro_completo',
-                                                                        dataNiveles.length - purchasedIdLevels.length === 1 ||
-                                                                            dataNiveles.length === 1 ? 1 : 0
-                                                                    );
-                                                                    purchasedIdLevels.push(nivel.idNivelCurso);
-                                                                    formData.append('termino_curso', 0);
-                                                                    formData.append('forma_pago', 'PayPal');
-                                                                    formData.append('cantidad_pagada', nivel.costo);
-                                                                    formData.append('idLevels', JSON.stringify(dataNiveles));
-                                                                    formData.append('levels', JSON.stringify(purchasedIdLevels));
-                                                                    formData.append('idSeccions', JSON.stringify(dataSecciones));
-
-                                                                    InsertShopingCourse(formData, idCurso).then((data) => {
-                                                                        console.log(data);
-                                                                    });
-
-                                                                    return actions.order.capture().then((details) => {
-                                                                        const name = details.payer.name.given_name;
-
-                                                                    });
-                                                                }}
-                                                            />
-                                                        </PayPalScriptProvider>
                                                     </div>
                                                 </div>
                                             </div>
@@ -748,19 +713,11 @@ function Contentido({ display, dataNiveles, dataSecciones, enviarVideo }) {
                                                                     {seccion.titulo}
                                                                 </h4>
                                                                 <button
-                                                                    disabled={
-                                                                        purchasedIdLevels.includes(nivel.idNivelCurso) ? false : true
-                                                                    }
                                                                     onClick={() => enviarVideo(seccion.video)}
                                                                     className={`${seccion.video ? 'd-block btn btn-secondary' : 'd-none'}`}>
                                                                     Ver video
                                                                 </button>
                                                                 <a
-
-                                                                    className={
-                                                                        `${seccion.contenido || seccion.link ? 'display-block ' : 'd-none'}
-                                                                        ${purchasedIdLevels.includes(nivel.idNivelCurso) ? false : 'disabled-a'}`
-                                                                    }
                                                                     download={'archivo_curso'}
                                                                     href={
                                                                         seccion.contenido ?
@@ -771,7 +728,6 @@ function Contentido({ display, dataNiveles, dataSecciones, enviarVideo }) {
                                                                 </a>
                                                             </div>
                                                         )
-
                                                     }
                                                 })
                                             }
@@ -867,9 +823,14 @@ function Comprar({ display, precio, levels, seccions }) {
         formData.append('curso', idCurso);
         formData.append('alumno', localStorage.getItem('userId'));
 
-        VerifyCourseComplete(formData).then((data) => {
-            setCourseComplete(data.compro_completo);
-        });
+        if (api == 'pw2') {
+
+        } else {
+            VerifyCourseComplete(formData).then((data) => {
+                setCourseComplete(data.compro_completo);
+            });
+        }
+
     }, []);
 
     if (levels && precio && seccions) {
@@ -908,8 +869,15 @@ function Comprar({ display, precio, levels, seccions }) {
                                 formData.append('levels', JSON.stringify([]));
                                 formData.append('idSeccions', JSON.stringify(seccions));
 
-                                InsertShopingCourse(formData, idCurso).then((data) => {
-                                });
+                                if (api == 'pw2') {
+                                    postCourseAlumn(idCurso, formData).then((data) => {
+                                        console.log(data);
+                                    });
+                                }
+                                else {
+                                    InsertShopingCourse(formData, idCurso).then((data) => {
+                                    });
+                                }
 
                                 return actions.order.capture().then((details) => {
                                     const name = details.payer.name.given_name;
@@ -1078,24 +1046,24 @@ export default function Curso() {
     };
 
     useEffect(() => {
-        if(api == 'pw2'){
+        if (api == 'pw2') {
             getCourseById(idCurso).then((course) => {
+                console.log(course);
                 setDataCurso(course.course);
                 setDataNiveles(course.levels);
                 setDataSecciones(course.sections);
             });
-        }else{
+        } else {
             GetCourse(idCurso).then((course) => {
                 setDataCurso(course.course);
                 setDataNiveles(course.levels);
                 setDataSecciones(course.sections);
             });
         }
-        
+
     }, []);
 
     if (dataCurso && dataNiveles && dataSecciones) {
-
         return (
             <div className='container-fluid p-0 m-0'>
                 <div className='row p-0 m-0'>
@@ -1103,7 +1071,7 @@ export default function Curso() {
                         <iframe
                             width="100%"
                             height="500"
-                            src={video ? `${process.env.REACT_APP_PATH_API_VIDEOS}/${video}` : ''}
+                            src={video ? `${'http://localhost:3000/'}${video}` : 'http://localhost:3000/uploads/video.mp4'}
                             title="Video curso"
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
