@@ -110,7 +110,7 @@ export default function Registro() {
             <form
                 id="registerForm"
                 onSubmit={(e) => {
-
+                    
                     e.preventDefault();
 
                     const bodyData = new FormData(document.getElementById('registerForm'));
