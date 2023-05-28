@@ -115,16 +115,6 @@ export default function Perfil() {
         //Obtener el perfil del usuario
 
         api == 'pw2' ? getUser().then(jsonData => {
-            let dateBirth = new Date(jsonData.user.birthdate);
-            const year = dateBirth.getFullYear();
-            const month = String(dateBirth.getMonth() + 1).padStart(2, '0');
-            const day = String(dateBirth.getDate()).padStart(2, '0');
-
-            const date = `${year}-${month}-${day}`;
-
-            console.log(jsonData.user.firstNames);
-            console.log(jsonData.user.lastNames);
-
             setDataPerfil(jsonData);
             setImagenPerfil(jsonData.user.imageProfile);
             setNombresPerfil(jsonData.user.firstNames);
@@ -133,7 +123,7 @@ export default function Perfil() {
             setContraseñaPerfil(jsonData.user.pass);
             setGeneroPerfil(jsonData.user.gender);
             setTipoUsuarioPerfil(jsonData.user.userType);
-            setFechaNacimientoPerfil(date);
+            setFechaNacimientoPerfil(jsonData.user.birthDate);
         }) :
             GetUserProfileBDM()
                 .then(jsonData => {
@@ -167,12 +157,9 @@ export default function Perfil() {
 
                     const bodyData = new FormData(document.getElementById('perfilForm'));
 
-                    const bodyDatapw2 = new FormData(document.getElementById('perfilForm'));
-                    bodyDatapw2.append('pass', contraseñaPerfil);
-
                     bodyData.append('borroImagen', borroImagen ? true : false);
 
-                    comprobacion ? (api == 'pw2' ? updateUser(bodyDatapw2).then((response) => {
+                    comprobacion ? (api == 'pw2' ? updateUser(bodyData).then((response) => {
                         console.log(response);
                     }) : UpdateUserProfileBDM(bodyData).then(response => {
                         setTextoModal(response.message);
@@ -205,7 +192,7 @@ export default function Perfil() {
                         </div>
                     </div>
                     <div className='col-12 d-flex justify-content-center align-items-center'>
-                        <h6 className='fw-bold p-0 m-0'>{calcularEdad(dataPerfil.user.birthdate)} años</h6>
+                        <h6 className='fw-bold p-0 m-0'>{calcularEdad(dataPerfil.user.birthDate)} años</h6>
                     </div>
                     <div className='col-12 d-flex justify-content-center align-items-center'>
                         <input
