@@ -10,23 +10,18 @@ function Header() {
     const navigate = useNavigate();
     const [mobileActive, setMobileActive] = useState(false);
     const [sesionActive, setSesionActive] = useState(false);
-    const [dataPerfil, setDataPerfil] = useState([]);
-    const [dataCategories, setCategories] = useState([]);
-    // const [api, setApi] = useState(localStorage.getItem('api'));
-
-    const api = localStorage.getItem('api');
+    const [dataPerfil, setDataPerfil] = useState();
+    const [dataCategories, setCategories] = useState();
+    const [api, setApi] = useState('bdm');
 
     useEffect(() => {
-
         localStorage.getItem('userId') ? (api == 'pw2' ? getUser().then(response => { setDataPerfil(response) }) : GetUserProfileBDM()
             .then(response => { setDataPerfil(response) })) : null;
-
         localStorage.getItem('token') ? setSesionActive(true) : null;
 
         api === 'pw2' ? null : GetCategories().then(response => {
             setCategories(response.categories)
         });
-
     }, []);
 
     if (dataPerfil && dataCategories) {
@@ -217,13 +212,13 @@ function Header() {
                                     </Link>
                                 </div>
                                 <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0">
-                                    <small className="text-black fw-bold">{dataPerfil.length > 0 ? dataPerfil.user.firstNames + ' ' + dataPerfil.user.lastNames : 'vacio'}</small>
+                                    <small className="text-black fw-bold">{dataPerfil.user.firstNames + ' ' + dataPerfil.user.lastNames}</small>
                                 </div>
                                 <div className="col-xl-1 d-flex justify-content-center align-items-center m-0 p-0 perfil-menu">
                                     <div
                                         onClick={() => navigate(`/perfil/${localStorage.getItem('userId')}`)}
                                         className="perfil-image p-0 m-0"
-                                        style={{ backgroundImage: `url(${dataPerfil.length > 0 && dataPerfil.user.imageProfile !== "" ? `data:image/jpeg;base64,${dataPerfil.user.imageProfile}` : perfilImageVacia}` }}></div>
+                                        style={{ backgroundImage: `url(${dataPerfil.user.imageProfile !== "" ? `data:image/jpeg;base64,${dataPerfil.user.imageProfile}` : perfilImageVacia}` }}></div>
                                     <ul className="lista-perfil w-25 p-2 mx-2">
                                         <div className="row pb-2 m-0">
                                             <div
@@ -450,12 +445,7 @@ function Header() {
                                         <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-1 perfil-menu">
                                             <div
                                                 className="perfil-image-mobile p-0 m-0"
-                                                style={{
-                                                    backgroundImage: `url(${dataPerfil.length > 0 && dataPerfil.user.imageProfile !== "" ?
-                                                        `data:image/jpeg;base64,${dataPerfil.user.imageProfile}` :
-                                                        perfilImageVacia})`
-                                                }}>
-                                            </div>
+                                                style={{ backgroundImage: `url(${dataPerfil.user.imageProfile !== "" ? `data:image/jpeg;base64,${dataPerfil.user.imageProfile}` : perfilImageVacia})` }}></div>
                                             <ul className="lista-perfil-mobile w-25 p-2 mx-2">
                                                 <div className="row pb-2 m-0">
                                                     <div
@@ -500,13 +490,7 @@ function Header() {
                                             </ul>
                                         </div>
                                         <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-1">
-                                            <Link to="/perfil/:userId" className="text-black">
-                                                {
-                                                    dataPerfil.length > 0 ?
-                                                        dataPerfil.user.firstNames + ' ' + dataPerfil.user.lastNames :
-                                                        'vacio'
-                                                }
-                                            </Link>
+                                            <Link to="/perfil/:userId" className="text-black">{dataPerfil.user.firstNames + ' ' + dataPerfil.user.lastNames}</Link>
                                         </div>
                                         <div className="col-sm-12 col-12 d-flex justify-content-start align-items-center m-0 pb-1">
                                             <Link to="/mis-cursos" className="text-black">Mis cursos</Link>
