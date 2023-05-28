@@ -68,14 +68,6 @@ export default function Registro() {
 
         const objectURL = URL.createObjectURL(archivo);
 
-        const reader = new FileReader();
-        reader.readAsDataURL(archivo);
-        reader.onloadend = () => {
-            const base64String = reader.result;
-            const base64Data = base64String.split(',')[1];
-            setImage(base64Data);
-        };
-
         setImagenPerfil(objectURL);
 
     }
@@ -108,8 +100,6 @@ export default function Registro() {
     const [correo, setCorreo] = useState('');
     const [contraseña, setContraseña] = useState('');
     const [textoModal, setTextoModal] = useState('');
-
-    const [image, setImage] = useState('');
 
     const api = localStorage.getItem('api');
 
