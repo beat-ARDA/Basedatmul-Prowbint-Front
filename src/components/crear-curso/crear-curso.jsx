@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function CrearCurso() {
 
+    const [videos, setVideos] = useState([]);
+    const [contadorVideos, setContadorVideos] = useState(-1);
+
     const [dataCategories, setDataCategories] = useState([]);
     const [sectionsArray, setSectionsArray] = useState([]);
     const [nivelArray, setNivelArray] = useState([]);
@@ -46,20 +49,29 @@ export default function CrearCurso() {
 
     if (dataCategories)
         return (
+            <form
+                enctype="multipart/form-data"
+                onSubmit={(e) => {
 
-            <form onSubmit={(e) => {
-                e.preventDefault();
+                    e.preventDefault();
 
-                const formData = new FormData(document.getElementById('form-curso'));
+                    const formData = new FormData(document.getElementById('form-curso'));
 
-                formData.append('instructor', instructor);
-                formData.append('levels', JSON.stringify(nivelArray));
-                formData.append('sections', JSON.stringify(sectionsArray));
+                    formData.append('instructor', instructor);
+                    formData.append('levels', JSON.stringify(nivelArray));
+                    formData.append('sections', JSON.stringify(sectionsArray));
 
-                InsertCourse(formData).then((dato) => {
-                    console.log(dato);
-                });
-            }} id="form-curso" className="container-fluid pt-2 padre-crear-curso">
+                    videos.forEach((video, index) => {
+                        formData.append(`video${index}`, video);
+                    });
+
+                    InsertCourse(formData).then((dato) => {
+                        console.log(dato);
+                    });
+
+                }}
+                id="form-curso"
+                className="container-fluid pt-2 padre-crear-curso">
                 <div className="row">
                     <div className="col-12">
                         <h5 className='fw-bold text-dark text-center'>Crear curso</h5>
@@ -290,23 +302,39 @@ export default function CrearCurso() {
                                                                         <input
                                                                             disabled={section.filesButtons}
                                                                             onChange={(e) => {
-                                                                                const fileReader = new FileReader();
-                                                                                fileReader.readAsDataURL(e.target.files[0]);
+                                                                                let suma = contadorVideos + 1;
+                                                                                section.contenido = 'video' + suma;
+                                                                                setContadorVideos(suma);
 
-                                                                                // Cuando se carga el archivo
-                                                                                fileReader.onload = function () {
-                                                                                    // Obtener los datos en base64
-                                                                                    const base64Data = fileReader.result.substr(fileReader.result.indexOf(',') + 1);
-                                                                                    section.contenido = base64Data;
-                                                                                    section.filesButtons = true;
-                                                                                    setContenidoBool(true);
-                                                                                }
+                                                                                const newArray = [...videos];
+                                                                                newArray.push(e.target.files[0]);
+                                                                                setVideos(newArray);
+
+                                                                                // const fileReader = new FileReader();
+                                                                                // fileReader.readAsDataURL(e.target.files[0]);
+
+                                                                                // // Cuando se carga el archivo
+                                                                                // fileReader.onload = function () {
+                                                                                //     // Obtener los datos en base64
+                                                                                //     const base64Data = fileReader.result.substr(fileReader.result.indexOf(',') + 1);
+
+                                                                                //     // //Dividir base 64
+                                                                                //     // const fragmentSize = 1000;
+                                                                                //     // const fragments = [];
+                                                                                //     // for (let i = 0; i < base64String.length; i += fragmentSize) {
+                                                                                //     //     fragments.push(base64String.substr(i, fragmentSize));
+                                                                                //     // }
+
+                                                                                //     section.contenido = 'll';
+                                                                                section.filesButtons = true;
+                                                                                setContenidoBool(true);
+                                                                                // }
                                                                             }
                                                                             }
                                                                             placeholder="Selecciona un video"
                                                                             type="file" accept="video/*"
                                                                             className="btn btn-secondary btn-sm w-100"
-                                                                            name="video" />
+                                                                            name={`video`} />
                                                                     </div>
                                                                 </div>
                                                                 <div className="d-flex row m-0 w-100">

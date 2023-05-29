@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useRef } from 'react';
 import './curso.css';
 import perfil from '../../images/perfil.jpg';
 import { useEffect } from 'react';
@@ -548,21 +548,20 @@ function DescripcionGeneral({ display, dataCurso }) {
 function Certificado({ display, terminoCurso }) {
     if (localStorage.getItem('userType') == 'Instructor') {
         return <h5 className={`${display ? 'fw-bold text-danger mt-3 d-flex justify-content-center' : 'd-none'}`}>
-            Debes de ser estudiante para obtener el certificado del curso!</h5>
+            Debes de ser estudiante para obtener el certificado del curso!
+        </h5>
     }
-    else {
+    else if (localStorage.getItem('userType') == 'Alumno') {
         return (
             <div className={`col-12 justify-content-center flex-column align-items-center py-3 m-0 ${display ? 'd-flex' : 'd-none'}`}>
                 <h6 className='fw-bold text-dark p-0 m-0 text-center py-2'>Consigue el certificado al completar todo el curso (No completado)</h6>
                 <button
                     disabled={terminoCurso == 1 ? false : true}
                     onClick={() => {
-
                         PDFJS.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS.version}/pdf.worker.js`;
                         const windowWidth = window.innerWidth;
                         const windowHeight = window.innerHeight;
                         PDFJS.getDocument(process.env.REACT_APP_PATH_FRONT + '/certificado.pdf').promise.then(function (pdf) {
-                            // Obtener la primera página del PDF
                             return pdf.getPage(1);
                         }).then(function (page) {
 
@@ -1083,6 +1082,8 @@ export default function Curso() {
         setVideo(dataVideo);
     };
 
+    const iframeRef = useRef(null);
+
     useEffect(() => {
 
         let formData = new FormData();
@@ -1099,12 +1100,37 @@ export default function Curso() {
             setDataNiveles(course.levels);
             setDataSecciones(course.sections);
         });
+
+        const iframe = iframeRef.current;
+
+        const handleVideoEnded = () => {
+            console.log('El usuario llegó al final del video');
+        };
+
+        if (iframe) {
+            iframe.onload = () => {
+                const video = iframe.contentWindow.document.querySelector('video');
+                if (video) {
+                    video.addEventListener('ended', handleVideoEnded);
+                }
+            };
+        }
+
+        return () => {
+            if (iframe) {
+                const video = iframe.contentWindow.document.querySelector('video');
+                if (video) {
+                    video.removeEventListener('ended', handleVideoEnded);
+                }
+            }
+        };
+
     }, []);
 
 
     if (!dataCurso || !dataNiveles || !dataSecciones) {
 
-        <h5>Wating for data</h5>
+        return <h5>Wating for data</h5>;
 
     } else {
         return (
@@ -1112,6 +1138,7 @@ export default function Curso() {
                 <div className='row p-0 m-0'>
                     <div className='col-12 p-0 m-0 d-flex justify-content-center'>
                         <iframe
+                            ref={iframeRef}
                             className='mt-5'
                             width="100%"
                             height="500"
