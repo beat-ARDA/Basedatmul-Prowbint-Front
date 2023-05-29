@@ -5,7 +5,7 @@ async function InsertCourse(bodyData) {
         dataType: "json"
     })
         .then(response => response.text())
-        .then(data => { return JSON.parse(data); })
+        .then(data => { console.log(data); return JSON.parse(data); })
         .catch(error => console.warn(error));
 }
 
@@ -70,8 +70,6 @@ async function GetCourse(idCourse) {
         .catch(error => console.warn(error));
 }
 
-
-
 async function GetKardex(bodyData) {
     return await fetch(`${process.env.REACT_APP_PATH_API}/kardex.php`, {
         method: 'POST',
@@ -115,6 +113,34 @@ async function GetPurchasedLevels(bodyData) {
         .catch(error => console.warn(error));
 }
 
+async function DeleteCourse(course) {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/deleteCourse.php/${course}`, {
+        method: 'POST',
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data) })
+        .catch(error => console.warn(error));
+}
+
+async function GetCoursesTeacher(bodyData) {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/getCoursesTeacher.php`, {
+        method: 'POST',
+        body: bodyData
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data) })
+        .catch(error => console.warn(error));
+}
+
+async function GetCourseFinished(course, bodyData) {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/getCourseFinished.php/${course}`, {
+        method: 'POST',
+        body: bodyData
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data) })
+        .catch(error => console.warn(error));
+}
 
 export {
     InsertCourse,
@@ -127,5 +153,8 @@ export {
     GetCoursesBestCalificated,
     SearchCourses,
     VerifyCourseComplete,
-    GetPurchasedLevels
+    GetPurchasedLevels,
+    DeleteCourse,
+    GetCoursesTeacher,
+    GetCourseFinished
 }

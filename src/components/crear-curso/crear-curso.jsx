@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function CrearCurso() {
 
-    const [dataCategories, setDataCategories] = useState();
+    const [dataCategories, setDataCategories] = useState([]);
     const [sectionsArray, setSectionsArray] = useState([]);
     const [nivelArray, setNivelArray] = useState([]);
     const [currentLevel, setCurrentLevel] = useState(true);
@@ -39,12 +39,14 @@ export default function CrearCurso() {
 
     useEffect(() => {
         GetCategories().then(response => {
-            setDataCategories(response.categories);
+            response.categories ?
+                setDataCategories(response.categories) : setDataCategories([]);
         });
     }, []);
 
     if (dataCategories)
         return (
+
             <form onSubmit={(e) => {
                 e.preventDefault();
 
@@ -68,7 +70,7 @@ export default function CrearCurso() {
                         name="categorias[]"
                         multiple={true}
                         className="form-control overflow-auto altura-categorias">
-                        <option value="" disabled >Seleccion las categorias...</option>
+                        <option value="" disabled >{dataCategories.length > 0 ? 'Seleccion las categorias...' : 'No hay categorias ...'}</option>
                         {
                             dataCategories.map((category, index) => {
                                 return (

@@ -27,7 +27,59 @@ const Dashboard = () => {
         });
     }, []);
 
-    if (dataCursos) {
+    if (!dataCursos) {
+        return (
+            <div className='container-fluid padre-dashboard'>
+                <div className='row mt-4'>
+                    <div className='col-12 border-bottom border-secondary'>
+                        <h4 className='fw-bold m-0 p-0 text-center'>Titulo de la busqueda</h4>
+                    </div>
+                </div>
+                <form
+                    className='row border-bottom border-secondary py-2 '>
+                    <div className='col-3 d-flex justify-content-end align-items-center'>
+                        <button
+                            className='btn btn-dark w-100 texto-boton p-0 m-0' type="button">Todos</button>
+                    </div>
+                    <div className='col-3 d-flex justify-content-center align-items-center'>
+                        <button
+                            className='btn btn-dark w-100 texto-boton p-0 m-0' type="button">Mejor calificados</button>
+                    </div>
+                    <div className='col-3 d-flex justify-content-center align-items-center'>
+                        <button
+                            className='btn btn-dark w-100 texto-boton p-0 m-0' type="button">Mas vendidos</button>
+                    </div>
+                    <div className='col-3 d-flex justify-content-start align-items-center'>
+                        <button
+                            className='btn btn-dark w-100 texto-boton p-0 m-0' type="button">Mas recientes</button>
+                    </div>
+                </form>
+                <div>
+                    <div className='d-flex justify-content-center'>
+                        <h4 className='mt-2'>No hay cursos en la base de datos! </h4>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation example" className='d-flex justify-content-center'>
+                    <ul className="pagination">
+                        <li className="page-item">
+                            <a className="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li className="page-item"><a className="page-link" href="#">1</a></li>
+                        <li className="page-item"><a className="page-link" href="#">2</a></li>
+                        <li className="page-item"><a className="page-link" href="#">3</a></li>
+                        <li className="page-item">
+                            <a className="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        )
+    }
+    else {
         return (
             <div className='container-fluid padre-dashboard'>
                 <div className='row mt-4'>

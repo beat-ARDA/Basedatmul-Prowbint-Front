@@ -2,8 +2,9 @@ import { React, useEffect, useState } from 'react';
 import './kardex.css';
 import { GetKardex } from '../../servicesBDM/courses';
 import { GetCategories } from '../../servicesBDM/categories';
+import { Link } from 'react-router-dom';
 
-function TarjetaKardex({ progreso, imagen, titulo, instructor, fechaInscripcion, fechaUltimaVista, fechaTerminacionCurso }) {
+function TarjetaKardex({ progreso, imagen, titulo, instructor, fechaInscripcion, fechaUltimaVista, fechaTerminacionCurso, idCurso }) {
     return (
         <div className='col-xl-4 border my-1'>
             <div className='row'>
@@ -13,7 +14,9 @@ function TarjetaKardex({ progreso, imagen, titulo, instructor, fechaInscripcion,
             </div>
             <div className='row'>
                 <div className='col-12 d-flex justify-content-center align-items-center'>
-                    <h6 className='fw-bold text-dark p-0 m-0'>{titulo}</h6>
+                    <Link to={`curso/${idCurso}`}>
+                        <h6 className='fw-bold text-dark p-0 m-0'>{titulo}</h6>
+                    </Link>
                 </div>
             </div>
             <div className='row'>
@@ -78,12 +81,10 @@ export default function Kardex() {
                 }
                 return resultado;
             }, []);
-
             setKardex(filterKardex);
         });
 
         GetCategories().then((categories) => {
-
             setCategories(categories.categories);
         });
 
@@ -195,6 +196,7 @@ export default function Kardex() {
                                         course.imagen;
                                     return (
                                         <TarjetaKardex
+                                            idCurso={course.idCurso}
                                             key={index}
                                             progreso={course.promedio}
                                             imagen={pathImage}

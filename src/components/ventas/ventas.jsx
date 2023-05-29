@@ -1,6 +1,7 @@
-import { React, useSatate } from 'react';
+import { React, useEffect, useState } from 'react';
 import './ventas.css';
 import { Link } from 'react-router-dom';
+import { DeleteCourse, GetCoursesTeacher } from '../../servicesBDM/courses';
 
 function ItemCursoVentas({ curso, cantidadAlumnos, nivelPromedio, totalCurso }) {
     return (
@@ -103,22 +104,43 @@ function ItemAlumnoVentas({ curso, nombreAlumno, fechaInscripcion, nivelAvance, 
     );
 }
 
-function ListaAlumnosVentas() {
+function ListaAlumnosVentas({ dataCursos }) {
+
+    const [idCurso, setIdCurso] = useState();
+
     return (
         <div className='col-xl-12 d-flex flex-column justify-content-center alig-items-center pt-4'>
             <div className='row d-flex justify-content-center'>
                 <select
+                    onChange={(e) => {
+                        setIdCurso(e.target.value);
+                    }}
                     aria-describedby="curso-ventas"
                     className="form-select text-secondary w-50 mb-2"
                     aria-label="Curso"
                     name="curso-ventas"
                     id="curso-ventas">
-                    <option defaultValue={"none"}>Selecciona un curso</option>
-                    <option value="React">React</option>
+                    <option defaultValue={""}>Selecciona un curso</option>
+                    {
+                        dataCursos.map((curso, index) => {
+                            return (
+                                <option key={index} value={curso.idCurso}>{curso.titulo}</option>
+                            );
+                        })
+                    }
                 </select>
-                <button className="btn btn-danger text-white fw-bold w-25 h-75">Desactivar curso</button>
-                <Link className="btn btn-dark text-white fw-bold w-25 h-75" to="/crear-curso">
-                    <button>Crear curso</button>
+                <button
+                    disabled={idCurso && idCurso !== '' ? false : true}
+                    onClick={() => {
+                        console.log(idCurso);
+                        DeleteCourse(idCurso).then((data) => {
+                            console.log(data);
+                        })
+
+                    }}
+                    className="btn btn-danger text-white w-25 h-75">Desactivar curso</button>
+                <Link className="btn btn-dark text-white w-25 h-75" to="/crear-curso">
+                    Crear curso
                 </Link>
             </div>
             <div className='row w-100 d-flex justify-content-center align-items border-bottom border-dark'>
@@ -246,22 +268,38 @@ function Filtros() {
 }
 
 export default function Ventas() {
-    return (
-        <div className='container-fluid padre-ventas py-2'>
-            <div className='row d-flex mb-2'>
-                <Filtros />
-            </div>
-            <div className="row">
-                <div className="col-12">
-                    <h5 className='fw-bold text-dark p-0 m-0 text-center'>Ventas</h5>
+
+    const [dataCursos, setDataCursos] = useState();
+
+    useEffect(() => {
+        let formData = new FormData();
+        formData.append('usuario', localStorage.getItem('userId'));
+        GetCoursesTeacher(formData).then((data) => {
+            setDataCursos(data.courses);
+        })
+    }, []);
+
+    if (!dataCursos) {
+        return (<h5>Waitin for data</h5>);
+    }
+    else {
+        return (
+            <div className='container-fluid padre-ventas py-2'>
+                <div className='row d-flex mb-2'>
+                    <Filtros />
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <h5 className='fw-bold text-dark p-0 m-0 text-center'>Ventas</h5>
+                    </div>
+                </div>
+                <div className='row'>
+                    <ListaCursosVentas />
+                </div>
+                <div className='row'>
+                    <ListaAlumnosVentas dataCursos={dataCursos} />
                 </div>
             </div>
-            <div className='row'>
-                <ListaCursosVentas />
-            </div>
-            <div className='row'>
-                <ListaAlumnosVentas />
-            </div>
-        </div>
-    );
+        );
+    }
 }

@@ -4,6 +4,11 @@
     z-index: 2;
 }
 
+.header-undefined {
+    background: linear-gradient(to right, #ff8800, #ff9300, #ff8800);
+    position: absolute;
+}
+
 .header-mobile {
     background: linear-gradient(to right, #ff8800, #ff9300, #ff8800);
     position: absolute;

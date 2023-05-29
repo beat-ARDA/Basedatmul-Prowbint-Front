@@ -27,8 +27,14 @@ export default function Router() {
                     <Route path='curso/:idCurso' element={<Curso />} />
                     <Route path="messages" element={<Messages />} />
                     <Route path="categorias" element={<Categorias />} />
-                    <Route path="mis-cursos" element={<Kardex />} />
-                    <Route path="ventas" element={<Ventas />} />
+                    {
+                        localStorage.getItem('userType') === 'Alumno' ?
+                            <Route path="mis-cursos" element={<Kardex />} /> :
+                            <Route path="ventas" element={<Ventas />} />
+                    }
+                    {
+                        localStorage.getItem('userType') === 'Alumno' ? <Route path='mis-cursos/curso/:idCurso' element={<Curso />} /> : null
+                    }
                     <Route path="crear-curso" element={<CrearCurso />} />
                 </Route>
                 <Route path='*' element={<ErrorPage />} />
