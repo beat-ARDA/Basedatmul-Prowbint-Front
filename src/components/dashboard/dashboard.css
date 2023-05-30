@@ -10,3 +10,24 @@
     top: 4rem;
     z-index: 1;
 }
+
+.search-form {
+    background-color: white;
+    border-radius: 2rem;
+}
+
+.search-input {
+    background-color: transparent;
+    outline: none;
+    border: none
+}
+
+.search-button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+.search-icon {
+    width: 1.5rem;
+}

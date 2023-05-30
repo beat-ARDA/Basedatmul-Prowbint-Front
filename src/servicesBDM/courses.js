@@ -20,13 +20,14 @@ async function InsertShopingCourse(bodyData, idCourse) {
         .catch(error => console.warn(error));
 }
 
-async function GetCourses() {
-    return await fetch(`${process.env.REACT_APP_PATH_API}/courses.php`, {
-        method: 'GET',
+async function GetCourses(formData) {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/getCourses.php`, {
+        method: 'POST',
+        body: formData,
         dataType: "json"
     })
         .then(response => response.text())
-        .then(data => { return JSON.parse(data) })
+        .then(data => { console.log(data); return JSON.parse(data) })
         .catch(error => console.warn(error));
 }
 
