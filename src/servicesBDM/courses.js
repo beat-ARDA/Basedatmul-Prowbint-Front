@@ -27,7 +27,7 @@ async function GetCourses(formData) {
         dataType: "json"
     })
         .then(response => response.text())
-        .then(data => { console.log(data); return JSON.parse(data) })
+        .then(data => { return JSON.parse(data) })
         .catch(error => console.warn(error));
 }
 
