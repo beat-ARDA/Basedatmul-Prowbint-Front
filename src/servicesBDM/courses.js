@@ -142,6 +142,26 @@ async function GetCourseFinished(course, bodyData) {
         .catch(error => console.warn(error));
 }
 
+async function InsertCourseFinished(bodyData) {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/insertCourseFinished.php`, {
+        method: 'POST',
+        body: bodyData
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data) })
+        .catch(error => console.warn(error));
+}
+
+async function GetCalCourse(course) {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/GetCalCourse.php/${course}`, {
+        method: 'GET',
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data) })
+        .catch(error => console.warn(error));
+}
+
+
 export {
     InsertCourse,
     GetCourses,
@@ -156,5 +176,7 @@ export {
     GetPurchasedLevels,
     DeleteCourse,
     GetCoursesTeacher,
-    GetCourseFinished
+    GetCourseFinished,
+    InsertCourseFinished,
+    GetCalCourse
 }

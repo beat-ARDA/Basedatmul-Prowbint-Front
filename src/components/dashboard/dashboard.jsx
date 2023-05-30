@@ -2,13 +2,14 @@ import { React, useEffect } from 'react';
 import './dashboard.css';
 import TarjetaDashboard from '../tarjeta-dashboard/tarjeta-dashboard';
 import '../tarjeta-dashboard/tarjeta-dashboard.css'
-import { GetCourses, GetCoursesBestCalificated, GetCoursesBestSellers, GetCoursesMostRecents } from '../../servicesBDM/courses';
+import { GetCourses, GetCoursesBestCalificated, GetCoursesBestSellers, GetCoursesMostRecents, GetCalCourse } from '../../servicesBDM/courses';
 import { useState } from 'react';
 
 
 const Dashboard = () => {
 
-    const [dataCursos, setDataCursos] = useState([]);
+    const [dataCursos, setDataCursos] = useState();
+    const [promedio, setPromedio] = useState();
 
     function getImageType(base64Image) {
         const header = base64Image.substring(0, 23);
@@ -129,8 +130,11 @@ const Dashboard = () => {
                 <div>
                     {dataCursos.map((curso, index) => {
 
-                        const pathImage = 'data:image/' + getImageType(curso.imagen) + ';base64,' + curso.imagen;
+                        // GetCalCourse(curso.idCurso).then((data) => {
 
+                        // });
+
+                        const pathImage = 'data:image/' + getImageType(curso.imagen) + ';base64,' + curso.imagen;
                         return (
                             <TarjetaDashboard
                                 id={curso.idCurso}
@@ -138,12 +142,13 @@ const Dashboard = () => {
                                 imagen={pathImage}
                                 titulo={curso.titulo}
                                 descripcion={curso.descripcion}
-                                instructor={curso.instructor}
+                                instructor={curso.nombre}
                                 estrellas={curso.promedio}
                                 fecha={curso.fecha_creacion}
                                 precio={curso.cost}
                             />
                         )
+
                     })}
                 </div>
                 <nav aria-label="Page navigation example" className='d-flex justify-content-center'>

@@ -1,13 +1,15 @@
 import { React, useEffect, useState } from 'react';
 import './ventas.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DeleteCourse, GetCoursesTeacher } from '../../servicesBDM/courses';
+import { GetReports } from '../../servicesBDM/reports';
+import { GetCategories } from '../../servicesBDM/categories';
 
-function ItemCursoVentas({ curso, cantidadAlumnos, nivelPromedio, totalCurso }) {
+function ItemCursoVentas({ curso, cantidadAlumnos, nivelPromedio, totalCurso, formaPago, totalVentas }) {
     return (
         <div className='row d-flex justify-content-center align-items border-bottom py-2'>
             <div className='col-2 d-flex justify-content-center align-items'>
-                <small className='text-dark texto-mobile'>{curso}</small>
+                <small className='text-dark texto-mobile fw-bold'>{curso}</small>
             </div>
             <div className='col-2 d-flex justify-content-center align-items'>
                 <small className='text-dark texto-mobile'>{cantidadAlumnos}</small>
@@ -19,16 +21,28 @@ function ItemCursoVentas({ curso, cantidadAlumnos, nivelPromedio, totalCurso }) 
                 <small className='text-dark texto-mobile'>{totalCurso}</small>
             </div>
             <div className='col-2 d-flex justify-content-center align-items'>
-
+                <small className='text-dark texto-mobile'>{formaPago}</small>
             </div>
             <div className='col-2 d-flex justify-content-center align-items'>
-
+                <small className='text-success texto-mobile'>{totalVentas}</small>
             </div>
         </div>
     );
 }
 
-function ListaCursosVentas() {
+function ListaCursosVentas({ reporteVentas }) {
+
+    const [totalVentas, setTotalVentas] = useState(0);
+    const [totalVentasAlumno, setTotalVentasAlumno] = useState(0);
+
+    useState(() => {
+        let totalVentas = 0;
+        reporteVentas.forEach((item, index) => {
+            totalVentas += item.total;
+        })
+        setTotalVentas(totalVentas);
+    }, []);
+
     return (
         <div className='col-xl-12 d-flex flex-column justify-content-center alig-items-center pt-4'>
             <div className='row d-flex justify-content-center align-items border-bottom border-dark'>
@@ -44,39 +58,41 @@ function ListaCursosVentas() {
                 <div className='col-2 d-flex justify-content-center align-items'>
                     <small className='text-dark fw-bold texto-mobile'>Total por curso</small>
                 </div>
-                <div className='col-4 d-flex justify-content-center align-items'>
+                <div className='col-2 d-flex justify-content-center align-items'>
+                    <small className='text-dark fw-bold texto-mobile'>forma pago</small>
+                </div>
+                <div className='col-2 d-flex justify-content-center align-items'>
                     <small className='text-dark fw-bold texto-mobile'>Total</small>
                 </div>
 
             </div>
             <div className='altura-lista'>
-                <ItemCursoVentas curso={"react"} cantidadAlumnos={"50"} nivelPromedio={"4"} totalCurso={"$5000"} />
-                <ItemCursoVentas curso={"react"} cantidadAlumnos={"50"} nivelPromedio={"4"} totalCurso={"$5000"} />
-                <ItemCursoVentas curso={"react"} cantidadAlumnos={"50"} nivelPromedio={"4"} totalCurso={"$5000"} />
-                <ItemCursoVentas curso={"react"} cantidadAlumnos={"50"} nivelPromedio={"4"} totalCurso={"$5000"} />
-                <ItemCursoVentas curso={"react"} cantidadAlumnos={"50"} nivelPromedio={"4"} totalCurso={"$5000"} />
+                {
+
+                    reporteVentas.map((item, index) => {
+
+                        return (
+                            <ItemCursoVentas
+                                formaPago={item.forma_pago}
+                                key={index}
+                                curso={item.titulo}
+                                cantidadAlumnos={item.cantidad_alumnos}
+                                nivelPromedio={"%" + item.porcentaje_terminado}
+                                totalCurso={"$" + item.total}
+                                totalVentas={reporteVentas.length - 1 === index ? "$" + totalVentas : null}
+                            />
+                        );
+                    })
+                }
+
+
             </div>
-            <div className='row w-100 d-flex justify-content-center align-items border-bottom'>
-                <div className='col-2 d-flex justify-content-center align-items'>
 
-                </div>
-                <div className='col-2 d-flex justify-content-center align-items'>
-
-                </div>
-                <div className='col-2 d-flex justify-content-center align-items'>
-
-                </div>
-                <div className='col-2 d-flex justify-content-center align-items'>
-                </div>
-                <div className='col-2 d-flex justify-content-center align-items'>
-                    <small className='text-danger fw-bold'>{"$25,000"}</small>
-                </div>
-            </div>
         </div>
     );
 }
 
-function ItemAlumnoVentas({ curso, nombreAlumno, fechaInscripcion, nivelAvance, precioPagado, formaPago }) {
+function ItemAlumnoVentas({ curso, nombreAlumno, fechaInscripcion, nivelAvance, precioPagado, formaPago, total }) {
     return (
         <div className='row w-100 d-flex justify-content-center align-items border-bottom py-2'>
             <div className='col-1 d-flex justify-content-center align-items'>
@@ -98,25 +114,27 @@ function ItemAlumnoVentas({ curso, nombreAlumno, fechaInscripcion, nivelAvance, 
                 <small className='text-dark texto-mobile'>{formaPago}</small>
             </div>
             <div className='col-1 d-flex justify-content-center align-items'>
-
+                <small className='text-success texto-mobile'>{total}</small>
             </div>
         </div>
     );
 }
 
-function ListaAlumnosVentas({ dataCursos }) {
+function ListaAlumnosVentas({ dataCursos, reporteVentasAlumno }) {
 
     const [idCurso, setIdCurso] = useState();
 
+    const navigate = useNavigate();
+
     return (
         <div className='col-xl-12 d-flex flex-column justify-content-center alig-items-center pt-4'>
-            <div className='row d-flex justify-content-center'>
+            <div className='row d-flex justify-content-center mb-2'>
                 <select
                     onChange={(e) => {
                         setIdCurso(e.target.value);
                     }}
                     aria-describedby="curso-ventas"
-                    className="form-select text-secondary w-50 mb-2"
+                    className="form-select text-secondary w-25 mb-2"
                     aria-label="Curso"
                     name="curso-ventas"
                     id="curso-ventas">
@@ -132,16 +150,26 @@ function ListaAlumnosVentas({ dataCursos }) {
                 <button
                     disabled={idCurso && idCurso !== '' ? false : true}
                     onClick={() => {
-                        console.log(idCurso);
+
                         DeleteCourse(idCurso).then((data) => {
-                            console.log(data);
+                            alert(data.message);
                         })
 
                     }}
-                    className="btn btn-danger text-white w-25 h-75">Desactivar curso</button>
-                <Link className="btn btn-dark text-white w-25 h-75" to="/crear-curso">
+                    className="btn btn-danger text-white w-25 text-center">Desactivar curso</button>
+                <button
+                    disabled={idCurso && idCurso !== '' ? false : true}
+
+                    onClick={() => {
+                        navigate('/crear-curso');
+                    }}
+
+                    className="btn btn-success text-white w-25 text-center">Actualizar curso</button>
+                <button onClick={() => {
+                    navigate('/crear-curso');
+                }} className="btn btn-dark text-white w-25 text-center w-25">
                     Crear curso
-                </Link>
+                </button>
             </div>
             <div className='row w-100 d-flex justify-content-center align-items border-bottom border-dark'>
                 <div className='col-1 d-flex justify-content-center align-items-center'>
@@ -167,126 +195,126 @@ function ListaAlumnosVentas({ dataCursos }) {
                 </div>
             </div>
             <div className='altura-lista'>
-                <ItemAlumnoVentas
-                    curso={"react"}
-                    nombreAlumno={"Alvaro Duron"}
-                    fechaInscripcion={"17-May-1996"}
-                    nivelAvance={"50%"}
-                    precioPagado={"$100"}
-                    formaPago={"Debito"} />
-                <ItemAlumnoVentas
-                    curso={"react"}
-                    nombreAlumno={"Alvaro Duron"}
-                    fechaInscripcion={"17-May-1996"}
-                    nivelAvance={"50%"}
-                    precioPagado={"$100"}
-                    formaPago={"Debito"} />
-                <ItemAlumnoVentas
-                    curso={"react"}
-                    nombreAlumno={"Alvaro Duron"}
-                    fechaInscripcion={"17-May-1996"}
-                    nivelAvance={"50%"}
-                    precioPagado={"$100"}
-                    formaPago={"Debito"} />
-                <ItemAlumnoVentas
-                    curso={"react"}
-                    nombreAlumno={"Alvaro Duron"}
-                    fechaInscripcion={"17-May-1996"}
-                    nivelAvance={"50%"}
-                    precioPagado={"$100"}
-                    formaPago={"Debito"} />
-                <ItemAlumnoVentas
-                    curso={"react"}
-                    nombreAlumno={"Alvaro Duron"}
-                    fechaInscripcion={"17-May-1996"}
-                    nivelAvance={"50%"}
-                    precioPagado={"$100"}
-                    formaPago={"Debito"} />
+
+                {reporteVentasAlumno.map((item, index) => {
+                    console.log(item);
+                    return (
+                        <ItemAlumnoVentas
+                            key={index}
+                            curso={item.curso}
+                            nombreAlumno={item.nombre}
+                            fechaInscripcion={item.fecha_registro}
+                            nivelAvance={"%" + item.porcentaje}
+                            precioPagado={"$" + item.cantidad_pagada}
+                            formaPago={item.forma_pago}
+                            total={"$" + item.total}
+                        />
+                    );
+                })}
             </div>
-            <div className='row w-100 d-flex justify-content-center align-items border-bottom'>
-                <div className='col-1 d-flex justify-content-center align-items-center'>
 
-                </div>
-                <div className='col-2 d-flex justify-content-center align-items-center'>
-
-                </div>
-                <div className='col-2 d-flex justify-content-center align-items-center'>
-
-                </div>
-                <div className='col-2 d-flex justify-content-center align-items-center'>
-
-                </div>
-                <div className='col-2 d-flex justify-content-center align-items-center'>
-
-                </div>
-                <div className='col-2 d-flex justify-content-center align-items-center'>
-
-                </div>
-                <div className='col-1 d-flex justify-content-center align-items-center'>
-                    <small className='text-danger fw-bold'>$25000</small>
-                </div>
-            </div>
 
         </div>
     );
-}
 
-function Filtros() {
-    return (
-        <form className='d-flex'>
-            <div className='col-3'>
-                <input type={"date"} className='form-control' name="fecha-inicio" />
-            </div>
-            <div className='col-3'>
-                <input type={"date"} className='form-control' name="fecha-termina" />
-            </div>
-            <div className='col-3'>
-                <select
-                    aria-describedby="categorias-ventas"
-                    className="form-select text-secondary"
-                    aria-label="Categorias"
-                    name="categorias-ventas"
-                    id="categorias-ventas">
-                    <option value={"Todas"}>Todas las categorias</option>
-                    <option value="Programacion">Programacion</option>
-
-                </select>
-            </div>
-            <div className='col-3'>
-                <select
-                    aria-describedby="categorias-ventas"
-                    className="form-select text-secondary"
-                    aria-label="Categorias"
-                    name="categorias-ventas"
-                    id="categorias-ventas">
-                    <option value={"Todos"}>Todos los cursos</option>
-                    <option value="Activos">Activos</option>
-                </select>
-            </div>
-        </form>
-    );
 }
 
 export default function Ventas() {
 
     const [dataCursos, setDataCursos] = useState();
+    const [reportVentas, setReportVentas] = useState();
+    const [reportVentasAlumno, setReportVentasAlumno] = useState();
+    const [categories, setCategories] = useState();
 
     useEffect(() => {
+
+        let formDataReports = new FormData();
+        formDataReports.append('instructor', localStorage.getItem('userId'));
+        formDataReports.append('fecha_inicio', '');
+        formDataReports.append('fecha_fin', '');
+        formDataReports.append('curso_activo', null);
+        formDataReports.append('categoria', null);
+        GetReports(formDataReports).then((reports) => {
+            setReportVentas(reports.reporte_ventas);
+            setReportVentasAlumno(reports.reporte_ventas_alumno);
+        });
+
         let formData = new FormData();
         formData.append('usuario', localStorage.getItem('userId'));
         GetCoursesTeacher(formData).then((data) => {
             setDataCursos(data.courses);
         })
+
+        GetCategories().then((categories) => {
+            setCategories(categories.categories);
+        });
+
     }, []);
 
-    if (!dataCursos) {
-        return (<h5>Waitin for data</h5>);
+    if (!dataCursos || !reportVentas || !reportVentasAlumno || !categories) {
+        return (<div>Waiting for data...</div>);
     }
     else {
         return (
             <div className='container-fluid padre-ventas py-2'>
                 <div className='row d-flex mb-2'>
-                    <Filtros />
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            let formData = new FormData(document.getElementById('formulario-ventas'));
+                            formData.append('instructor', localStorage.getItem('userId'));
+
+                            GetReports(formData).then((reports) => {
+                                setReportVentas(reports.reporte_ventas);
+                                setReportVentasAlumno(reports.reporte_ventas_alumno);
+                            });
+
+                        }}
+                        id='formulario-ventas'
+                        className='d-flex justify-content-center'>
+                        <div className='col-2'>
+                            <input id="fecha_inicio" name='fecha_inicio' type={"date"} className='form-control' />
+                        </div>
+                        <div className='col-2'>
+                            <input id="fecha_fin" name='fecha_fin' type={"date"} className='form-control' />
+                        </div>
+                        <div className='col-2'>
+                            <select
+                                aria-describedby="categorias-ventas"
+                                className="form-select text-secondary"
+                                aria-label="Categorias"
+                                id="categoria"
+                                name="categoria">
+                                <option value="todas">Todas</option>
+                                {
+                                    categories.map((categorieData, index) => {
+                                        return (
+                                            <option
+                                                key={index}
+                                                id={categorieData.idCategoria}
+                                                value={categorieData.idCategoria}>
+                                                {categorieData.nombre}
+                                            </option>
+                                        );
+                                    })
+                                }
+                            </select>
+                        </div>
+                        <div className='col-2'>
+                            <select
+                                aria-describedby="categorias-ventas"
+                                className="form-select text-secondary"
+                                aria-label="Categorias"
+                                name="curso_activo"
+                                id="curso_activo">
+                                <option value="todos">Todos</option>
+                                <option value="1">Activos</option>
+                            </select>
+                        </div>
+                        <div className='col-2'>
+                            <input type='submit' value={'Filtrar'} className='btn btn-success w-100' />
+                        </div>
+                    </form>
                 </div>
                 <div className="row">
                     <div className="col-12">
@@ -294,10 +322,10 @@ export default function Ventas() {
                     </div>
                 </div>
                 <div className='row'>
-                    <ListaCursosVentas />
+                    <ListaCursosVentas reporteVentas={reportVentas} />
                 </div>
                 <div className='row'>
-                    <ListaAlumnosVentas dataCursos={dataCursos} />
+                    <ListaAlumnosVentas dataCursos={dataCursos} reporteVentasAlumno={reportVentasAlumno} />
                 </div>
             </div>
         );

@@ -198,7 +198,7 @@ export default function Kardex() {
                                         <TarjetaKardex
                                             idCurso={course.idCurso}
                                             key={index}
-                                            progreso={course.promedio}
+                                            progreso={course.porcentaje}
                                             imagen={pathImage}
                                             titulo={course.titulo}
                                             instructor={course.nombre_instructor}

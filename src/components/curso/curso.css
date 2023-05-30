@@ -53,3 +53,15 @@
     pointer-events: none;
     text-decoration: none;
 }
+
+.star-valoraciones {
+    width: 1.8rem!important;
+    height: 1.8rem!important;
+    padding: 0.2rem;
+    margin: 0;
+    fill: #bf930d;
+}
+
+.star-valoraciones:hover{
+    opacity: 0.6;
+}

@@ -2,11 +2,21 @@ import { React, useState, useRef } from 'react';
 import './curso.css';
 import perfil from '../../images/perfil.jpg';
 import { useEffect } from 'react';
-import { GetCourse, GetPurchasedLevels, InsertShopingCourse, VerifyCourseComplete, GetCourseFinished } from '../../servicesBDM/courses';
+import {
+    GetCourse,
+    GetPurchasedLevels,
+    InsertShopingCourse,
+    VerifyCourseComplete,
+    GetCourseFinished,
+    InsertCourseFinished,
+    GetCalCourse
+} from '../../servicesBDM/courses';
 import { useParams } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import * as PDFJS from "pdfjs-dist/build/pdf";
 import jsPDF from 'jspdf';
+import { GetComments, InsertComment } from '../../servicesBDM/comentarios';
+import { GetCertificated } from '../../servicesBDM/certificated';
 
 function TarjetaComentarios({
     imagen,
@@ -17,7 +27,7 @@ function TarjetaComentarios({
     return (
         <div className='row w-75 py-2 border-secondary border-bottom m-0'>
             <div className='col-1 d-0 m-0 d-flex justify-content-end'>
-                <img src={imagen} className='imagen-comentario rounded-circle' />
+                <img src={`data:image/jpeg;base64,${imagen}`} className='imagen-comentario rounded-circle' />
             </div>
             <div className='col-xl-11 col-10'>
                 <div className='row'>
@@ -237,19 +247,23 @@ function TarjetaComentarios({
 
 function Valoraciones({
     display,
-    numeroEstrellas,
-    porcentajeUnaEstrella,
-    porcentajeDosEstrella,
-    porcentajeTresEstrella,
-    porcentajeCuatroEstrella,
-    porcentajeCincoEstrella }) {
+    comments,
+    promedio,
+    terminoCurso }) {
+
+    const { idCurso } = useParams();
+
+    const [valoracion, setValoracion] = useState('');
+    const [comentario, setComentario] = useState('');
+    const [textoModal, setTextModal] = useState('');
+
+    useEffect(() => {
+
+    }, []);
+
     return (
         <div className={`container-fluid flex-column align-items-center p-0 m-0 ${display ? 'd-flex' : 'd-none'}`}>
-            <div className='row p-0 m-0 w-100'>
-                <div className='col-12'>
-                    <h5 className='text-center fw-bold py-4'>Comentarios de los estudiantes</h5>
-                </div>
-            </div>
+
             <div className='row p-0 m-0 w-100 d-flex justify-content-center border-bottom border-dark'>
                 <div className='col-xl-2 col-6 p-0 m-0 d-flex flex-column justify-content-center align-items-center'>
                     <h3 className='text-center fw-bold p-0 m-0'>Valoracion del curso</h3>
@@ -260,273 +274,145 @@ function Valoraciones({
                         <path
                             d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
                     </svg>
-                    <h3 className='text-center fw-bold p-0 m-0'>{numeroEstrellas}</h3>
+                    <h3 className='text-center fw-bold p-0 m-0'>{promedio}</h3>
                 </div>
-                <div className='col-xl-4 col-6 p-0 m-0 d-flex flex-column justify-content-center align-items-center'>
-                    {/*Una estrella*/}
-                    <div className={`row py-1 m-0 justify-content-center align-items-center d-flex`}>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
+
+            </div>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+
+                    if (comentario !== '' && valoracion !== '') {
+                        let bodyComment = new FormData();
+                        bodyComment.append('curso', idCurso);
+                        bodyComment.append('usuario', localStorage.getItem('userId'));
+                        bodyComment.append('comentario', comentario);
+                        bodyComment.append('calificacion', valoracion);
+                        InsertComment(bodyComment).then((data) => {
+                            setTextModal(data.message);
+                        })
+                    } else {
+                        setTextModal('Verifica que los campos valoracion y comentario no esten vacios!');
+                    }
+
+                    setComentario('');
+                    setValoracion('');
+                }}
+
+                className={`${terminoCurso.course.termino_curso === 1 ? 'row p-0 m-0 w-50 d-flex justify-content-center mt-2 text-center' : 'd-none'}`}>
+                <svg
+                    onClick={() => {
+                        setValoracion(1);
+                    }}
+                    className='w-25 h-25 star-valoraciones'
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 576 512">
+                    <path
+                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                </svg>
+                <svg
+                    onClick={() => {
+                        setValoracion(2);
+                    }}
+                    className='w-25 h-25 star-valoraciones'
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 576 512">
+                    <path
+                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                </svg>
+                <svg
+                    onClick={() => {
+                        setValoracion(3);
+                    }}
+                    className='w-25 h-25 star-valoraciones'
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 576 512">
+                    <path
+                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                </svg>
+                <svg
+                    onClick={() => {
+                        setValoracion(4);
+                    }}
+                    className='w-25 h-25 star-valoraciones'
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 576 512">
+                    <path
+                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                </svg>
+                <svg
+                    onClick={() => {
+                        setValoracion(5);
+                    }}
+                    className='w-25 h-25 star-valoraciones'
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 576 512">
+                    <path
+                        d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+                </svg>
+                <label className='p-0 m-0 fw-bold' htmlFor='comentario'>Inserta un comentario y una valoracion!</label>
+                <input
+                    onChange={(e) => {
+                        setComentario(e.target.value);
+                    }}
+                    value={comentario}
+                    id='comentario'
+                    type='text'
+                    className='form-control text-center mt-1'
+                    placeholder='Envianos un comentario!'
+                    name='comentario'
+                />
+                <input
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    className='btn btn-dark mt-1'
+                    type='submit'
+                    value={'Enviar comentario!'} />
+            </form>
+            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="exampleModalLabel">Mensaje</h1>
+                            <button
+                                onClick={() => {
+                                    window.location.reload();
+                                }}
+                                type="button"
+                                className="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
+                        <div className="modal-body">
+                            {textoModal}
                         </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <h6 className='text-primary text-start fw-bold p-0 m-0'>{porcentajeUnaEstrella}</h6>
-                        </div>
-                    </div>
-                    {/*Dos estrellas*/}
-                    <div className={`row py-1 m-0 justify-content-center align-items-center d-flex`}>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <h6 className='text-primary text-start fw-bold p-0 m-0'>{porcentajeDosEstrella}</h6>
-                        </div>
-                    </div>
-                    {/*Tres estrellas*/}
-                    <div className={`row py-1 m-0 justify-content-center align-items-center d-flex`}>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <h6 className='text-primary text-start fw-bold p-0 m-0'>{porcentajeTresEstrella}</h6>
-                        </div>
-                    </div>
-                    {/*Cuatro estrellas*/}
-                    <div className={`row py-1 m-0 justify-content-center align-items-center d-flex`}>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='w-25 h-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <h6 className='text-primary text-start fw-bold p-0 m-0'>{porcentajeCuatroEstrella}</h6>
-                        </div>
-                    </div>
-                    {/*Cinco estrellas*/}
-                    <div className={`row py-1 m-0 justify-content-center align-items-center d-flex`}>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <svg
-                                className='h-25 w-25 estrella-icon'
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 576 512">
-                                <path
-                                    d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
-                            </svg>
-                        </div>
-                        <div className='col-2 p-0 m-0 d-flex justify-content-start align-items-center'>
-                            <h6 className='text-primary text-start fw-bold p-0 m-0'>{porcentajeCincoEstrella}</h6>
+                        <div className="modal-footer">
+                            <button
+                                onClick={() => {
+                                    window.location.reload();
+                                }}
+                                type="button"
+                                className="btn btn-dark"
+                                data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <TarjetaComentarios
-                imagen={perfil}
-                alumno={"Alvaro Duron"}
-                estrellasComentario={5}
-                comentario={"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"} />
+            {
+                comments.map((comment, index) => {
+                    return (
+                        <TarjetaComentarios
+                            key={index}
+                            imagen={comment.imageProfile}
+                            alumno={comment.nombre}
+                            estrellasComentario={comment.calificaion}
+                            comentario={comment.comentario} />
+                    );
+                })
+
+            }
         </div>
     );
+
 }
 
 function DescripcionGeneral({ display, dataCurso }) {
@@ -545,7 +431,8 @@ function DescripcionGeneral({ display, dataCurso }) {
     );
 }
 
-function Certificado({ display, terminoCurso }) {
+function Certificado({ display, terminoCurso, certificado }) {
+
     if (localStorage.getItem('userType') == 'Instructor') {
         return <h5 className={`${display ? 'fw-bold text-danger mt-3 d-flex justify-content-center' : 'd-none'}`}>
             Debes de ser estudiante para obtener el certificado del curso!
@@ -556,7 +443,7 @@ function Certificado({ display, terminoCurso }) {
             <div className={`col-12 justify-content-center flex-column align-items-center py-3 m-0 ${display ? 'd-flex' : 'd-none'}`}>
                 <h6 className='fw-bold text-dark p-0 m-0 text-center py-2'>Consigue el certificado al completar todo el curso (No completado)</h6>
                 <button
-                    disabled={terminoCurso == 1 ? false : true}
+                    disabled={terminoCurso.course.termino_curso === 1 ? false : true}
                     onClick={() => {
                         PDFJS.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS.version}/pdf.worker.js`;
                         const windowWidth = window.innerWidth;
@@ -577,13 +464,13 @@ function Certificado({ display, terminoCurso }) {
                             // Renderizar la página en el lienzo
                             page.render({ canvasContext: context, viewport: viewport }).promise.then(function () {
                                 // Escribir texto en el lienzo
-                                context.font = '30px Arial';
+                                context.font = '20px Arial';
                                 context.fillStyle = 'black';
 
                                 ///////////////////////////////////////////////////////
                                 //                     NOMBRE ALUMNO                 //
                                 ///////////////////////////////////////////////////////
-                                context.fillText('Alvaro Ramses Duron Alejo', 150, 330);
+                                context.fillText(certificado.nombre_alumno, 150, 330);
 
                                 ///////////////////////////////////////////////////////
                                 //                        FECHA                      //
@@ -598,19 +485,19 @@ function Certificado({ display, terminoCurso }) {
                                 // Formatear la fecha como una cadena en el formato deseado
                                 const fechaFormateada = `${año}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`;
 
-                                context.fillText(fechaFormateada, 650, 50);
+                                context.fillText(certificado.fecha, 650, 50);
 
                                 ///////////////////////////////////////////////////////
                                 //                     NOMBRE CURSO                  //
                                 ///////////////////////////////////////////////////////
 
-                                context.fillText('React', 320, 200);
+                                context.fillText(certificado.titulo, 320, 200);
 
                                 ///////////////////////////////////////////////////////
                                 //                     NOMBRE INSTRUCTOR             //
                                 ///////////////////////////////////////////////////////
 
-                                context.fillText('Mateo Alfonso', 550, 550);
+                                context.fillText(certificado.nombre_instructor, 550, 550);
 
                                 // Convertir el lienzo a una imagen base64
                                 var imageData = canvas.toDataURL('image/png');
@@ -723,6 +610,7 @@ function Contentido({ display, enviarVideo, dataNiveles, dataSecciones }) {
                                                                 formData.append('idSeccions', JSON.stringify(dataSecciones));
 
                                                                 InsertShopingCourse(formData, idCurso).then((data) => {
+                                                                    alert('Nivel comprado con exito!');
                                                                     window.location.reload();
                                                                 });
 
@@ -741,7 +629,6 @@ function Contentido({ display, enviarVideo, dataNiveles, dataSecciones }) {
                                                 if (seccion.nivel === nivel.idNivelCurso) {
                                                     return (
                                                         <div
-
                                                             key={indexSeccion}
                                                             className='row text-center'>
                                                             <h4
@@ -752,12 +639,34 @@ function Contentido({ display, enviarVideo, dataNiveles, dataSecciones }) {
                                                                 disabled={
                                                                     purchasedIdLevels.includes(nivel.idNivelCurso) ? false : true
                                                                 }
-                                                                onClick={() => enviarVideo(seccion.video)}
+                                                                onClick={() => {
+                                                                    let formCourse = new FormData();
+                                                                    formCourse.append('curso', idCurso);
+                                                                    formCourse.append('nivel', nivel.idNivelCurso);
+                                                                    formCourse.append('seccion', seccion.idSecciones);
+                                                                    formCourse.append('alumno', localStorage.getItem('userId'));
+
+                                                                    InsertCourseFinished(formCourse).then((data) => {
+                                                                        console.log(data);
+                                                                    });
+
+                                                                    enviarVideo(seccion.video);
+                                                                }}
                                                                 className={`${seccion.video ? 'd-block btn btn-secondary' : 'd-none'}`}>
                                                                 Ver video
                                                             </button>
                                                             <a
+                                                                onClick={() => {
+                                                                    let formCourse = new FormData();
+                                                                    formCourse.append('curso', idCurso);
+                                                                    formCourse.append('nivel', nivel.idNivelCurso);
+                                                                    formCourse.append('seccion', seccion.idSecciones);
+                                                                    formCourse.append('alumno', localStorage.getItem('userId'));
 
+                                                                    InsertCourseFinished(formCourse).then((data) => {
+                                                                        console.log(data);
+                                                                    });
+                                                                }}
                                                                 className={
                                                                     `${seccion.contenido || seccion.link ? 'display-block ' : 'd-none'}
                                                                         ${purchasedIdLevels.includes(nivel.idNivelCurso) ? false : 'disabled-a'}`
@@ -859,6 +768,7 @@ function Comprar({ display, dataSecciones, dataNiveles, dataCurso }) {
 
     const { idCurso } = useParams();
     const [courseComplete, setCourseComplete] = useState(0);
+    const [textoModal, setTextoModal] = useState('');
 
     useEffect(() => {
         const formData = new FormData();
@@ -883,7 +793,8 @@ function Comprar({ display, dataSecciones, dataNiveles, dataCurso }) {
                 </div>
                 <div className={`col-12 justify-content-center flex-column align-items-center py-3 m-0 ${display && courseComplete !== 1 ? 'd-flex' : 'd-none'}`}>
                     <h6 className='fw-bold text-dark p-0 m-0 text-center py-2'>Consigue el curso ahora por ${dataCurso.cost}</h6>
-                    <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_CLIENT_ID_PAYPAL }}>
+                    <PayPalScriptProvider
+                        options={{ "client-id": process.env.REACT_APP_CLIENT_ID_PAYPAL }}>
                         <PayPalButtons
                             createOrder={(data, actions) => {
                                 return actions.order.create({
@@ -896,6 +807,7 @@ function Comprar({ display, dataSecciones, dataNiveles, dataCurso }) {
                                     ],
                                 });
                             }}
+
                             onApprove={(data, actions) => {
 
                                 const formData = new FormData();
@@ -910,6 +822,8 @@ function Comprar({ display, dataSecciones, dataNiveles, dataCurso }) {
                                 formData.append('idSeccions', JSON.stringify(dataSecciones));
 
                                 InsertShopingCourse(formData, idCurso).then((data) => {
+                                    alert('Curso comprado con exito!');
+                                    location.reload();
                                 });
 
                                 return actions.order.capture().then((details) => {
@@ -924,7 +838,7 @@ function Comprar({ display, dataSecciones, dataNiveles, dataCurso }) {
     }
 }
 
-function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones, enviarVideo, terminoCurso }) {
+function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones, enviarVideo, terminoCurso, comments, promedio, certificadoData }) {
 
     const [descripcionGeneral, setDescrpcionGeneral] = useState(true);
     const [valoraciones, setValoraciones] = useState(false);
@@ -1048,13 +962,12 @@ function NavegacionVideo({ dataCurso, dataNiveles, dataSecciones, enviarVideo, t
                 />
                 <Valoraciones
                     display={valoraciones}
-                    numeroEstrellas={"4.5"}
-                    porcentajeUnaEstrella={"10%"}
-                    porcentajeDosEstrella={"10%"}
-                    porcentajeTresEstrella={"5%"}
-                    porcentajeCuatroEstrella={"5%"}
-                    porcentajeCincoEstrella={"70%"} />
+                    comments={comments}
+                    promedio={promedio}
+                    terminoCurso={terminoCurso}
+                />
                 <Certificado
+                    certificado={certificadoData}
                     display={certificado}
                     terminoCurso={terminoCurso} />
                 <Comprar
@@ -1077,6 +990,9 @@ export default function Curso() {
     const [dataSecciones, setDataSecciones] = useState();
     const [terminoCurso, setDataTerminoCurso] = useState();
     const [video, setVideo] = useState();
+    const [comments, setComments] = useState();
+    const [promedio, setPromedio] = useState();
+    const [certificado, setCertificado] = useState();
 
     const enviarVideo = (dataVideo) => {
         setVideo(dataVideo);
@@ -1086,13 +1002,31 @@ export default function Curso() {
 
     useEffect(() => {
 
+        let formDataCertificado = new FormData();
+        formDataCertificado.append('alumno', localStorage.getItem('userId'));
+        formDataCertificado.append('curso', idCurso);
+
+        GetCertificated(formDataCertificado).then((data) => {
+            if (data.status == 200)
+                setCertificado(data.certificado);
+        });
+
+        GetComments(idCurso).then((data) => {
+            if (data.status == 200)
+                setComments(data.comments);
+        });
+
+        GetCalCourse(idCurso).then((data) => {
+            data.promedio !== null ?
+                setPromedio(data.promedio) : setPromedio(0);
+        });
+
         let formData = new FormData();
 
         formData.append('usuario', localStorage.getItem('userId'));
 
         GetCourseFinished(idCurso, formData).then((data) => {
-            data ?
-                setDataTerminoCurso(data.termino_curso) : setDataTerminoCurso(0);
+            setDataTerminoCurso(data);
         });
 
         GetCourse(idCurso).then((course) => {
@@ -1128,9 +1062,13 @@ export default function Curso() {
     }, []);
 
 
-    if (!dataCurso || !dataNiveles || !dataSecciones) {
-
-        return <h5>Wating for data</h5>;
+    if (!dataCurso || 
+        !dataNiveles || 
+        !dataSecciones || 
+        !terminoCurso || 
+        !comments || 
+        certificado === undefined || certificado === null || promedio === undefined || promedio === null) {
+        return <h5 className=''>Wating for data</h5>;
 
     } else {
         return (
@@ -1153,11 +1091,14 @@ export default function Curso() {
                 <div className='row p-0 m-0'>
                     <div className='col-12 p-0 m-0'>
                         <NavegacionVideo
+                            certificadoData={certificado}
                             terminoCurso={terminoCurso}
                             enviarVideo={enviarVideo}
                             dataCurso={dataCurso}
                             dataNiveles={dataNiveles}
                             dataSecciones={dataSecciones}
+                            comments={comments}
+                            promedio={promedio}
                         />
                     </div>
                 </div>

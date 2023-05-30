@@ -38,6 +38,8 @@ export default function CrearCurso() {
     const [contenidoBool, setContenidoBool] = useState(false);
     const [linkBool, setLinkBool] = useState(false);
 
+    const [textoModal, setTextoModal] = useState('');
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -66,7 +68,8 @@ export default function CrearCurso() {
                     });
 
                     InsertCourse(formData).then((dato) => {
-                        console.log(dato);
+                        if (dato.status == 200)
+                            setTextoModal(dato.message);
                     });
 
                 }}
@@ -120,7 +123,8 @@ export default function CrearCurso() {
                             accept="image/*"
                             name="imagen" />
                     </div>
-                    <div className="col-6 ps-1">
+                    <div className="col-6 ps-1 d-flex flex-row justify-content-center align-items-center">
+                        <label className="small fs-4 text-success fw-bold" htmlFor="costo">$</label>
                         <input
                             onChange={(e) => {
                                 setPrecioCurso(e.target.value);
@@ -129,10 +133,11 @@ export default function CrearCurso() {
                                 else
                                     setDescripcionBool(false);
                             }}
+                            id="costo"
                             name="costo"
                             value={precioCurso}
                             className="form-control"
-                            type="text"
+                            type="number"
                             placeholder="Ingresa el precio del curso..." />
                     </div>
                 </div>
@@ -217,7 +222,10 @@ export default function CrearCurso() {
                                             placeholder="Titulo del nivel"
                                         />
                                     </div>
-                                    <div className="col-2 ps-1">
+                                    <div className="col-2 ps-1 d-flex justify-content-center align-items-center">
+                                        <label 
+                                        className="label fs-4 text-success fw-bold" 
+                                        htmlFor="precio-nivel">$</label>
                                         <input
                                             onChange={(e) => {
                                                 nivel.costo = e.target.value;
@@ -226,6 +234,7 @@ export default function CrearCurso() {
                                                 else
                                                     setPrecioNivelBool(false);
                                             }}
+                                            id="precio-nivel"
                                             className="text-center form-control"
                                             type="text"
                                             name="precio-nivel"
@@ -435,6 +444,8 @@ export default function CrearCurso() {
                     <div className="row m-1">
                         <div className="col-12 text-end">
                             <button
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
                                 className="btn-primary btn w-100"
                                 type="submit">Publicar</button>
                         </div>
@@ -445,6 +456,36 @@ export default function CrearCurso() {
                                 type="button"
                                 onClick={() => navigate('/')}
                                 className="btn-danger btn w-100">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    className={`"modal fade"`}
+                    id="exampleModal"
+                    tabIndex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Error</h1>
+                                <button
+                                    onClick={() => {
+                                        navigate('/');
+                                    }}
+                                    type="button"
+                                    className="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                {textoModal}
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={() => {
+                                    navigate('/');
+                                }} type="button" className="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,6 @@
 import { React, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './tarjeta-dashboard.css';
-import { GetCourse } from '../../servicesBDM/courses';
 
 const TarjetaDashboard = ({
     id,
@@ -14,7 +13,7 @@ const TarjetaDashboard = ({
     precio
 }) => {
     return (
-        <div className='row border-bottom border-secondary'>
+        <div className='row border-bottom border-secondary tarjeta'>
             <div className='col-3 col-xl-2'>
                 <img className='imagen-curso d-flex justify-content-start' src={imagen} />
             </div>
@@ -316,8 +315,8 @@ const TarjetaDashboard = ({
                         </svg>
                     </div>
                 </div>
-                <h6 className='form-text text-end'>{fecha}</h6>
-                <h6 className='form-text text-danger fw-bold p-0 m-0 text-end'>{precio}</h6>
+                <h6 className=' text-end mt-2'>{fecha}</h6>
+                <h3 className=' text-success fw-bold p-0 m-0 text-end'>${precio}</h3>
             </div>
         </div >
     )

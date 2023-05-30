@@ -36,6 +36,7 @@ export default function Router() {
                         localStorage.getItem('userType') === 'Alumno' ? <Route path='mis-cursos/curso/:idCurso' element={<Curso />} /> : null
                     }
                     <Route path="crear-curso" element={<CrearCurso />} />
+                    <Route path="crear-curso/:idCurso" element={<CrearCurso />} />
                 </Route>
                 <Route path='*' element={<ErrorPage />} />
             </Route>
