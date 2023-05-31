@@ -52,7 +52,7 @@ export default function CrearCurso() {
     if (dataCategories)
         return (
             <form
-                enctype="multipart/form-data"
+                encType="multipart/form-data"
                 onSubmit={(e) => {
 
                     e.preventDefault();
@@ -68,8 +68,11 @@ export default function CrearCurso() {
                     });
 
                     InsertCourse(formData).then((dato) => {
-                        if (dato.status == 200)
+                        if (dato.status == 200) {
                             setTextoModal(dato.message);
+                            alert(dato.message);
+                            navigate('/');
+                        }
                     });
 
                 }}
@@ -223,9 +226,9 @@ export default function CrearCurso() {
                                         />
                                     </div>
                                     <div className="col-2 ps-1 d-flex justify-content-center align-items-center">
-                                        <label 
-                                        className="label fs-4 text-success fw-bold" 
-                                        htmlFor="precio-nivel">$</label>
+                                        <label
+                                            className="label fs-4 text-success fw-bold"
+                                            htmlFor="precio-nivel">$</label>
                                         <input
                                             onChange={(e) => {
                                                 nivel.costo = e.target.value;
@@ -444,8 +447,7 @@ export default function CrearCurso() {
                     <div className="row m-1">
                         <div className="col-12 text-end">
                             <button
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"
+
                                 className="btn-primary btn w-100"
                                 type="submit">Publicar</button>
                         </div>
@@ -459,36 +461,7 @@ export default function CrearCurso() {
                         </div>
                     </div>
                 </div>
-                <div
-                    className={`"modal fade"`}
-                    id="exampleModal"
-                    tabIndex="-1"
-                    aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Error</h1>
-                                <button
-                                    onClick={() => {
-                                        navigate('/');
-                                    }}
-                                    type="button"
-                                    className="btn-close"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                {textoModal}
-                            </div>
-                            <div className="modal-footer">
-                                <button onClick={() => {
-                                    navigate('/');
-                                }} type="button" className="btn btn-dark" data-bs-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </form >
         );
 }

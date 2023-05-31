@@ -59,7 +59,6 @@ const Dashboard = () => {
                     <div className='col-12 border-bottom border-secondary'>
                         <h4 className='fw-bold m-0 p-0 text-center'>Titulo de la busqueda</h4>
                     </div>
-                   
                 </div>
                 <form
                     className='row border-bottom border-secondary py-2 '>
@@ -244,7 +243,7 @@ const Dashboard = () => {
                                 instructor={curso.nombre}
                                 estrellas={curso.promedio}
                                 fecha={curso.fecha_creacion}
-                                precio={curso.cost}
+                                precio={parseInt(curso.cost).toLocaleString()}
                             />
                         )
 
