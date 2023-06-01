@@ -3,6 +3,7 @@ import './messages.css';
 import imagenPerfil from '../../images/perfil.jpg';
 import { useEffect } from 'react';
 import { GetUsers } from '../../servicesBDM/userService';
+import { InsertMessage, GetMessages } from '../../servicesBDM/messages';
 
 export default function Messages() {
 
@@ -11,7 +12,6 @@ export default function Messages() {
     const [receptor, setReceptor] = useState();
     const [messages, setMessages] = useState([]);
     const [mensaje, setMensaje] = useState('');
-    const [chatSelected, setChat] = useState();
 
     useEffect(() => {
 
@@ -63,7 +63,6 @@ export default function Messages() {
                 ws1.send(jsonDataDisconnect);
 
                 ws1.close();
-
             }
         }
 
@@ -85,8 +84,19 @@ export default function Messages() {
                             id='form-users-messages'>
                             <select
                                 onChange={(e) => {
-                                    console.log(e.target.value);
                                     setReceptor(e.target.value);
+
+                                    if (e.target.value === '-1')
+                                        return;
+
+                                    let formMessages = new FormData();
+                                    formMessages.append('usuario1', localStorage.getItem('userId'));
+                                    formMessages.append('usuario2', e.target.value);
+
+                                    GetMessages(formMessages).then((data) => {
+                                        setMessages(data.messages);
+                                    });
+
                                 }}
                                 id='users'
                                 defaultValue={""}
@@ -119,6 +129,13 @@ export default function Messages() {
                             onSubmit={(e) => {
                                 e.preventDefault();
 
+                                let mensajeCheck = mensaje.replace(/\s/g, "");
+
+                                if (mensajeCheck === '') {
+                                    alert('Te faltan datos');
+                                    return;
+                                }
+
                                 const fechaHoraActual = new Date();
 
                                 let dataMensaje = {
@@ -137,20 +154,31 @@ export default function Messages() {
                                     const newMessages = [...prevMessages, JSON.parse(jsonDataMensaje)];
                                     return newMessages;
                                 });
+
+                                let formMessage = new FormData();
+
+                                formMessage.append('usuario1', localStorage.getItem('userId'));
+                                formMessage.append('usuario2', receptor);
+                                formMessage.append('mensaje', mensaje);
+
+                                InsertMessage(formMessage).then((data) => {
+                                    console.log(data);
+                                })
+
                             }}
                             className={`${!receptor || receptor === '-1' ? 'd-none' : 'row w-100'}`}
                         >
                             <div className='col-12 mensajes-area border'>
                                 {
                                     messages.map((message, index) => {
-                                        if ((message.userIdEmiter === receptor && message.userIdReceptor === localStorage.getItem('userId')) ||
-                                            (message.userIdEmiter === localStorage.getItem('userId') && message.userIdReceptor === receptor))
+
+                                        if ((message.userIdEmiter == receptor && message.userIdReceptor == localStorage.getItem('userId')) ||
+                                            (message.userIdEmiter == localStorage.getItem('userId') && message.userIdReceptor == receptor))
                                             return (
                                                 <div key={index}
-                                                    className={`row d-flex py-2 ${message.userIdEmiter === localStorage.getItem('userId') ?
+                                                    className={`row d-flex py-2 ${message.userIdEmiter == localStorage.getItem('userId') ?
                                                         'justify-content-end' : 'justify-content-start'}`}>
-                                                    <small>{message.userIdEmiter}</small>
-                                                    <div className={`col-6 texto-mensaje rounded ${message.userIdEmiter === localStorage.getItem('userId') ?
+                                                    <div className={`col-6 texto-mensaje rounded ${message.userIdEmiter == localStorage.getItem('userId') ?
                                                         'bg-primary' : 'bg-danger'}`}>
                                                         <h6 className='text-white py-2 m-0 text-center'>{message.message}</h6>
                                                     </div>
