@@ -523,7 +523,7 @@ function Contentido({ display, enviarVideo, dataNiveles, dataSecciones }) {
 
     const { idCurso } = useParams();
 
-    const [purchasedIdLevels, setPurchasedIdLevels] = useState([]);
+    const [purchasedIdLevels, setPurchasedIdLevels] = useState();
 
     useEffect(() => {
 
@@ -533,166 +533,179 @@ function Contentido({ display, enviarVideo, dataNiveles, dataSecciones }) {
         formData.append('alumno', localStorage.getItem('userId'));
 
         GetPurchasedLevels(formData).then((data) => {
+
+            console.log(data);
+
             const arrIdLevels = data.levels.map((level) => {
                 return level.nivel
             });
+
+
             setPurchasedIdLevels(arrIdLevels);
         });
 
     }, []);
 
-    return (
-        <>
-            <div className={`col-12 d-flex flex-column justify-content-center align-items-center py-3 ${display ? 'd-flex' : 'd-none'}`}>
-                <div className='row w-75 border-bottom border-secondary mb-2'>
-                    <div className='col-12'>
-                        <h5
-                            className={`${localStorage.getItem('userType') == 'Instructor' ? 'text-danger fw-bold p-0 m-0 text-center' : 'd-none'}`} >
-                            Debes de ser estudiante para comprar este curso!
-                        </h5>
-                        <h5
-                            className={`${localStorage.getItem('userType') == 'Alumno' ? 'text-dark fw-bold p-0 m-0 text-center' : 'd-none'}`} >
-                            Contenido del curso
-                        </h5>
+    if (!purchasedIdLevels) {
+        return (<h3>Waiting for data!</h3>);
+    }
+    else {
+        return (
+            <>
+                <div className={`col-12 d-flex flex-column justify-content-center align-items-center py-3 ${display ? 'd-flex' : 'd-none'}`}>
+                    <div className='row w-75 border-bottom border-secondary mb-2'>
+                        <div className='col-12'>
+                            <h5
+                                className={`${localStorage.getItem('userType') == 'Instructor' ? 'text-danger fw-bold p-0 m-0 text-center' : 'd-none'}`} >
+                                Debes de ser estudiante para comprar este curso!
+                            </h5>
+                            <h5
+                                className={`${localStorage.getItem('userType') == 'Alumno' ? 'text-dark fw-bold p-0 m-0 text-center' : 'd-none'}`} >
+                                Contenido del curso
+                            </h5>
+                        </div>
                     </div>
-                </div>
-                <div className='row w-50 border border-dark'>
-                    <div className='col-12 w-100 d-flex justify-content-center d-flex flex-column'>
-                        {
-                            dataNiveles.map((nivel, indexNivel) => {
-                                return (
-                                    <div key={indexNivel}>
-                                        <div className='row text-center d-flex'>
-                                            <div className='col-12 d-flex justify-content-center'>
-                                                <h3
-                                                    className='fw-bold text-dark'>
-                                                    {nivel.titulo}
-                                                    <small
-                                                        className='text-success'>
-                                                        $ {nivel.costo}
-                                                    </small>
-                                                </h3>
-                                                <div className={
-                                                    purchasedIdLevels.includes(nivel.idNivelCurso) ||
-                                                        localStorage.getItem('userType') == 'Instructor'
-                                                        ? 'd-none' : 'd-block'
-                                                }>
-                                                    <PayPalScriptProvider
-                                                        options={{ "client-id": process.env.REACT_APP_CLIENT_ID_PAYPAL }}>
-                                                        <PayPalButtons
-                                                            createOrder={(data, actions) => {
-                                                                return actions.order.create({
-                                                                    purchase_units: [
-                                                                        {
-                                                                            amount: {
-                                                                                value: `${nivel.costo}`,
+                    <div className='row w-50 border border-dark'>
+                        <div className='col-12 w-100 d-flex justify-content-center d-flex flex-column'>
+                            {
+                                dataNiveles.map((nivel, indexNivel) => {
+                                    return (
+                                        <div key={indexNivel}>
+                                            <div className='row text-center d-flex'>
+                                                <div className='col-12 d-flex justify-content-center'>
+                                                    <h3
+                                                        className='fw-bold text-dark'>
+                                                        {nivel.titulo}
+                                                        <small
+                                                            className='text-success'>
+                                                            $ {nivel.costo}
+                                                        </small>
+                                                    </h3>
+                                                    <div className={
+                                                        purchasedIdLevels.includes(nivel.idNivelCurso) ||
+                                                            localStorage.getItem('userType') === 'Instructor'
+                                                            ? 'd-none' : 'd-block'
+                                                    }>
+                                                        <PayPalScriptProvider
+                                                            options={{ "client-id": process.env.REACT_APP_CLIENT_ID_PAYPAL }}>
+                                                            <PayPalButtons
+                                                                createOrder={(data, actions) => {
+                                                                    return actions.order.create({
+                                                                        purchase_units: [
+                                                                            {
+                                                                                amount: {
+                                                                                    value: `${nivel.costo <= 0 ? 1 : nivel.costo}`
+                                                                                },
                                                                             },
-                                                                        },
-                                                                    ],
-                                                                });
-                                                            }}
+                                                                        ],
+                                                                    });
+                                                                }}
 
-                                                            onApprove={(data, actions) => {
+                                                                onApprove={(data, actions) => {
 
-                                                                const formData = new FormData();
+                                                                    const formData = new FormData();
 
-                                                                formData.append('alumno', localStorage.getItem('userId'));
-                                                                formData.append('compro_completo',
-                                                                    dataNiveles.length - purchasedIdLevels.length === 1 ||
-                                                                        dataNiveles.length === 1 ? 1 : 0
-                                                                );
-                                                                purchasedIdLevels.push(nivel.idNivelCurso);
-                                                                formData.append('termino_curso', 0);
-                                                                formData.append('forma_pago', 'PayPal');
-                                                                formData.append('cantidad_pagada', nivel.costo);
-                                                                formData.append('idLevels', JSON.stringify(dataNiveles));
-                                                                formData.append('levels', JSON.stringify(purchasedIdLevels));
-                                                                formData.append('idSeccions', JSON.stringify(dataSecciones));
+                                                                    formData.append('alumno', localStorage.getItem('userId'));
+                                                                    formData.append('compro_completo',
+                                                                        dataNiveles.length - purchasedIdLevels.length === 1 ||
+                                                                            dataNiveles.length === 1 ? 1 : 0
+                                                                    );
 
-                                                                InsertShopingCourse(formData, idCurso).then((data) => {
-                                                                    alert('Nivel comprado con exito!');
-                                                                    window.location.reload();
-                                                                });
+                                                                    let arregloPurchased = purchasedIdLevels;
+                                                                    arregloPurchased.push(nivel.idNivelCurso);
 
-                                                                return actions.order.capture().then((details) => {
-                                                                    const name = details.payer.name.given_name;
+                                                                    formData.append('termino_curso', 0);
+                                                                    formData.append('forma_pago', 'PayPal');
+                                                                    formData.append('cantidad_pagada', nivel.costo);
+                                                                    formData.append('idLevels', JSON.stringify(dataNiveles));
+                                                                    formData.append('levels', JSON.stringify(arregloPurchased));
+                                                                    formData.append('idSeccions', JSON.stringify(dataSecciones));
 
-                                                                });
-                                                            }}
-                                                        />
-                                                    </PayPalScriptProvider>
+                                                                    InsertShopingCourse(formData, idCurso).then((data) => {
+                                                                        alert('Nivel comprado con exito!');
+                                                                        window.location.reload();
+                                                                    });
+
+                                                                    return actions.order.capture().then((details) => {
+                                                                        const name = details.payer.name.given_name;
+
+                                                                    });
+                                                                }}
+                                                            />
+                                                        </PayPalScriptProvider>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        {
-                                            dataSecciones.map((seccion, indexSeccion) => {
-                                                if (seccion.nivel === nivel.idNivelCurso) {
-                                                    return (
-                                                        <div
-                                                            key={indexSeccion}
-                                                            className='row text-center'>
-                                                            <h4
-                                                                className='text-dark m-0'>
-                                                                {seccion.titulo}
-                                                            </h4>
-                                                            <button
-                                                                disabled={
-                                                                    purchasedIdLevels.includes(nivel.idNivelCurso) ? false : true
-                                                                }
-                                                                onClick={() => {
-                                                                    let formCourse = new FormData();
-                                                                    formCourse.append('curso', idCurso);
-                                                                    formCourse.append('nivel', nivel.idNivelCurso);
-                                                                    formCourse.append('seccion', seccion.idSecciones);
-                                                                    formCourse.append('alumno', localStorage.getItem('userId'));
+                                            {
+                                                dataSecciones.map((seccion, indexSeccion) => {
+                                                    if (seccion.nivel === nivel.idNivelCurso) {
+                                                        return (
+                                                            <div
+                                                                key={indexSeccion}
+                                                                className='row text-center'>
+                                                                <h4
+                                                                    className='text-dark m-0'>
+                                                                    {seccion.titulo}
+                                                                </h4>
+                                                                <button
+                                                                    disabled={
+                                                                        purchasedIdLevels.includes(nivel.idNivelCurso) ? false : true
+                                                                    }
+                                                                    onClick={() => {
+                                                                        let formCourse = new FormData();
+                                                                        formCourse.append('curso', idCurso);
+                                                                        formCourse.append('nivel', nivel.idNivelCurso);
+                                                                        formCourse.append('seccion', seccion.idSecciones);
+                                                                        formCourse.append('alumno', localStorage.getItem('userId'));
 
-                                                                    InsertCourseFinished(formCourse).then((data) => {
-                                                                        console.log(data);
-                                                                    });
+                                                                        InsertCourseFinished(formCourse).then((data) => {
+                                                                            console.log(data);
+                                                                        });
 
-                                                                    enviarVideo(seccion.video);
-                                                                }}
-                                                                className={`${seccion.video ? 'd-block btn btn-secondary' : 'd-none'}`}>
-                                                                Ver video
-                                                            </button>
-                                                            <a
-                                                                onClick={() => {
-                                                                    let formCourse = new FormData();
-                                                                    formCourse.append('curso', idCurso);
-                                                                    formCourse.append('nivel', nivel.idNivelCurso);
-                                                                    formCourse.append('seccion', seccion.idSecciones);
-                                                                    formCourse.append('alumno', localStorage.getItem('userId'));
+                                                                        enviarVideo(seccion.video);
+                                                                    }}
+                                                                    className={`${seccion.video ? 'd-block btn btn-secondary' : 'd-none'}`}>
+                                                                    Ver video
+                                                                </button>
+                                                                <a
+                                                                    onClick={() => {
+                                                                        let formCourse = new FormData();
+                                                                        formCourse.append('curso', idCurso);
+                                                                        formCourse.append('nivel', nivel.idNivelCurso);
+                                                                        formCourse.append('seccion', seccion.idSecciones);
+                                                                        formCourse.append('alumno', localStorage.getItem('userId'));
 
-                                                                    InsertCourseFinished(formCourse).then((data) => {
-                                                                        console.log(data);
-                                                                    });
-                                                                }}
-                                                                className={
-                                                                    `${seccion.contenido || seccion.link ? 'display-block ' : 'd-none'}
+                                                                        InsertCourseFinished(formCourse).then((data) => {
+                                                                            console.log(data);
+                                                                        });
+                                                                    }}
+                                                                    className={
+                                                                        `${seccion.contenido || seccion.link ? 'display-block ' : 'd-none'}
                                                                         ${purchasedIdLevels.includes(nivel.idNivelCurso) ? false : 'disabled-a'}`
-                                                                }
-                                                                download={'archivo_curso'}
-                                                                href={
-                                                                    seccion.contenido ?
-                                                                        `data:${seccion.mime};base64,${seccion.contenido}` : (seccion.link ? seccion.link : '')}>
-                                                                {
-                                                                    seccion.contenido ? 'Contenido' : (seccion.link ? 'link' : '')
-                                                                }
-                                                            </a>
-                                                        </div>
-                                                    )
+                                                                    }
+                                                                    download={'archivo_curso'}
+                                                                    href={
+                                                                        seccion.contenido ?
+                                                                            `data:${seccion.mime};base64,${seccion.contenido}` : (seccion.link ? seccion.link : '')}>
+                                                                    {
+                                                                        seccion.contenido ? 'Contenido' : (seccion.link ? 'link' : '')
+                                                                    }
+                                                                </a>
+                                                            </div>
+                                                        )
 
-                                                }
-                                            })
-                                        }
-                                    </div>
-                                )
-                            })}
+                                                    }
+                                                })
+                                            }
+                                        </div>
+                                    )
+                                })}
+                        </div>
                     </div>
-                </div>
-            </div >
-        </>
-    );
+                </div >
+            </>
+        );
+    }
 }
 
 function SectionContenido({ nombreSeccion }) {
@@ -1062,11 +1075,11 @@ export default function Curso() {
     }, []);
 
 
-    if (!dataCurso || 
-        !dataNiveles || 
-        !dataSecciones || 
-        !terminoCurso || 
-        !comments || 
+    if (!dataCurso ||
+        !dataNiveles ||
+        !dataSecciones ||
+        !terminoCurso ||
+        !comments ||
         certificado === undefined || certificado === null || promedio === undefined || promedio === null) {
         return <h5 className=''>Wating for data</h5>;
 

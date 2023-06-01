@@ -117,6 +117,8 @@ const Dashboard = () => {
                                 e.preventDefault();
                                 let form = new FormData(document.getElementById('dashboard-filters'));
 
+
+
                                 GetCourses(form).then((courses) => {
                                     setDataCursos(courses.courses);
                                 });
@@ -191,7 +193,15 @@ const Dashboard = () => {
                     <div className='col-3 d-flex justify-content-end align-items-center'>
                         <button
                             onClick={() => {
-                                GetCourses().then((courses) => {
+                                let newForm = new FormData();
+
+                                newForm.append('buscador', '');
+                                newForm.append('fecha_inicio', '');
+                                newForm.append('fecha_fin', '');
+                                newForm.append('categoria', null);
+                                newForm.append('users', null);
+                        
+                                GetCourses(newForm).then((courses) => {
                                     setDataCursos(courses.courses);
                                 });
                             }}
