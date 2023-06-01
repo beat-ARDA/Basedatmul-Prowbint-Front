@@ -46,4 +46,13 @@ async function GetDashboardUsers() {
         .catch(error => console.warn(error));
 };
 
-export { GetUserProfileBDM, UpdateUserProfileBDM, PostUserProfile, LogIn, GetDashboardUsers }
+async function GetUsers() {
+    return await fetch(`${process.env.REACT_APP_PATH_API}/getUsers.php`, {
+        method: 'GET',
+    })
+        .then(response => response.text())
+        .then(data => { return JSON.parse(data) })
+        .catch(error => console.warn(error));
+};
+
+export { GetUserProfileBDM, UpdateUserProfileBDM, PostUserProfile, LogIn, GetDashboardUsers, GetUsers }
