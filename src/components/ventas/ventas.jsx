@@ -128,49 +128,7 @@ function ListaAlumnosVentas({ dataCursos, reporteVentasAlumno }) {
 
     return (
         <div className='col-xl-12 d-flex flex-column justify-content-center alig-items-center pt-4'>
-            <div className='row d-flex justify-content-center mb-2'>
-                <select
-                    onChange={(e) => {
-                        setIdCurso(e.target.value);
-                    }}
-                    aria-describedby="curso-ventas"
-                    className="form-select text-secondary w-25 mb-2"
-                    aria-label="Curso"
-                    name="curso-ventas"
-                    id="curso-ventas">
-                    <option defaultValue={""}>Selecciona un curso</option>
-                    {
-                        dataCursos.map((curso, index) => {
-                            return (
-                                <option key={index} value={curso.idCurso}>{curso.titulo}</option>
-                            );
-                        })
-                    }
-                </select>
-                <button
-                    disabled={idCurso && idCurso !== '' ? false : true}
-                    onClick={() => {
 
-                        DeleteCourse(idCurso).then((data) => {
-                            alert(data.message);
-                        })
-
-                    }}
-                    className="btn btn-danger text-white w-25 text-center">Desactivar curso</button>
-                <button
-                    disabled={idCurso && idCurso !== '' ? false : true}
-
-                    onClick={() => {
-                        navigate('/crear-curso');
-                    }}
-
-                    className="btn btn-success text-white w-25 text-center">Actualizar curso</button>
-                <button onClick={() => {
-                    navigate('/crear-curso');
-                }} className="btn btn-dark text-white w-25 text-center w-25">
-                    Crear curso
-                </button>
-            </div>
             <div className='row w-100 d-flex justify-content-center align-items border-bottom border-dark'>
                 <div className='col-1 d-flex justify-content-center align-items-center'>
                     <small className='text-dark fw-bold texto-mobile'>Curso</small>
@@ -212,8 +170,6 @@ function ListaAlumnosVentas({ dataCursos, reporteVentasAlumno }) {
                     );
                 })}
             </div>
-
-
         </div>
     );
 
@@ -225,6 +181,7 @@ export default function Ventas() {
     const [reportVentas, setReportVentas] = useState();
     const [reportVentasAlumno, setReportVentasAlumno] = useState();
     const [categories, setCategories] = useState();
+    const [idCurso, setIdCurso] = useState();
 
     useEffect(() => {
 
@@ -234,6 +191,8 @@ export default function Ventas() {
         formDataReports.append('fecha_fin', '');
         formDataReports.append('curso_activo', null);
         formDataReports.append('categoria', null);
+        formDataReports.append('curso', null);
+
         GetReports(formDataReports).then((reports) => {
             setReportVentas(reports.reporte_ventas);
             setReportVentasAlumno(reports.reporte_ventas_alumno);
@@ -263,6 +222,7 @@ export default function Ventas() {
                             e.preventDefault();
                             let formData = new FormData(document.getElementById('formulario-ventas'));
                             formData.append('instructor', localStorage.getItem('userId'));
+                            formData.append('curso', null);
 
                             GetReports(formData).then((reports) => {
                                 setReportVentas(reports.reporte_ventas);
@@ -325,6 +285,67 @@ export default function Ventas() {
                     <ListaCursosVentas reporteVentas={reportVentas} />
                 </div>
                 <div className='row'>
+                    <div className='row d-flex justify-content-center mb-2'>
+                        <select
+                            onChange={(e) => {
+                                setIdCurso(e.target.value);
+
+                                if (e.target.value === "" || e.target.value === null || e.target.value === undefined)
+                                    return;
+
+                                let formDataReports = new FormData();
+                                formDataReports.append('instructor', localStorage.getItem('userId'));
+                                formDataReports.append('fecha_inicio', '');
+                                formDataReports.append('fecha_fin', '');
+                                formDataReports.append('curso_activo', null);
+                                formDataReports.append('categoria', null);
+                                formDataReports.append('curso', e.target.value);
+
+                                GetReports(formDataReports).then((reports) => {
+                                    setReportVentas(reports.reporte_ventas);
+                                    setReportVentasAlumno(reports.reporte_ventas_alumno);
+                                });
+                            }}
+                            aria-describedby="curso-ventas"
+                            className="form-select text-secondary w-25 mb-2"
+                            aria-label="Curso"
+                            name="curso-ventas"
+                            id="curso-ventas">
+                            <option
+                                defaultValue={""}>
+                                Selecciona un curso</option>
+                            {
+                                dataCursos.map((curso, index) => {
+                                    return (
+                                        <option
+                                            key={index}
+                                            value={curso.idCurso}>{curso.titulo}</option>
+                                    );
+                                })
+                            }
+                        </select>
+                        <button
+                            disabled={idCurso && idCurso !== '' ? false : true}
+                            onClick={() => {
+                                DeleteCourse(idCurso).then((data) => {
+                                    alert(data.message);
+                                })
+                            }}
+                            className="btn btn-danger text-white w-25 text-center">Desactivar curso</button>
+                        <button
+                            disabled={idCurso && idCurso !== '' ? false : true}
+
+                            onClick={() => {
+                                navigate('/crear-curso');
+                            }}
+
+                            className="btn btn-success text-white w-25 text-center">Actualizar curso</button>
+                        <button onClick={() => {
+                            navigate('/crear-curso');
+                        }} className="btn btn-dark text-white w-25 text-center w-25">
+                            Crear curso
+                        </button>
+                    </div>
                     <ListaAlumnosVentas dataCursos={dataCursos} reporteVentasAlumno={reportVentasAlumno} />
                 </div>
             </div>
