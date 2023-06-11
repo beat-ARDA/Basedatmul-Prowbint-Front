@@ -256,11 +256,7 @@ function Valoraciones({
     const [valoracion, setValoracion] = useState('');
     const [comentario, setComentario] = useState('');
     const [textoModal, setTextModal] = useState('');
-
-    useEffect(() => {
-
-    }, []);
-
+    
     return (
         <div className={`container-fluid flex-column align-items-center p-0 m-0 ${display ? 'd-flex' : 'd-none'}`}>
 
@@ -314,7 +310,7 @@ function Valoraciones({
                     onClick={() => {
                         setValoracion(2);
                     }}
-                    className='w-25 h-25 star-valoraciones'
+                    className={`w-25 h-25 ${valoracion < 2 && valoracion !== '' ? 'star-opacity' : 'star-valoraciones'}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 576 512">
                     <path
@@ -324,7 +320,7 @@ function Valoraciones({
                     onClick={() => {
                         setValoracion(3);
                     }}
-                    className='w-25 h-25 star-valoraciones'
+                    className={`w-25 h-25 ${valoracion < 3 && valoracion !== '' ? 'star-opacity' : 'star-valoraciones'}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 576 512">
                     <path
@@ -334,7 +330,7 @@ function Valoraciones({
                     onClick={() => {
                         setValoracion(4);
                     }}
-                    className='w-25 h-25 star-valoraciones'
+                    className={`w-25 h-25 ${valoracion < 4 && valoracion !== '' ? 'star-opacity' : 'star-valoraciones'}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 576 512">
                     <path
@@ -344,7 +340,8 @@ function Valoraciones({
                     onClick={() => {
                         setValoracion(5);
                     }}
-                    className='w-25 h-25 star-valoraciones'
+                    
+                    className={`w-25 h-25 ${valoracion < 5 && valoracion !== '' ? 'star-opacity' : 'star-valoraciones'}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 576 512">
                     <path

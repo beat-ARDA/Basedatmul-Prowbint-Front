@@ -183,6 +183,8 @@ export default function Ventas() {
     const [categories, setCategories] = useState();
     const [idCurso, setIdCurso] = useState();
 
+    const navigate = useNavigate();
+
     useEffect(() => {
 
         let formDataReports = new FormData();
